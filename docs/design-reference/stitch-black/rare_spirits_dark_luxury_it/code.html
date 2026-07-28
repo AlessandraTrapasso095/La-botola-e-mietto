@@ -1,0 +1,395 @@
+<!DOCTYPE html><html class="dark" lang="it"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Spiriti Rari &amp; Edizioni Limitate | La Botola e Mietto</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&amp;family=Manrope:wght@200..800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-error-container": "#ffdad6",
+                        "on-primary-container": "#554300",
+                        "surface-dim": "#131313",
+                        "surface-container-lowest": "#0e0e0e",
+                        "primary-container": "#d4af37",
+                        "on-secondary": "#303130",
+                        "inverse-primary": "#735c00",
+                        "on-surface": "#e5e2e1",
+                        "on-tertiary-fixed-variant": "#6c3a00",
+                        "surface-container": "#20201f",
+                        "tertiary-fixed": "#ffdcc1",
+                        "secondary-fixed": "#e3e2e0",
+                        "on-secondary-fixed-variant": "#464746",
+                        "on-tertiary-fixed": "#2e1500",
+                        "tertiary-fixed-dim": "#ffb779",
+                        "surface-bright": "#393939",
+                        "error-container": "#93000a",
+                        "surface-tint": "#e9c349",
+                        "on-secondary-fixed": "#1b1c1b",
+                        "on-primary-fixed": "#241a00",
+                        "surface-variant": "#353535",
+                        "inverse-surface": "#e5e2e1",
+                        "secondary": "#c7c6c4",
+                        "outline-variant": "#4d4635",
+                        "on-surface-variant": "#d0c5af",
+                        "error": "#ffb4ab",
+                        "primary": "#f2ca50",
+                        "primary-fixed": "#ffe088",
+                        "secondary-container": "#464746",
+                        "on-secondary-container": "#b5b5b3",
+                        "surface": "#131313",
+                        "background": "#131313",
+                        "on-background": "#e5e2e1",
+                        "on-primary-fixed-variant": "#574500",
+                        "on-primary": "#3c2f00",
+                        "surface-container-highest": "#353535",
+                        "on-error": "#690005",
+                        "inverse-on-surface": "#313030",
+                        "outline": "#99907c",
+                        "surface-container-high": "#2a2a2a",
+                        "tertiary-container": "#f5a050",
+                        "on-tertiary": "#4c2700",
+                        "surface-container-low": "#1c1b1b",
+                        "tertiary": "#ffc390"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "margin-mobile": "20px",
+                        "gutter": "32px",
+                        "margin-desktop": "64px",
+                        "container-max": "1280px",
+                        "unit": "8px"
+                    },
+                    "fontFamily": {
+                        "headline-sm": ["Playfair Display"],
+                        "headline-lg-mobile": ["Playfair Display"],
+                        "headline-lg": ["Playfair Display"],
+                        "body-md": ["Manrope"],
+                        "display-lg": ["Playfair Display"],
+                        "body-lg": ["Manrope"],
+                        "label-md": ["Manrope"],
+                        "headline-md": ["Playfair Display"]
+                    },
+                    "fontSize": {
+                        "headline-sm": ["1.5rem", { "lineHeight": "1.4", "fontWeight": "500" }],
+                        "headline-lg-mobile": ["2.25rem", { "lineHeight": "1.2", "fontWeight": "600" }],
+                        "headline-lg": ["3rem", { "lineHeight": "1.2", "fontWeight": "600" }],
+                        "body-md": ["1rem", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "display-lg": ["4.5rem", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-lg": ["1.125rem", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "label-md": ["0.875rem", { "lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "headline-md": ["2rem", { "lineHeight": "1.3", "fontWeight": "500" }]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            background-color: #131313;
+            color: #e5e2e1;
+            overflow-x: hidden;
+        }
+        .frosted-glass {
+            backdrop-filter: blur(20px);
+            background: rgba(19, 19, 19, 0.7);
+        }
+        .curated-hover:hover .hover-glow {
+            opacity: 1;
+        }
+        .hover-glow {
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            box-shadow: 0 0 40px 5px rgba(212, 175, 55, 0.1);
+        }
+        .subtle-gradient-overlay {
+            background: linear-gradient(to bottom, rgba(19, 19, 19, 0) 0%, rgba(19, 19, 19, 0.9) 100%);
+        }
+    </style>
+</head>
+<body class="font-body-md text-body-md selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-transparent backdrop-blur-xl bg-surface/10 border-b border-surface-variant/20">
+<div class="flex justify-between items-center px-margin-desktop py-6 max-w-container-max mx-auto">
+<div class="flex items-center gap-8">
+<a class="flex items-center" href="#">
+<img alt="La Botola e Mietto Logo" class="h-10 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAwzUC_6kNzvUUibdIMQgK3WvrPbhGg63DAcs_iHUqM1XL8Lq1pyp-OHgb-cL1fOZlKR7ZjdBPlKxjRV_eFq2f6HT09HfmNC4omDDUD2HnA2R5jAlS68fOCdRly1ind76oZ9ddguvDip9MMSqgoWqnvh0piMusy7nD4F_35TWDxidKRSSNJyh6x26hOp_1KhKX0du-M_9f8YHDsLxsKfFvCBahozkHTyj-mAoD3xaBEwMYxujrRY1X9wGcOwYSelC_ibc">
+</a>
+<div class="hidden md:flex gap-8">
+<a class="text-on-surface hover:text-primary transition-colors duration-300 font-label-md text-label-md uppercase tracking-widest" href="#">Whisky</a>
+<a class="text-on-surface hover:text-primary transition-colors duration-300 font-label-md text-label-md uppercase tracking-widest" href="#">Rum</a>
+<a class="text-on-surface hover:text-primary transition-colors duration-300 font-label-md text-label-md uppercase tracking-widest" href="#">Vino</a>
+<a class="text-on-surface hover:text-primary transition-colors duration-300 font-label-md text-label-md uppercase tracking-widest" href="#">Cognac</a>
+<a class="text-on-surface hover:text-primary transition-colors duration-300 font-label-md text-label-md uppercase tracking-widest" href="#">Gin</a>
+<a class="text-on-surface hover:text-primary transition-colors duration-300 font-label-md text-label-md uppercase tracking-widest" href="#">Regali</a>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<button class="material-symbols-outlined text-primary hover:opacity-80 transition-all duration-300 cursor-pointer">favorite</button>
+<button class="material-symbols-outlined text-primary hover:opacity-80 transition-all duration-300 cursor-pointer">shopping_bag</button>
+<button class="material-symbols-outlined text-primary hover:opacity-80 transition-all duration-300 cursor-pointer">person</button>
+</div>
+</div>
+</nav>
+<main class="pt-32 pb-24">
+<!-- Header Section -->
+<header class="relative px-margin-desktop mb-20 max-w-container-max mx-auto overflow-hidden">
+<div class="absolute inset-0 z-0 opacity-30"></div>
+<div class="relative z-10 py-16 flex flex-col items-center text-center">
+<span class="font-label-md text-label-md text-primary tracking-[0.3em] uppercase mb-4">La Collezione per Intenditori</span>
+<h1 class="font-headline-lg text-headline-lg text-on-surface mb-6 max-w-3xl leading-tight">Spritz Rari &amp; Edizioni Limitate</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto opacity-80 italic">
+                    Una selezione curata dei nettari più elusivi al mondo, invecchiati alla perfezione e preservati per coloro che comprendono il valore della pazienza.
+                </p>
+<div class="w-24 h-px bg-primary/40 mt-12"></div>
+</div>
+</header>
+<div class="grid grid-cols-12 px-margin-desktop gap-gutter max-w-container-max mx-auto">
+<!-- Filter Sidebar -->
+<aside class="col-span-12 md:col-span-3 space-y-12">
+<div class="sticky top-40">
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-8">Affina</h3>
+<div class="space-y-10">
+<!-- Region -->
+<div>
+<p class="font-label-md text-label-md text-primary uppercase tracking-widest mb-4">Regione</p>
+<ul class="space-y-3">
+<li class=""><label class="flex items-center gap-3 cursor-pointer group"><input class="rounded-none border-outline-variant bg-transparent text-primary focus:ring-0 focus:ring-offset-0" type="checkbox"><span class="font-body-md text-on-surface-variant group-hover:text-primary transition-colors">Islay, Scozia</span></label></li>
+<li class=""><label class="flex items-center gap-3 cursor-pointer group"><input class="rounded-none border-outline-variant bg-transparent text-primary focus:ring-0 focus:ring-offset-0" type="checkbox"><span class="font-body-md text-on-surface-variant group-hover:text-primary transition-colors">Cognac, Francia</span></label></li>
+<li class=""><label class="flex items-center gap-3 cursor-pointer group"><input class="rounded-none border-outline-variant bg-transparent text-primary focus:ring-0 focus:ring-offset-0" type="checkbox"><span class="font-body-md text-on-surface-variant group-hover:text-primary transition-colors">Speyside, Scozia</span></label></li>
+<li class=""><label class="flex items-center gap-3 cursor-pointer group"><input class="rounded-none border-outline-variant bg-transparent text-primary focus:ring-0 focus:ring-offset-0" type="checkbox"><span class="font-body-md text-on-surface-variant group-hover:text-primary transition-colors">Kyoto, Giappone</span></label></li>
+</ul>
+</div>
+<!-- Age -->
+<div>
+<p class="font-label-md text-label-md text-primary uppercase tracking-widest mb-4">Invecchiamento</p>
+<ul class="space-y-3">
+<li class=""><label class="flex items-center gap-3 cursor-pointer group"><input class="border-outline-variant bg-transparent text-primary focus:ring-0 focus:ring-offset-0" name="age" type="radio"><span class="font-body-md text-on-surface-variant group-hover:text-primary transition-colors">18+ Anni</span></label></li>
+<li class=""><label class="flex items-center gap-3 cursor-pointer group"><input class="border-outline-variant bg-transparent text-primary focus:ring-0 focus:ring-offset-0" name="age" type="radio"><span class="font-body-md text-on-surface-variant group-hover:text-primary transition-colors">25+ Anni</span></label></li>
+<li class=""><label class="flex items-center gap-3 cursor-pointer group"><input class="border-outline-variant bg-transparent text-primary focus:ring-0 focus:ring-offset-0" name="age" type="radio"><span class="font-body-md text-on-surface-variant group-hover:text-primary transition-colors">40+ Anni</span></label></li>
+</ul>
+</div>
+<!-- Price -->
+<div>
+<p class="font-label-md text-label-md text-primary uppercase tracking-widest mb-4">Range di Investimento</p>
+<div class="relative pt-4">
+<input class="w-full h-1 bg-surface-variant rounded-full appearance-none cursor-pointer accent-primary" type="range">
+<div class="flex justify-between mt-4 font-label-md text-on-surface-variant">
+<span class="">€500</span>
+<span class="">€50.000+</span>
+</div>
+</div>
+</div>
+<button class="w-full py-4 bg-transparent border border-secondary text-on-surface font-label-md text-label-md uppercase tracking-widest hover:bg-on-surface hover:text-background transition-all duration-500">
+                            Applica Selezione
+                        </button>
+</div>
+</div>
+</aside>
+<!-- Product Grid -->
+<section class="col-span-12 md:col-span-9">
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-16 gap-x-8">
+<!-- Product 1 -->
+<div class="group cursor-pointer">
+<div class="relative aspect-[3/4] overflow-hidden bg-surface-container-low curated-hover border border-outline-variant/10">
+<div class="absolute inset-0 hover-glow z-0" style="background: radial-gradient(circle at 130px -198.594px, rgba(212, 175, 55, 0.08) 0%, transparent 80%);"></div>
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 z-10" data-alt="Una macro fotografia in studio di un decanter di cristallo antico riempito con whisky scozzese di 40 anni dal colore ambrato profondo." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA-FjAhjAt7kNuedSmkkM9ZkzJuGF77Z3rJbyKX77KWjEp0YMGTyyGgAfxPWEzo6OX8gE7yQJZIUXSsu2LcbVtFLD9U-driqNUFHXXUXWtD1VYMOTJeksDbr1Ovzii2XSXi6wwb1Kz8S-tCl93GHxJBmthlIQBXwnESRSaaRzncRHf9Y454Ect3BYMej8c-ML3H0HddFSPdPRE7hjlJAyy8wuzh-LeOEYrbPaadFwExSOzYsG9UCcWf6Q">
+<div class="absolute top-4 left-4 z-20">
+<span class="px-3 py-1 bg-primary/20 backdrop-blur-md border border-primary/30 text-primary text-[10px] tracking-[0.2em] uppercase font-bold">Limitata 1 di 50</span>
+</div>
+</div>
+<div class="mt-6 space-y-2">
+<div class="flex justify-between items-start">
+<h3 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors duration-300">The Highland Legacy</h3>
+<span class="font-label-md text-label-md text-primary">€12.400</span>
+</div>
+<div class="flex items-center gap-4 text-on-surface-variant opacity-60">
+<span class="text-xs uppercase tracking-widest font-bold">42 Anni</span>
+<span class="w-1 h-1 bg-outline-variant rounded-full"></span>
+<span class="text-xs uppercase tracking-widest font-bold">Single Malt Scotch</span>
+</div>
+</div>
+</div>
+<!-- Product 2 -->
+<div class="group cursor-pointer">
+<div class="relative aspect-[3/4] overflow-hidden bg-surface-container-low curated-hover border border-outline-variant/10">
+<div class="absolute inset-0 hover-glow z-0" style="background: radial-gradient(circle at -166px -198.594px, rgba(212, 175, 55, 0.08) 0%, transparent 80%);"></div>
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 z-10" data-alt="Una bottiglia premium di raro whisky giapponese esposta su un plinto di ossidiana lucida scura." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJ1u9kK90dUdCWKAIWQoACBXnotNSNjB7lK8OlOr75DM6k3IfKSY_-AyX81ACvO4gyvRVHbBIGQvKr4_4yzwg_dnplycAlgdbAnFIzfAmRGl_U6Op3CsTuKr3oT18uyUAOei_y7z6NE3WELm8IhOhaWpPxCawGKA4uiYBfCK3p8Brdw3S-VH1sxKn4DWesD6eEOvYAfOoFiLua0mlLutSRFElerBZCwddbckIPzwBmhkCVU0ip6yTq4w">
+<div class="absolute top-4 right-4 z-20">
+<button class="material-symbols-outlined text-on-surface/50 hover:text-error transition-colors">favorite</button>
+</div>
+</div>
+<div class="mt-6 space-y-2">
+<div class="flex justify-between items-start">
+<h3 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors duration-300">Yamazaki 'Winter Moon'</h3>
+<span class="font-label-md text-label-md text-primary">€8.900</span>
+</div>
+<div class="flex items-center gap-4 text-on-surface-variant opacity-60">
+<span class="text-xs uppercase tracking-widest font-bold">Distillato 1982</span>
+<span class="w-1 h-1 bg-outline-variant rounded-full"></span>
+<span class="text-xs uppercase tracking-widest font-bold">Giappone, Kyoto</span>
+</div>
+</div>
+</div>
+<!-- Product 3 -->
+<div class="group cursor-pointer">
+<div class="relative aspect-[3/4] overflow-hidden bg-surface-container-low curated-hover border border-outline-variant/10">
+<div class="absolute inset-0 hover-glow z-0" style="background: radial-gradient(circle at -462px -198.594px, rgba(212, 175, 55, 0.08) 0%, transparent 80%);"></div>
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 z-10" data-alt="Primo piano di una rara bottiglia di cognac d'annata riposta in un astuccio di legno umidificato artigianale." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBWMrGXKl_V3A2MQp_XBue2s2JSswHu5V3d2UFCfPZLh0eA2YzGG7i68p2s0xTsD58wvmgYU8u_WqjkoRvhul53VE-XhwF_d9Kkrm2d37r-XKBbZRVMRTLCANlbsseM0gRS2zeebdzzBax2NolYz-yFGHo6zLnKBLHHCRzctJns__SxQzAwvHGRia0qDCbouh60ZHk3Gf3y6kUJTsFn4-6GNkGixEmew7P17MUJffGirCk-ETPn6t-P-w">
+</div>
+<div class="mt-6 space-y-2">
+<div class="flex justify-between items-start">
+<h3 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors duration-300">Louis XIII Private Cellar</h3>
+<span class="font-label-md text-label-md text-primary">€24.500</span>
+</div>
+<div class="flex items-center gap-4 text-on-surface-variant opacity-60">
+<span class="text-xs uppercase tracking-widest font-bold">Grand Champagne</span>
+<span class="w-1 h-1 bg-outline-variant rounded-full"></span>
+<span class="text-xs uppercase tracking-widest font-bold">Legacy Reserve</span>
+</div>
+</div>
+</div>
+<!-- Product 4 -->
+<div class="group cursor-pointer">
+<div class="relative aspect-[3/4] overflow-hidden bg-surface-container-low curated-hover border border-outline-variant/10">
+<div class="absolute inset-0 hover-glow z-0" style="background: radial-gradient(circle at 130px -745.781px, rgba(212, 175, 55, 0.08) 0%, transparent 80%);"></div>
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 z-10" data-alt="Composizione artistica con una bottiglia di rum invecchiato ultra-premium accanto a un bicchiere di cristallo tagliato." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAU-xDUTm0UzCXsUs4C6XqCVCHhO9x-RBlk4lMJaWWDWsWgpO_dnptbqa0EOCgjlrxWA7V_g50g9djmRKcB7PDTaJyhK90qzheOM-SxviLysenM5RdiCutlmR77n_XLG26y9GNXwB2J5GnAIkxA1Z5TN4zKGUsCX79fnHZu8aXfbBBj66h79ppF0Ihn9LWcB-eCzBs-7cBmDxnAqQ4Ya8i07vUfJHeSAPWFsdJ7L0EPavLzvrQ9MEnqeA">
+</div>
+<div class="mt-6 space-y-2">
+<div class="flex justify-between items-start">
+<h3 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors duration-300">El Dorado 50yr Cask</h3>
+<span class="font-label-md text-label-md text-primary">€4.200</span>
+</div>
+<div class="flex items-center gap-4 text-on-surface-variant opacity-60">
+<span class="text-xs uppercase tracking-widest font-bold">Cask Strength</span>
+<span class="w-1 h-1 bg-outline-variant rounded-full"></span>
+<span class="text-xs uppercase tracking-widest font-bold">Demerara, Guyana</span>
+</div>
+</div>
+</div>
+<!-- Product 5 -->
+<div class="group cursor-pointer">
+<div class="relative aspect-[3/4] overflow-hidden bg-surface-container-low curated-hover border border-outline-variant/10">
+<div class="absolute inset-0 hover-glow z-0" style="background: radial-gradient(circle at -166px -745.781px, rgba(212, 175, 55, 0.08) 0%, transparent 80%);"></div>
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 z-10" data-alt="Bottiglia elegante di vodka ultra-rara prodotta con acqua glaciale, presentata in una bottiglia di vetro inciso." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAvqx7nBD2o-db60jGSx6Bkya_yQFfwE4l0D7H5FQ5rS8VDBwSv7FKv79WKS_9yvh2QX4cNk001sU6MzeBiX2e3DrXZWk8LRw8iaXlHyVNUq5OnM2ZGEyNhFV8cpOcrOULT8cBAbFmDe6GKwwxV_iGc8A1CY7BUimRsIA9FpdJZ4CNHl3waMWUs3oN3TvjfcIWY6PIuCGA9LMpPx4nYLJX9H7AhQ9caMkkZejUSe2r03Y4Sw9EWH7EMKg">
+</div>
+<div class="mt-6 space-y-2">
+<div class="flex justify-between items-start">
+<h3 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors duration-300">Arctic Purity Diamond</h3>
+<span class="font-label-md text-label-md text-primary">€1.800</span>
+</div>
+<div class="flex items-center gap-4 text-on-surface-variant opacity-60">
+<span class="text-xs uppercase tracking-widest font-bold">Distillata 7 volte</span>
+<span class="w-1 h-1 bg-outline-variant rounded-full"></span>
+<span class="text-xs uppercase tracking-widest font-bold">Serie Elite</span>
+</div>
+</div>
+</div>
+<!-- Product 6 -->
+<div class="group cursor-pointer">
+<div class="relative aspect-[3/4] overflow-hidden bg-surface-container-low curated-hover border border-outline-variant/10">
+<div class="absolute inset-0 hover-glow z-0" style="background: radial-gradient(circle at -462px -745.781px, rgba(212, 175, 55, 0.08) 0%, transparent 80%);"></div>
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 z-10" data-alt="Dettaglio dell'etichetta di una rara bottiglia di vino di un leggendario vigneto francese, annata 1945." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDSlPxgbPUNQFpsBr4s8IxQr2VSYUpbeP9zn7GxBl6IDUblV37qDqf3iPpHpLxEZgXJFts-REe88YfddL3JGligJvaoA6WtkYaIBtdLqbj60UTa4AGl_90UOsQk6zQwUxYNzuQqX0H-LEH54tmBTRpoTINnBDWDMskaWeRp09q2bEaCjXrxVFPi_3fc4BrNt_kKJR_U83Wdu99n5Ba_xjs6nTaVLCKsfouLDBa5xnAza500Oq8IMWsi1w">
+</div>
+<div class="mt-6 space-y-2">
+<div class="flex justify-between items-start">
+<h3 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors duration-300">Château Mouton 1945</h3>
+<span class="font-label-md text-label-md text-primary">€38.000</span>
+</div>
+<div class="flex items-center gap-4 text-on-surface-variant opacity-60">
+<span class="text-xs uppercase tracking-widest font-bold">Bordeaux, Francia</span>
+<span class="w-1 h-1 bg-outline-variant rounded-full"></span>
+<span class="text-xs uppercase tracking-widest font-bold">Annata Iconica</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Pagination / Load More -->
+<div class="mt-24 text-center">
+<button class="px-12 py-5 bg-primary text-on-primary font-label-md text-label-md uppercase tracking-widest hover:brightness-110 transition-all duration-300 transform active:scale-95 shadow-xl shadow-primary/10">
+                        Scopri Altre Rarità
+                    </button>
+<p class="mt-6 font-body-md text-on-surface-variant opacity-50 italic">Stai visualizzando 6 di 42 articoli esclusivi</p>
+</div>
+</section>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full pt-20 pb-10 bg-surface-container-lowest border-t border-outline-variant/30">
+<div class="grid grid-cols-12 px-margin-desktop gap-gutter max-w-container-max mx-auto">
+<div class="col-span-12 md:col-span-4 space-y-6">
+<img alt="La Botola e Mietto" class="h-12 w-auto object-contain opacity-80" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCuJ1CxD0ZZODJYCAxyAtYCJ-4osF3Z60COrMCMUSFbW83KHFA7M1CfTmDY_UAKlRM-_Ilqo_jjnPcLrWwLjP78UvxWW-2SStcOjKq1BA_tGiAgpgSi-mWtOBkLzgb-CfAFgRDToIzeCWQroJMuuzN80lvs3zW2CeVRrGf4pXChZZMJGwDgLiUO5IadD09C0WMrw8bouIUUbkXlcTJFeSaKnlkK4I-oqJhPpEd3-898e-E3JzuIe25mg2d1nE6Q6iEALFQ">
+<p class="text-on-surface-variant font-body-md max-w-xs leading-relaxed italic opacity-70">
+                    "Sorseggiare è viaggiare. Possedere è preservare la storia. Uniamo la cantina al collezionista."
+                </p>
+</div>
+<div class="col-span-6 md:col-span-2 space-y-6">
+<h4 class="font-label-md text-label-md text-primary uppercase tracking-widest">Patrimonio</h4>
+<ul class="space-y-3 font-body-md text-on-surface-variant">
+<li class=""><a class="hover:text-primary transition-colors duration-300 underline-offset-4 hover:underline" href="#">La Nostra Storia</a></li>
+<li class=""><a class="hover:text-primary transition-colors duration-300 underline-offset-4 hover:underline" href="#">Cantina Privata</a></li>
+<li class=""><a class="hover:text-primary transition-colors duration-300 underline-offset-4 hover:underline" href="#">Newsletter</a></li>
+</ul>
+</div>
+<div class="col-span-6 md:col-span-2 space-y-6">
+<h4 class="font-label-md text-label-md text-primary uppercase tracking-widest">Servizio Clienti</h4>
+<ul class="space-y-3 font-body-md text-on-surface-variant">
+<li class=""><a class="hover:text-primary transition-colors duration-300 underline-offset-4 hover:underline" href="#">Spedizioni e Resi</a></li>
+<li class=""><a class="hover:text-primary transition-colors duration-300 underline-offset-4 hover:underline" href="#">Termini di Servizio</a></li>
+<li class=""><a class="hover:text-primary transition-colors duration-300 underline-offset-4 hover:underline" href="#">Privacy Policy</a></li>
+</ul>
+</div>
+<div class="col-span-12 md:col-span-4 space-y-8">
+<h4 class="font-label-md text-label-md text-primary uppercase tracking-widest">Il Circolo Riservato</h4>
+<p class="text-on-surface-variant font-body-md">Iscriviti alla nostra lista per l'accesso prioritario ad acquisizioni private.</p>
+<div class="flex border-b border-outline-variant/40 pb-2">
+<input class="bg-transparent border-none focus:ring-0 w-full font-body-md text-on-surface placeholder:text-on-surface-variant/40" placeholder="Il tuo indirizzo email" type="email">
+<button class="material-symbols-outlined text-primary">arrow_forward</button>
+</div>
+</div>
+<div class="col-span-12 mt-16 pt-8 border-t border-outline-variant/10 flex flex-col md:flex-row justify-between items-center gap-4">
+<p class="text-on-surface-variant font-label-md text-label-md opacity-60">© 2024 La Botola e Mietto. Creato per il Palato Esigente.</p>
+<div class="flex gap-6">
+<span class="material-symbols-outlined text-on-surface-variant/40 cursor-pointer hover:text-primary transition-colors">brand_awareness</span>
+<span class="material-symbols-outlined text-on-surface-variant/40 cursor-pointer hover:text-primary transition-colors">wine_bar</span>
+<span class="material-symbols-outlined text-on-surface-variant/40 cursor-pointer hover:text-primary transition-colors">social_distance</span>
+</div>
+</div>
+</div>
+</footer>
+<script>
+        // Subtle Parallax Effect on Scroll
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const hero = document.querySelector('header');
+            if (hero) {
+                hero.style.transform = `translateY(${scrolled * 0.1}px)`;
+            }
+        });
+
+        // Horizontal Cursor Light Micro-interaction
+        document.addEventListener('mousemove', (e) => {
+            const cards = document.querySelectorAll('.curated-hover');
+            cards.forEach(card => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const glow = card.querySelector('.hover-glow');
+                if (glow) {
+                    glow.style.background = `radial-gradient(circle at ${x}px ${y}px, rgba(212, 175, 55, 0.08) 0%, transparent 80%)`;
+                }
+            });
+        });
+    </script>
+
+
+</body></html>

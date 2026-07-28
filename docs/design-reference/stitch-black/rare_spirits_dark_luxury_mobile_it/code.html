@@ -1,0 +1,409 @@
+<!DOCTYPE html><html class="dark" lang="it"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Spiriti Rari | La Botola e Mietto</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;family=Playfair+Display:wght@500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+        }
+        .frosted-obsidian {
+            background: rgba(19, 19, 19, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        .champagne-glow {
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.05);
+        }
+        .active-filter-indicator {
+            width: 4px;
+            height: 16px;
+            background-color: #d4af37;
+            position: absolute;
+            left: 0;
+        }
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+        .animate-slide-up {
+            animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-container-highest": "#353535",
+                      "error-container": "#93000a",
+                      "on-secondary-fixed-variant": "#464746",
+                      "on-tertiary-fixed": "#2e1500",
+                      "surface-tint": "#e9c349",
+                      "on-primary-container": "#554300",
+                      "secondary-fixed": "#e3e2e0",
+                      "primary-fixed": "#ffe088",
+                      "on-tertiary-fixed-variant": "#6c3a00",
+                      "outline": "#99907c",
+                      "surface-variant": "#353535",
+                      "on-primary": "#3c2f00",
+                      "surface-dim": "#131313",
+                      "primary-fixed-dim": "#e9c349",
+                      "inverse-surface": "#e5e2e1",
+                      "on-secondary-container": "#b5b5b3",
+                      "inverse-primary": "#735c00",
+                      "tertiary": "#ffc390",
+                      "error": "#ffb4ab",
+                      "on-surface-variant": "#d0c5af",
+                      "secondary": "#c7c6c4",
+                      "primary-container": "#d4af37",
+                      "on-primary-fixed": "#241a00",
+                      "on-error-container": "#ffdad6",
+                      "outline-variant": "#4d4635",
+                      "surface-container-low": "#1c1b1b",
+                      "on-surface": "#e5e2e1",
+                      "tertiary-fixed-dim": "#ffb779",
+                      "on-secondary": "#303130",
+                      "tertiary-fixed": "#ffdcc1",
+                      "on-background": "#e5e2e1",
+                      "surface-bright": "#393939",
+                      "background": "#131313",
+                      "surface-container-high": "#2a2a2a",
+                      "secondary-fixed-dim": "#c7c6c4",
+                      "surface-container": "#20201f",
+                      "surface": "#131313",
+                      "on-tertiary-container": "#6a3900",
+                      "on-tertiary": "#4c2700",
+                      "on-error": "#690005",
+                      "surface-container-lowest": "#0e0e0e",
+                      "secondary-container": "#464746",
+                      "on-secondary-fixed": "#1b1c1b",
+                      "inverse-on-surface": "#313030",
+                      "on-primary-fixed-variant": "#574500",
+                      "tertiary-container": "#f5a050",
+                      "primary": "#f2ca50"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "container-max": "1280px",
+                      "unit": "8px",
+                      "gutter": "32px",
+                      "margin-desktop": "64px",
+                      "margin-mobile": "20px"
+              },
+              "fontFamily": {
+                      "label-md": ["Manrope"],
+                      "headline-sm": ["Playfair Display"],
+                      "headline-md": ["Playfair Display"],
+                      "headline-lg": ["Playfair Display"],
+                      "display-lg": ["Playfair Display"],
+                      "body-lg": ["Manrope"],
+                      "body-md": ["Manrope"],
+                      "headline-lg-mobile": ["Playfair Display"]
+              },
+              "fontSize": {
+                      "label-md": ["0.875rem", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                      "headline-sm": ["1.5rem", {"lineHeight": "1.4", "fontWeight": "500"}],
+                      "headline-md": ["2rem", {"lineHeight": "1.3", "fontWeight": "500"}],
+                      "headline-lg": ["3rem", {"lineHeight": "1.2", "fontWeight": "600"}],
+                      "display-lg": ["4.5rem", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "body-lg": ["1.125rem", {"lineHeight": "1.6", "fontWeight": "400"}],
+                      "body-md": ["1rem", {"lineHeight": "1.6", "fontWeight": "400"}],
+                      "headline-lg-mobile": ["2.25rem", {"lineHeight": "1.2", "fontWeight": "600"}]
+              }
+            },
+          },
+        }
+      </script>
+<style>
+        body {
+          min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface selection:bg-primary/30 min-h-screen">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-surface/10 backdrop-blur-md border-b border-surface-variant/20">
+<div class="flex justify-between items-center px-margin-mobile py-4 max-w-container-max mx-auto">
+<span class="font-headline-sm text-headline-sm font-medium text-primary tracking-tight">La Botola e Mietto</span>
+<div class="flex gap-4 items-center">
+<button class="hover:opacity-80 transition-all duration-300">
+<span class="material-symbols-outlined text-primary" data-icon="search">search</span>
+</button>
+<button class="hover:opacity-80 transition-all duration-300">
+<span class="material-symbols-outlined text-primary" data-icon="shopping_bag">shopping_bag</span>
+</button>
+<button class="hover:opacity-80 transition-all duration-300" onclick="toggleMenu()">
+<span class="material-symbols-outlined text-primary" data-icon="menu">menu</span>
+</button>
+</div>
+</div>
+</nav>
+<!-- Mobile Header Hero Section -->
+<header class="pt-32 pb-12 px-margin-mobile relative overflow-hidden">
+<div class="relative z-10">
+<p class="font-label-md text-label-md text-primary tracking-widest mb-2">SELEZIONE CURATA</p>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface mb-4">Spritz Rari</h1>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-md">Esplorando il mondo evanescente delle rarità pre-proibizionismo e capolavori artigianali invecchiati nelle ombre della storia.</p>
+</div>
+</header>
+<!-- Sticky Filter & View Controller -->
+<div class="sticky top-[68px] z-40 bg-surface-dim/95 backdrop-blur-md border-y border-outline-variant/30 px-margin-mobile py-4 flex justify-between items-center">
+<button class="flex items-center gap-2 font-label-md text-label-md text-on-surface" onclick="openFilters()">
+<span class="material-symbols-outlined" data-icon="tune">tune</span>
+        FILTRA E ORDINA
+    </button>
+<div class="flex gap-6 items-center">
+<span class="font-label-md text-label-md text-on-surface-variant uppercase">42 ARTICOLI</span>
+<button class="text-primary">
+<span class="material-symbols-outlined" data-icon="grid_view">grid_view</span>
+</button>
+</div>
+</div>
+<!-- Product Grid -->
+<main class="px-margin-mobile py-8 grid grid-cols-1 gap-12">
+<!-- Product Card 1 -->
+<article class="group relative">
+<div class="relative aspect-[3/4] overflow-hidden bg-surface-container mb-4 champagne-glow">
+<div class="w-full h-full bg-cover bg-center transition-transform duration-700 group-hover:scale-105" data-alt="Una macrofotografia di una rarissima caraffa da whisky in cristallo antico. L'illuminazione è soffusa con bagliori ambrati. Estetica di lusso senza tempo." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDdXo1YxUZFoBaxDERbx_KJ95KR7mf7OlvyVe30SnNpkfvvz5Ec-1_GlTIgkj9gysCNetcs_01DQK-UdceERZwbLIXA7Rksora7WmqFhddrBt5L4hkUQ25940pMeTaxVH5L6U77NPE7hmXzVOcOpit4vHI9x10ZJuoOvAzW2DAo16nbm-t7E4SVgsm2J_poRMDigz5SLKUdl9R3JPSo_vjM0A05n13LHHgKqO6ce-uNh_P9LqRcCaBJDg')"></div>
+<div class="absolute top-4 left-4 bg-primary/90 text-on-primary px-3 py-1 font-label-md text-[10px] tracking-widest uppercase">Grado Investimento</div>
+<button class="absolute top-4 right-4 bg-surface-container-lowest/40 backdrop-blur-md p-2 rounded-full border border-outline-variant/30">
+<span class="material-symbols-outlined text-on-surface" data-icon="favorite">favorite</span>
+</button>
+</div>
+<div class="flex flex-col gap-1">
+<span class="font-label-md text-label-md text-primary/70 uppercase tracking-widest">The Macallan</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface leading-tight">1952 Fine &amp; Rare Vintage</h3>
+<div class="flex justify-between items-end mt-2">
+<p class="font-body-lg text-body-lg text-primary font-bold">€38.500,00</p>
+<span class="font-label-md text-[12px] text-on-surface-variant">70cl / 48,6% Vol.</span>
+</div>
+</div>
+</article>
+<!-- Product Card 2 -->
+<article class="group relative">
+<div class="relative aspect-[3/4] overflow-hidden bg-surface-container mb-4">
+<div class="w-full h-full bg-cover bg-center transition-transform duration-700 group-hover:scale-105" data-alt="Ritratto di una bottiglia polverosa di Cognac vintage del XIX secolo in una cantina buia. Atmosfera misteriosa e sofisticata." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAh2mya0Q9jKn7qayqFGBV4LK5C3hMP4v3To8X125i7GlDQUdxZUjhZCPQwQ0kZVTVk1Hmv1J77M8--WwTv4hj8viUhEK2LgRbX_VkzQeiY97Y0VHCl_k3GmQhh6eg7d2xlLYWQe_FE0dLI4hk_F9cnYITsftLpRk2JNGimnG0_Rx7pvjxISf6wNpGimRbdN12aZmm4XOF65KcedKG-Vu_w64Bhum3G8EJjPDUhYrdRfu7EQezQ6cTUlg')"></div>
+<button class="absolute top-4 right-4 bg-surface-container-lowest/40 backdrop-blur-md p-2 rounded-full border border-outline-variant/30">
+<span class="material-symbols-outlined text-on-surface" data-icon="favorite">favorite</span>
+</button>
+</div>
+<div class="flex flex-col gap-1">
+<span class="font-label-md text-label-md text-primary/70 uppercase tracking-widest">Louis XIII</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface leading-tight">L'Odyssée d'un Roi</h3>
+<div class="flex justify-between items-end mt-2">
+<p class="font-body-lg text-body-lg text-primary font-bold">€125.000,00</p>
+<span class="font-label-md text-[12px] text-on-surface-variant">150cl / 40,0% Vol.</span>
+</div>
+</div>
+</article>
+<!-- Product Card 3 -->
+<article class="group relative">
+<div class="relative aspect-[3/4] overflow-hidden bg-surface-container mb-4">
+<div class="w-full h-full bg-cover bg-center transition-transform duration-700 group-hover:scale-105" data-alt="Dettaglio di una rara bottiglia di whisky Hibiki giapponese con motivi incisi, illuminata in una stanza minimalista. Stile premium." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCqEJU5wewDsFy7dHGy3TsfGaxXL38H2EUHVQ-Sr0LR9WuS_fYSzfE6dNACRCX-3m-k-XAhIz2odRkKlaTFbbnbGmNBFV1UZfdsXAF-UaOsh986Qg8s1SkZMYUc4UAdGQ6VeTGJ4SuortU4P5gn3FHhH8kOIkEjwT4Z2oHwH27wgnwogkfqXC7wOqsAKed7fmoiLeZmXThcFvyZKr0P44hu0FQCLL42WaTLe9_OsgcXhJGu9pXwo8yWYQ')"></div>
+<div class="absolute top-4 left-4 bg-tertiary-container/90 text-on-tertiary-container px-3 py-1 font-label-md text-[10px] tracking-widest uppercase">Esaurito</div>
+<button class="absolute top-4 right-4 bg-surface-container-lowest/40 backdrop-blur-md p-2 rounded-full border border-outline-variant/30">
+<span class="material-symbols-outlined text-on-surface" data-icon="favorite">favorite</span>
+</button>
+</div>
+<div class="flex flex-col gap-1">
+<span class="font-label-md text-label-md text-primary/70 uppercase tracking-widest">Suntory Hibiki</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface leading-tight">30 Year Old Kacho Fugetsu</h3>
+<div class="flex justify-between items-end mt-2">
+<p class="font-body-lg text-body-lg text-on-surface-variant/50 line-through">€9.200,00</p>
+<span class="font-label-md text-[12px] text-on-surface-variant">70cl / 43,0% Vol.</span>
+</div>
+</div>
+</article>
+</main>
+<!-- Pagination / Load More -->
+<div class="px-margin-mobile py-16 flex flex-col items-center gap-6">
+<p class="font-body-md text-body-md text-on-surface-variant">Mostrando 3 di 42 tesori</p>
+<div class="w-full h-[1px] bg-outline-variant/30 relative">
+<div class="absolute top-0 left-0 h-full w-[10%] bg-primary"></div>
+</div>
+<button class="w-full py-4 border border-outline font-label-md text-label-md text-on-surface hover:bg-surface-container transition-colors tracking-widest">
+        ESPLORA ALTRI
+    </button>
+</div>
+<!-- Filter Overlay (Bottom Sheet) -->
+<div class="fixed inset-0 z-[60] hidden" id="filterOverlay">
+<!-- Backdrop -->
+<div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeFilters()"></div>
+<!-- Sheet -->
+<div class="absolute bottom-0 left-0 w-full bg-surface-dim border-t border-outline-variant/50 rounded-t-[2rem] h-[751px] flex flex-col animate-slide-up">
+<!-- Header -->
+<div class="flex justify-between items-center p-margin-mobile border-b border-outline-variant/20">
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Filtri</h2>
+<button class="text-on-surface" onclick="closeFilters()">
+<span class="material-symbols-outlined" data-icon="close">close</span>
+</button>
+</div>
+<!-- Content -->
+<div class="flex-1 overflow-y-auto hide-scrollbar p-margin-mobile space-y-10">
+<!-- Category Section -->
+<div>
+<h3 class="font-label-md text-label-md text-primary mb-6 tracking-[0.2em]">TIPOLOGIA SPIRITO</h3>
+<div class="flex flex-wrap gap-3">
+<button class="px-5 py-2 rounded-full border border-primary text-primary font-label-md text-[12px]">TUTTI GLI SPIRITI</button>
+<button class="px-5 py-2 rounded-full border border-outline-variant text-on-surface-variant font-label-md text-[12px]">WHISKY</button>
+<button class="px-5 py-2 rounded-full border border-outline-variant text-on-surface-variant font-label-md text-[12px]">RUM</button>
+<button class="px-5 py-2 rounded-full border border-outline-variant text-on-surface-variant font-label-md text-[12px]">COGNAC</button>
+<button class="px-5 py-2 rounded-full border border-outline-variant text-on-surface-variant font-label-md text-[12px]">ARMAGNAC</button>
+</div>
+</div>
+<!-- Price Range -->
+<div>
+<h3 class="font-label-md text-label-md text-primary mb-6 tracking-[0.2em]">FASCIA DI PREZZO</h3>
+<div class="space-y-6">
+<div class="h-[2px] bg-outline-variant/30 relative">
+<div class="absolute top-1/2 left-[20%] w-[60%] h-1 bg-primary -translate-y-1/2"></div>
+<div class="absolute top-1/2 left-[20%] w-4 h-4 bg-primary border-2 border-background rounded-full -translate-x-1/2 -translate-y-1/2 shadow-lg"></div>
+<div class="absolute top-1/2 left-[80%] w-4 h-4 bg-primary border-2 border-background rounded-full -translate-x-1/2 -translate-y-1/2 shadow-lg"></div>
+</div>
+<div class="flex justify-between font-body-md text-on-surface">
+<span class="">€500</span>
+<span class="">€50.000+</span>
+</div>
+</div>
+</div>
+<!-- Region -->
+<div>
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-label-md text-label-md text-primary tracking-[0.2em]">REGIONE</h3>
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="expand_more">expand_more</span>
+</div>
+<ul class="space-y-4">
+<li class="flex items-center gap-4 text-on-surface">
+<div class="w-5 h-5 border border-outline rounded-sm flex items-center justify-center">
+<div class="w-2 h-2 bg-primary"></div>
+</div>
+<span class="font-body-md">Speyside, Scozia</span>
+</li>
+<li class="flex items-center gap-4 text-on-surface-variant">
+<div class="w-5 h-5 border border-outline-variant rounded-sm"></div>
+<span class="font-body-md">Cognac, Francia</span>
+</li>
+<li class="flex items-center gap-4 text-on-surface-variant">
+<div class="w-5 h-5 border border-outline-variant rounded-sm"></div>
+<span class="font-body-md">Isole Caraibiche</span>
+</li>
+</ul>
+</div>
+<!-- Investment Status -->
+<div>
+<h3 class="font-label-md text-label-md text-primary mb-6 tracking-[0.2em]">STATO COLLEZIONE</h3>
+<div class="grid grid-cols-2 gap-4">
+<button class="flex flex-col gap-2 p-4 bg-surface-container border border-outline-variant text-left">
+<span class="material-symbols-outlined text-primary" data-icon="trending_up">trending_up</span>
+<span class="font-label-md text-on-surface">Investimento</span>
+</button>
+<button class="flex flex-col gap-2 p-4 border border-outline-variant text-left">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="workspace_premium">workspace_premium</span>
+<span class="font-label-md text-on-surface-variant">Collezionisti</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Footer Buttons -->
+<div class="p-margin-mobile border-t border-outline-variant/30 grid grid-cols-2 gap-4 bg-surface-dim">
+<button class="py-4 border border-outline text-on-surface font-label-md tracking-widest" onclick="closeFilters()">RESET</button>
+<button class="py-4 bg-primary text-on-primary font-label-md tracking-widest" onclick="closeFilters()">APPLICA (42)</button>
+</div>
+</div>
+</div>
+<!-- Footer -->
+<footer class="bg-surface-container-lowest w-full pt-20 pb-10 border-t border-outline-variant/30">
+<div class="grid grid-cols-1 px-margin-mobile gap-10 max-w-container-max mx-auto">
+<div>
+<span class="font-headline-sm text-headline-sm text-primary mb-6 block">La Botola e Mietto</span>
+<p class="font-body-md text-body-md text-on-surface-variant mb-8">Unisciti alla nostra cerchia ristretta per allocazioni esclusive e rilasci di cantina privati.</p>
+<div class="flex gap-4 mb-10">
+<input class="bg-transparent border-b border-outline-variant focus:border-primary outline-none py-2 font-body-md text-on-surface w-full uppercase" placeholder="LA TUA EMAIL" type="email">
+<button class="text-primary font-label-md tracking-widest border-b border-primary py-2 uppercase">UNISCITI</button>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-8">
+<ul class="space-y-4">
+<li class=""><a class="font-body-md text-on-surface-variant hover:text-primary transition-colors duration-300" href="#">La Nostra Storia</a></li>
+<li class=""><a class="font-body-md text-on-surface-variant hover:text-primary transition-colors duration-300" href="#">Spedizioni e Resi</a></li>
+<li class=""><a class="font-body-md text-on-surface-variant hover:text-primary transition-colors duration-300" href="#">Cantina Privata</a></li>
+</ul>
+<ul class="space-y-4">
+<li class=""><a class="font-body-md text-on-surface-variant hover:text-primary transition-colors duration-300" href="#">Termini di Servizio</a></li>
+<li class=""><a class="font-body-md text-on-surface-variant hover:text-primary transition-colors duration-300" href="#">Privacy Policy</a></li>
+<li class=""><a class="font-body-md text-on-surface-variant hover:text-primary transition-colors duration-300" href="#">Newsletter</a></li>
+</ul>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant text-[12px] opacity-60">
+            © 2024 La Botola e Mietto. Creato per i palati più esigenti.
+        </p>
+</div>
+</footer>
+<!-- Bottom Navigation Bar (Mobile Destination Rule) -->
+<nav class="md:hidden fixed bottom-0 w-full z-50 bg-surface/80 backdrop-blur-xl border-t border-surface-variant/20">
+<div class="flex justify-around items-center py-4 px-4">
+<button class="flex flex-col items-center gap-1 group text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="text-[10px] font-label-md uppercase tracking-tighter">Home</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-primary">
+<span class="material-symbols-outlined" data-icon="liquor" style="font-variation-settings: 'FILL' 1;">liquor</span>
+<span class="text-[10px] font-label-md uppercase tracking-tighter">Rari</span>
+</button>
+<button class="flex flex-col items-center gap-1 group text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+<span class="text-[10px] font-label-md uppercase tracking-tighter">Cerca</span>
+</button>
+<button class="flex flex-col items-center gap-1 group text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="text-[10px] font-label-md uppercase tracking-tighter">Profilo</span>
+</button>
+</div>
+</nav>
+<script>
+    function openFilters() {
+        const overlay = document.getElementById('filterOverlay');
+        overlay.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeFilters() {
+        const overlay = document.getElementById('filterOverlay');
+        overlay.classList.add('hidden');
+        document.body.style.overflow = 'auto';
+    }
+
+    function toggleMenu() {
+        alert('Il menu di navigazione si aprirebbe qui');
+    }
+
+    window.addEventListener('scroll', () => {
+        const scroll = window.scrollY;
+        const header = document.querySelector('header');
+        if (header) {
+            header.style.opacity = 1 - (scroll / 400);
+            header.style.transform = `translateY(${scroll * 0.2}px)`;
+        }
+    });
+</script>
+
+
+</body></html>

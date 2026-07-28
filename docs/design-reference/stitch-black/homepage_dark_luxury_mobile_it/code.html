@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="it"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>La Botola e Mietto | Boutique di Lusso Oscuro</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;family=Playfair+Display:wght@500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-highest": "#353535",
+                    "error-container": "#93000a",
+                    "on-secondary-fixed-variant": "#464746",
+                    "on-tertiary-fixed": "#2e1500",
+                    "surface-tint": "#e9c349",
+                    "on-primary-container": "#554300",
+                    "secondary-fixed": "#e3e2e0",
+                    "primary-fixed": "#ffe088",
+                    "on-tertiary-fixed-variant": "#6c3a00",
+                    "outline": "#99907c",
+                    "surface-variant": "#353535",
+                    "on-primary": "#3c2f00",
+                    "surface-dim": "#131313",
+                    "primary-fixed-dim": "#e9c349",
+                    "inverse-surface": "#e5e2e1",
+                    "on-secondary-container": "#b5b5b3",
+                    "inverse-primary": "#735c00",
+                    "tertiary": "#ffc390",
+                    "error": "#ffb4ab",
+                    "on-surface-variant": "#d0c5af",
+                    "secondary": "#c7c6c4",
+                    "primary-container": "#d4af37",
+                    "on-primary-fixed": "#241a00",
+                    "on-error-container": "#ffdad6",
+                    "outline-variant": "#4d4635",
+                    "surface-container-low": "#1c1b1b",
+                    "on-surface": "#e5e2e1",
+                    "tertiary-fixed-dim": "#ffb779",
+                    "on-secondary": "#303130",
+                    "tertiary-fixed": "#ffdcc1",
+                    "on-background": "#e5e2e1",
+                    "surface-bright": "#393939",
+                    "background": "#131313",
+                    "surface-container-high": "#2a2a2a",
+                    "secondary-fixed-dim": "#c7c6c4",
+                    "surface-container": "#20201f",
+                    "surface": "#131313",
+                    "on-tertiary-container": "#6a3900",
+                    "on-tertiary": "#4c2700",
+                    "on-error": "#690005",
+                    "surface-container-lowest": "#0e0e0e",
+                    "secondary-container": "#464746",
+                    "on-secondary-fixed": "#1b1c1b",
+                    "inverse-on-surface": "#313030",
+                    "on-primary-fixed-variant": "#574500",
+                    "tertiary-container": "#f5a050",
+                    "primary": "#f2ca50"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "container-max": "1280px",
+                    "unit": "8px",
+                    "gutter": "32px",
+                    "margin-desktop": "64px",
+                    "margin-mobile": "20px"
+            },
+            "fontFamily": {
+                    "label-md": ["Manrope"],
+                    "headline-sm": ["Playfair Display"],
+                    "headline-md": ["Playfair Display"],
+                    "headline-lg": ["Playfair Display"],
+                    "display-lg": ["Playfair Display"],
+                    "body-lg": ["Manrope"],
+                    "body-md": ["Manrope"],
+                    "headline-lg-mobile": ["Playfair Display"]
+            },
+            "fontSize": {
+                    "label-md": ["0.875rem", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "headline-sm": ["1.5rem", {"lineHeight": "1.4", "fontWeight": "500"}],
+                    "headline-md": ["2rem", {"lineHeight": "1.3", "fontWeight": "500"}],
+                    "headline-lg": ["3rem", {"lineHeight": "1.2", "fontWeight": "600"}],
+                    "display-lg": ["4.5rem", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-lg": ["1.125rem", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "body-md": ["1rem", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "headline-lg-mobile": ["2.25rem", {"lineHeight": "1.2", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        .frosted-obsidian {
+            background: rgba(19, 19, 19, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        .text-glow-amber {
+            text-shadow: 0 0 15px rgba(242, 202, 80, 0.3);
+        }
+        .matte-card {
+            background-color: #1c1c1c;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .matte-card:active {
+            transform: scale(0.98);
+            border-color: #f2ca50;
+        }
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #131313;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4d4635;
+        }
+        .nav-active-indicator {
+            width: 2px;
+            height: 100%;
+            background-color: #f2ca50;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+        body {
+          min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md selection:bg-primary-container selection:text-on-primary-container">
+<!-- Mobile Top Navigation Header -->
+<nav class="fixed top-0 w-full z-50 bg-transparent backdrop-blur-xl bg-surface/10 border-b border-surface-variant/20 transition-all duration-300">
+<div class="flex justify-between items-center px-margin-mobile py-5">
+<button aria-label="Apri Menu" class="text-primary p-2 -ml-2" id="mobile-menu-trigger">
+<span class="material-symbols-outlined text-[28px]">menu</span>
+</button>
+<div class="font-headline-md text-headline-md font-medium text-primary tracking-tight">
+                La Botola e Mietto
+            </div>
+<div class="flex items-center gap-4">
+<button class="text-primary hover:opacity-80 transition-all duration-300">
+<span class="material-symbols-outlined" data-icon="shopping_bag">shopping_bag</span>
+</button>
+</div>
+</div>
+</nav>
+<!-- Full Screen Mobile Menu Overlay -->
+<div class="fixed inset-0 z-[60] bg-background transform -translate-x-full transition-transform duration-500 ease-in-out" id="mobile-overlay">
+<div class="flex flex-col h-full px-margin-mobile pt-5 pb-10">
+<div class="flex justify-between items-center mb-16">
+<div class="font-headline-md text-headline-md font-medium text-primary">La Botola e Mietto</div>
+<button class="text-primary p-2 -mr-2" id="mobile-menu-close">
+<span class="material-symbols-outlined text-[32px]">close</span>
+</button>
+</div>
+<div class="flex flex-col gap-8">
+<a class="font-headline-lg-mobile text-headline-lg-mobile text-primary font-bold border-b border-primary pb-2 inline-block w-fit" href="#">Whisky</a>
+<a class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface-variant hover:text-primary transition-colors" href="#">Rum</a>
+<a class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface-variant hover:text-primary transition-colors" href="#">Vini</a>
+<a class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface-variant hover:text-primary transition-colors" href="#">Cognac</a>
+<a class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface-variant hover:text-primary transition-colors" href="#">Gin</a>
+<a class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface-variant hover:text-primary transition-colors" href="#">Regali</a>
+</div>
+<div class="mt-auto pt-10 border-t border-outline-variant/30 flex flex-col gap-4">
+<div class="flex gap-6">
+<span class="material-symbols-outlined text-primary" data-icon="favorite">favorite</span>
+<span class="material-symbols-outlined text-primary" data-icon="person">person</span>
+</div>
+<p class="font-label-md text-label-md text-on-surface-variant">© 2024 La Botola e Mietto.</p>
+</div>
+</div>
+</div>
+<main class="overflow-x-hidden">
+<!-- Cinematic Hero Section -->
+<section class="relative h-[795px] flex flex-col justify-end px-margin-mobile pb-16 overflow-hidden">
+<div class="absolute inset-0 z-0">
+<div class="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent"></div>
+<div class="absolute inset-0 flex items-center justify-center opacity-70">
+<img class="w-full h-full object-cover mix-blend-overlay" data-alt="A moody, cinematic extreme close-up of a premium amber liquid being poured into a crystal glass. The lighting is low-key, highlighting the golden reflections and slow movement of the liquid against a matte black background. The overall aesthetic is one of quiet, dark luxury and sophisticated craftsmanship." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBgwBsoj_uKOBMBalkQrPhYL_fLTbVN19Ib8LWYkpLfjigAx33jrdDdscp8tZGToDZNfxUSyiU61c-xDEZXkDaoEVdUvJsWoGrFeYt63zjei_sa_LE5PxZ7mRnTWBUutu1rxFPECRSiFFpzBZSuiVR9xKSbZO_IupoLWyM-NUTUBD4UN-QZD9H6ow0ZPXU67uB2DNsWCS1I0Dx9BY4ucwww_KvVP1L2iZCDrni_qdzNGGAcv9qscaSIhQ"/>
+</div>
+</div>
+<div class="relative z-10 space-y-6">
+<div class="inline-block py-1 px-3 border border-primary/40 rounded-full">
+<span class="font-label-md text-label-md text-primary tracking-widest uppercase">Dal 1984</span>
+</div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface tracking-tight leading-tight">
+                    Selezione <br/>nelle <span class="text-primary italic">Ombre</span>
+</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-[80%]">
+                    Vivi il ritmo lento del lusso con i nostri distillati selezionati a mano dalle cantine più esclusive del mondo.
+                </p>
+<div class="pt-4 flex flex-col gap-4">
+<button class="bg-primary text-on-primary-fixed py-4 font-label-md text-label-md tracking-widest uppercase shadow-lg shadow-primary/10 active:scale-95 transition-transform">
+                        Esplora la Cantina
+                    </button>
+<button class="border border-on-surface/30 text-on-surface py-4 font-label-md text-label-md tracking-widest uppercase active:scale-95 transition-transform backdrop-blur-md bg-white/5">
+                        La Nostra Storia
+                    </button>
+</div>
+</div>
+<!-- Scroll Indicator -->
+<div class="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-50">
+<div class="w-px h-12 bg-gradient-to-b from-primary to-transparent"></div>
+</div>
+</section>
+<!-- Curated Collections - Bento Style for Mobile -->
+<section class="py-20 px-margin-mobile bg-surface">
+<div class="mb-12">
+<h2 class="font-headline-md text-headline-md text-primary mb-2">Collezioni Selezionate</h2>
+<div class="w-12 h-px bg-primary/60"></div>
+</div>
+<div class="grid grid-cols-1 gap-6">
+<!-- Large Feature Card -->
+<div class="relative h-[400px] overflow-hidden group">
+<img class="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-active:scale-105" data-alt="A vertical composition featuring a rare, dark-label whisky bottle sitting on a minimalist black stone plinth. Atmospheric amber lighting illuminates the side of the glass, creating a high-contrast shadow. The background is a textured, dark graphite wall, evoking an exclusive lounge feeling. Cinematic and premium aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDTNVyJbuRL_V3p2ae3hFZySuJnTZrjwkYKZ8BfAWca_rdv2MzG9NzwHycl_LFN1Za7zBBM-9oXYaGkH3pO0URlg0oxYGpjOk1fgXdCcbFyYp3mIhvOS7wcOmBB6rvpB2S6TJngAaupLdGYF0xu5BOx8VBZYuMWmtTxxlqPcDQGzgdJXnJGzUP-noFU62G3JmoJdcLoPFe9lRRtfVi7Fvz6mthOhaqfnj4F-KPZxTsmNyMphbZLSshhoQ"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background/90 via-transparent to-transparent"></div>
+<div class="absolute bottom-6 left-6 right-6">
+<span class="font-label-md text-label-md text-primary tracking-widest mb-2 block">RARITÀ</span>
+<h3 class="font-headline-sm text-headline-sm mb-4">The Smoky Highlands</h3>
+<a class="text-on-surface font-label-md text-label-md border-b border-primary pb-1 inline-block" href="#">Esplora la Collezione</a>
+</div>
+</div>
+<!-- Secondary Cards -->
+<div class="grid grid-cols-2 gap-4">
+<div class="relative h-[250px] overflow-hidden group">
+<img class="absolute inset-0 w-full h-full object-cover" data-alt="An artistic shot of a deep red wine swirl in a delicate crystal glass. The image is moody and desaturated except for the rich crimson of the wine. Soft, warm amber light catches the rim of the glass. Matte luxury styling with deep black shadows." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBNJ5CxUo0J6yEgMFKnw2XSmUmG1SWFoGI5tmjPXFroSA7TNJHLh01kMmkXUcmD8749d-m4_EjNnfCHuyYtFlBCeXGk1RQWSv5D7ukrc50YqpaPc-3SRXQHRxG-JWWPkgKx3ac7dzlE23boaEhom2CRTRnjPgCFdwCRTlfEfKiOW9_89t1BKsfhWNDQad6ZUss8FFUloNN61MzLeTMufcoS4kP6blV8dHWDddIFs9Ld1IXH_T6JSoRs4A"/>
+<div class="absolute inset-0 bg-background/40"></div>
+<div class="absolute inset-0 flex flex-col justify-end p-4">
+<h3 class="font-label-md text-label-md text-white">Cantina Privata</h3>
+</div>
+</div>
+<div class="relative h-[250px] overflow-hidden group">
+<img class="absolute inset-0 w-full h-full object-cover" data-alt="A close-up of a premium gin bottle with botanical elements like juniper berries and dried orange slices artistically arranged on a dark, slate-like surface. The lighting is sophisticated and directional, creating long shadows and a sense of depth. Gold accents on the label glisten." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAXrM49MU3uDKStUHM9OBscvROWZOBeyqgTU-tSMqAH5Yq2NYa65ChB1siAstdgj3h5IiFRmiUhF8OJ1dhbPZrdqcahayWHZn8t2CaBZUyeO4tPpLgCPWBhwUDUEokAVAPa3n59xXaHeQ5AsQqvHPaaEJJwbAcz8Z1kZ4QfnlgNMv6q_2iZPBs8TGHVLu-9mfmMIn_b9vpWlbzueBzMbMmRMQPag3v-0QWJeQ9PZETZ1z72JPOPQ7W6Qg"/>
+<div class="absolute inset-0 bg-background/40"></div>
+<div class="absolute inset-0 flex flex-col justify-end p-4">
+<h3 class="font-label-md text-label-md text-white">Artigiani del Gin</h3>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Featured Bottles - Vertical High Impact Scrolling -->
+<section class="py-20 bg-surface-container-lowest">
+<div class="px-margin-mobile mb-12 flex justify-between items-end">
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface">Bottiglie in Evidenza</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2">Selezioni raffinate per il tuo mobile bar.</p>
+</div>
+<a class="text-primary font-label-md text-label-md border-b border-primary pb-1" href="#">Vedi Tutto</a>
+</div>
+<div class="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar gap-6 px-margin-mobile pb-10">
+<!-- Bottle Item 1 -->
+<div class="min-w-[85vw] snap-center">
+<div class="matte-card p-6 border border-outline-variant/30 flex flex-col items-center">
+<div class="relative h-[320px] w-full mb-8 flex justify-center items-center">
+<img class="h-full object-contain drop-shadow-2xl" data-alt="A studio portrait of a high-end cognac bottle with an intricate gold-engraved label. The bottle is backlit, highlighting the rich mahogany color of the spirit and the clarity of the glass. It sits on a polished black surface with a faint reflection. The overall vibe is extremely luxurious and exclusive." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDtaCUHlP8iDg009iKQV3wKsXqw2AcVLFF-YOtkqmKObUsauQKrIBO1cJMEFrccV0bhg5WB52nP0kmKEB0h0_WxRquEIhpwF6obWlE7myhzpeWz1gU-u3koLkPduMazns3OJ7PoUdx_meq6XUzw20tAaYXxMMdij_PcfQlxX3inqEhJ6tkknt4GMi1iNs3HLp0EKG4_FkQmwtPC0_uOSMXGoYdceXXGIyBGMWlVeONf2Gfgb8qM9Zj3PQ"/>
+<div class="absolute inset-0 bg-primary/5 rounded-full blur-3xl -z-10 scale-75"></div>
+</div>
+<div class="w-full text-center">
+<span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-widest">Cognac • Grande Champagne</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mt-2 mb-1">Louis XIII Rémy Martin</h3>
+<p class="text-primary font-headline-sm font-bold">$4.250</p>
+<button class="mt-8 w-full border border-primary/60 text-primary py-3 font-label-md text-label-md tracking-widest uppercase hover:bg-primary hover:text-on-primary transition-all">
+                                Aggiungi al Carrello
+                            </button>
+</div>
+</div>
+</div>
+<!-- Bottle Item 2 -->
+<div class="min-w-[85vw] snap-center">
+<div class="matte-card p-6 border border-outline-variant/30 flex flex-col items-center">
+<div class="relative h-[320px] w-full mb-8 flex justify-center items-center">
+<img class="h-full object-contain drop-shadow-2xl" data-alt="A portrait of a rare Japanese whisky bottle with a minimalist washi paper label and calligraphy. The bottle is clear glass, showing a light honey-colored whisky. The lighting is soft and diffused, creating a serene, Zen-like atmosphere. High-end product photography in a dark luxury setting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB63DU6UAmSv6SmpeYOO0G-XzbQ5pYoPIdr-4JLzdgiePi9mT2QszaJAdjEKWyKW7PPRB_xuqcOyrhSLQSirtI56IBxuyfVtcJ0aXlfFu6iTxZZ1DzdKUM3kDBFtRmiy_1CYUl12yUR2CIpzfFtg-Y05YOaVYOf_oYTpcUUmL2gFuwFRDECtJ6iTtgXvmHBuqAe0Ik4mw2cQUv_bgmFm4Bfi-1ZbDdBjNPT33hhDBMUbpUzB3CI8G4XAg"/>
+<div class="absolute inset-0 bg-primary/5 rounded-full blur-3xl -z-10 scale-75"></div>
+</div>
+<div class="w-full text-center">
+<span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-widest">Whisky • Distilleria Suntory</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mt-2 mb-1">Hibiki 21 Anni</h3>
+<p class="text-primary font-headline-sm font-bold">$1.150</p>
+<button class="mt-8 w-full border border-primary/60 text-primary py-3 font-label-md text-label-md tracking-widest uppercase hover:bg-primary hover:text-on-primary transition-all">
+                                Aggiungi al Carrello
+                            </button>
+</div>
+</div>
+</div>
+<!-- Bottle Item 3 -->
+<div class="min-w-[85vw] snap-center">
+<div class="matte-card p-6 border border-outline-variant/30 flex flex-col items-center">
+<div class="relative h-[320px] w-full mb-8 flex justify-center items-center">
+<img class="h-full object-contain drop-shadow-2xl" data-alt="A luxury rum bottle from Barbados, with a heavy glass base and a cork stopper sealed with dark wax. The label is textured cream paper with vintage gold foil typography. The spirit is a deep, dark amber. The bottle is placed on a dark wooden surface with a soft amber glow from behind. Elegant and sophisticated." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDhETA0o2OnF5CnCnM5mdD7_5uR9Yt0_LVEyuPR3HTDT_2aM5Ks5L4WJy6K9Kg-c5Lgy3ukHMN7kahqbYWOotYLo0QXJlfm-L9ZBLoK-h5SPgjpH_I78Tbd2OaMEh9LuQdx-Y1rgtUcOEzDA1nh7q6l-TV4n_3wtv6lHX3-sSxK4vScSFLlVLYQ4f0kntCFE5z9d2rClFKesqLTkts84_ko8mL89Twn99v6tm51zeCq-UmwDyhkYEYJCA"/>
+<div class="absolute inset-0 bg-primary/5 rounded-full blur-3xl -z-10 scale-75"></div>
+</div>
+<div class="w-full text-center">
+<span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-widest">Rum • Single Cask</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mt-2 mb-1">Foursquare 2009</h3>
+<p class="text-primary font-headline-sm font-bold">$210</p>
+<button class="mt-8 w-full border border-primary/60 text-primary py-3 font-label-md text-label-md tracking-widest uppercase hover:bg-primary hover:text-on-primary transition-all">
+                                Aggiungi al Carrello
+                            </button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Newsletter / Membership -->
+<section class="py-24 px-margin-mobile text-center relative overflow-hidden">
+<div class="relative z-10">
+<span class="material-symbols-outlined text-primary text-[48px] mb-6" data-icon="auto_awesome">auto_awesome</span>
+<h2 class="font-headline-md text-headline-md text-on-surface mb-4">La Cerchia Ristretta</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mb-10 max-w-sm mx-auto">
+                    Unisciti alla nostra membership esclusiva per l'accesso anticipato a edizioni rare e inviti a degustazioni private in cantina.
+                </p>
+<form class="space-y-4">
+<input class="w-full bg-transparent border-b border-on-surface/30 focus:border-primary focus:ring-0 text-on-surface font-body-md py-3 transition-colors text-center" placeholder="La tua Email" type="email"/>
+<button class="w-full bg-primary text-on-primary py-4 font-label-md text-label-md tracking-widest uppercase mt-4">Richiedi Invito</button>
+</form>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full pt-20 pb-10 border-t border-outline-variant/30 bg-surface-container-lowest">
+<div class="grid grid-cols-1 px-margin-mobile gap-10 max-w-container-max mx-auto">
+<div class="flex flex-col gap-6">
+<div class="font-headline-sm text-headline-sm text-primary">La Botola e Mietto</div>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-xs">
+                    Curatori di distillati eccezionali dal 1984. Un'eredità di gusto, un futuro di discernimento.
+                </p>
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="mail">mail</span>
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="public">public</span>
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="star">star</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-8">
+<div class="flex flex-col gap-4">
+<h4 class="font-label-md text-label-md text-primary tracking-widest uppercase">Esplora</h4>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Storia</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Cantina Privata</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Newsletter</a>
+</div>
+<div class="flex flex-col gap-4">
+<h4 class="font-label-md text-label-md text-primary tracking-widest uppercase">Supporto</h4>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Spedizioni</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Resi</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Termini</a>
+</div>
+</div>
+<div class="pt-10 border-t border-outline-variant/20">
+<p class="font-body-md text-body-md text-on-surface-variant">
+                    © 2024 La Botola e Mietto. Creato per i palati più esigenti.
+                </p>
+</div>
+</div>
+</footer>
+<script>
+        const menuTrigger = document.getElementById('mobile-menu-trigger');
+        const menuClose = document.getElementById('mobile-menu-close');
+        const menuOverlay = document.getElementById('mobile-overlay');
+
+        menuTrigger.addEventListener('click', () => {
+            menuOverlay.style.transform = 'translateX(0)';
+            document.body.style.overflow = 'hidden';
+        });
+
+        menuClose.addEventListener('click', () => {
+            menuOverlay.style.transform = 'translateX(-100%)';
+            document.body.style.overflow = 'auto';
+        });
+
+        // Sticky Header effect on scroll
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 50) {
+                nav.classList.add('frosted-obsidian');
+                nav.classList.remove('bg-transparent');
+            } else {
+                nav.classList.remove('frosted-obsidian');
+                nav.classList.add('bg-transparent');
+            }
+        });
+
+        // Simple smooth scroll behavior for snap containers
+        const snapContainer = document.querySelector('.snap-x');
+        if(snapContainer) {
+            snapContainer.addEventListener('wheel', (evt) => {
+                evt.preventDefault();
+                snapContainer.scrollLeft += evt.deltaY;
+            });
+        }
+    </script>
+</body></html>
