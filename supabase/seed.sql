@@ -1,0 +1,2 @@
+-- Nessun prodotto dimostrativo: il catalogo cliente sarà importato in una
+-- milestone dedicata dopo la validazione di tassonomia, testi e immagini.

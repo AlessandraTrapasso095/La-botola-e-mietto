@@ -1,0 +1,98 @@
+:root {
+  color-scheme: dark;
+
+  --color-obsidian-950: #0e0e0e;
+  --color-obsidian-900: #131313;
+  --color-graphite-850: #1c1b1b;
+  --color-graphite-800: #20201f;
+  --color-graphite-700: #2a2a2a;
+  --color-graphite-600: #353535;
+  --color-ivory-100: #f3f0ea;
+  --color-ivory-200: #e5e2e1;
+  --color-ivory-400: #d0c5af;
+  --color-champagne-300: #f2d77c;
+  --color-champagne-400: #e6c45b;
+  --color-gilt-500: #c9a746;
+  --color-bronze-500: #b87736;
+  --color-error-300: #ffb4ab;
+  --color-error-800: #93000a;
+
+  --color-background: var(--color-obsidian-900);
+  --color-surface: var(--color-graphite-850);
+  --color-surface-elevated: var(--color-graphite-800);
+  --color-surface-strong: var(--color-graphite-700);
+  --color-text: var(--color-ivory-200);
+  --color-text-strong: var(--color-ivory-100);
+  --color-text-muted: var(--color-ivory-400);
+  --color-accent: var(--color-champagne-400);
+  --color-accent-soft: var(--color-champagne-300);
+  --color-accent-contrast: #2f2506;
+  --color-border: #4d4635;
+  --color-border-subtle: rgb(77 70 53 / 45%);
+  --color-focus: var(--color-champagne-300);
+  --color-danger: var(--color-error-300);
+
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.375rem;
+  --font-size-2xl: clamp(1.6rem, 1.3rem + 1vw, 2.25rem);
+  --font-size-3xl: clamp(2.1rem, 1.55rem + 2.2vw, 3.5rem);
+  --font-size-display: clamp(2.75rem, 1.65rem + 5vw, 5.5rem);
+
+  --line-height-tight: 1.08;
+  --line-height-heading: 1.2;
+  --line-height-body: 1.65;
+  --letter-spacing-label: 0.12em;
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+  --space-24: 6rem;
+  --space-32: 8rem;
+  --space-40: 10rem;
+
+  --container-content: 80rem;
+  --container-reading: 45rem;
+  --container-gutter: clamp(1.25rem, 0.6rem + 2.5vw, 4rem);
+
+  --radius-xs: 0.125rem;
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-pill: 999px;
+  --border-thin: 1px;
+
+  --shadow-ambient: 0 24px 80px rgb(0 0 0 / 38%);
+  --shadow-gilt: 0 0 24px rgb(230 196 91 / 10%);
+  --focus-ring: 0 0 0 2px var(--color-background), 0 0 0 4px var(--color-focus);
+
+  --z-base: 0;
+  --z-sticky: 30;
+  --z-header: 40;
+  --z-notice: 50;
+  --z-overlay: 70;
+  --z-dialog: 80;
+
+  --motion-fast: 180ms;
+  --motion-standard: 340ms;
+  --motion-editorial: 720ms;
+  --ease-functional: cubic-bezier(0.2, 0, 0, 1);
+  --ease-editorial: cubic-bezier(0.22, 1, 0.36, 1);
+  --reveal-distance: 1.5rem;
+  --image-zoom: 1.04;
+  --motion-stagger: 70ms;
+
+  --opacity-muted: 0.72;
+  --opacity-disabled: 0.46;
+  --opacity-overlay: 0.76;
+  --overlay-color: rgb(8 8 8 / var(--opacity-overlay));
+}

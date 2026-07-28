@@ -22,6 +22,7 @@ reference-private/
 *.zip
 *.rar
 *.7z
+*.pages
 
 # File di sistema
 .DS_Store
@@ -32,3 +33,8 @@ Thumbs.db
 npm-debug.log*
 yarn-debug.log*
 pnpm-debug.log*
+
+# Tooling e deploy locali
+.vercel/
+.turbo/
+*.tsbuildinfo

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="48" fill="#131313"/>
+  <rect x="32" y="32" width="448" height="448" rx="28" fill="none" stroke="#4d4635" stroke-width="10"/>
+  <path d="M256 100v240M198 154h116M188 340h136" stroke="#e6c45b" stroke-width="24" stroke-linecap="round"/>
+  <text x="256" y="426" fill="#f3f0ea" font-family="Georgia,serif" font-size="56" text-anchor="middle" letter-spacing="14">LBM</text>
+</svg>

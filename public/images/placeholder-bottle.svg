@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" role="img" aria-labelledby="title">
+  <title id="title">Bottiglia provvisoria su fondo grafite</title>
+  <defs>
+    <radialGradient id="halo">
+      <stop stop-color="#e6c45b" stop-opacity=".22"/>
+      <stop offset="1" stop-color="#131313" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="bottle" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#c69247" stop-opacity=".7"/>
+      <stop offset=".5" stop-color="#593216" stop-opacity=".85"/>
+      <stop offset="1" stop-color="#18120e"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="1000" fill="#1c1b1b"/>
+  <circle cx="400" cy="470" r="340" fill="url(#halo)"/>
+  <path d="M340 120h120v168c0 37 16 70 45 94 60 51 88 119 88 203v275c0 42-34 76-76 76H283c-42 0-76-34-76-76V585c0-84 28-152 88-203 29-24 45-57 45-94V120Z" fill="url(#bottle)" stroke="#d0c5af" stroke-opacity=".28" stroke-width="4"/>
+  <rect x="252" y="510" width="296" height="220" rx="4" fill="#131313" fill-opacity=".7" stroke="#e6c45b" stroke-opacity=".3"/>
+  <path d="M302 620h196M335 659h130" stroke="#e6c45b" stroke-opacity=".5" stroke-width="4"/>
+</svg>

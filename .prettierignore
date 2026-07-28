@@ -1,0 +1,8 @@
+.next
+coverage
+docs/design-reference
+node_modules
+playwright-report
+reference-private
+test-results
+package-lock.json
