@@ -11,6 +11,7 @@ const staticRoutes = [
   "/marchi",
   "/preferiti",
   "/carrello",
+  "/chi-siamo",
   "/privacy-policy",
   "/cookie-policy",
   "/termini-e-condizioni",

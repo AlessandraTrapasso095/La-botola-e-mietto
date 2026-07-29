@@ -5,6 +5,7 @@ import { Container } from "@/components/ui/container";
 import { Divider } from "@/components/ui/divider";
 import { Logo } from "@/components/ui/logo";
 import { businessAddressLine, businessInfo } from "@/config/business";
+import { CookiePreferencesButton } from "@/features/cookie-consent/cookie-preferences-button";
 
 const catalogLinks = [
   { label: "Nuovi arrivi", href: "/#nuovi-arrivi" },
@@ -15,6 +16,7 @@ const catalogLinks = [
 ] as const;
 
 const serviceLinks = [
+  { label: "Chi siamo", href: "/chi-siamo" },
   { label: "Spedizioni e resi", href: "/spedizioni-e-resi" },
   { label: "Contatti", href: "/contatti" },
   { label: "Termini e condizioni", href: "/termini-e-condizioni" },
@@ -24,7 +26,7 @@ const serviceLinks = [
 
 export function SiteFooter() {
   return (
-    <footer className="border-border-subtle border-t bg-[#0e0e0e]">
+    <footer className="border-border-subtle border-t bg-[var(--color-obsidian-950)]">
       <Container className="grid gap-12 py-16 md:grid-cols-2 lg:grid-cols-[1.25fr_0.75fr_0.8fr_1fr] lg:gap-14 lg:py-24">
         <div>
           <Logo />
@@ -77,6 +79,9 @@ export function SiteFooter() {
                 </Link>
               </li>
             ))}
+            <li>
+              <CookiePreferencesButton />
+            </li>
           </ul>
         </nav>
 

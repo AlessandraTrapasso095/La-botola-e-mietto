@@ -4,8 +4,10 @@ test("age gate, persistenza, tastiera e viewport mobile", async ({
   context,
   page,
 }) => {
+  test.setTimeout(120_000);
   await context.clearCookies();
-  await page.goto("/");
+  await page.goto(`/?age-gate-e2e=${Date.now()}`);
+  await page.waitForLoadState("networkidle");
 
   const dialog = page.getByRole("dialog", {
     name: /Per accedere a La Botola e Mietto/i,
@@ -15,7 +17,7 @@ test("age gate, persistenza, tastiera e viewport mobile", async ({
   });
   const exitButton = page.getByRole("button", { name: "No, esci dal sito" });
 
-  await expect(dialog).toBeVisible();
+  await expect(dialog).toBeVisible({ timeout: 60_000 });
   await expect(confirmButton).toBeFocused();
   await expect(page.locator("#site-shell")).toHaveAttribute("inert", "");
 

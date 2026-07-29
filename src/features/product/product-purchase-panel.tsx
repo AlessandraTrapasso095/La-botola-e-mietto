@@ -7,19 +7,23 @@ import { BagIcon, HeartIcon } from "@/components/icons";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { IconButton } from "@/components/ui/icon-button";
-import type { CatalogProductView } from "@/content/catalog/types";
+import { businessInfo } from "@/config/business";
+import { shippingConfig } from "@/config/commerce";
+import type { CatalogProductSummaryView } from "@/content/catalog/types";
 import { useCommerce } from "@/features/commerce/commerce-provider";
 import { cn } from "@/lib/cn";
+import { formatEuroMinor } from "@/lib/money";
 
 export function ProductPurchasePanel({
   product,
 }: {
-  product: CatalogProductView;
+  product: CatalogProductSummaryView;
 }) {
   const [quantity, setQuantity] = useState(1);
   const [shareMessage, setShareMessage] = useState("");
   const { addToCart, isWishlisted, toggleWishlist } = useCommerce();
   const wished = isWishlisted(product.slug);
+  const isAvailable = product.stockQuantity > 0;
 
   const shareProduct = async () => {
     const shareData = {
@@ -76,8 +80,15 @@ export function ProductPurchasePanel({
         </p>
         <p className="text-text-muted mt-1 text-xs uppercase">IVA inclusa</p>
         <p className="mt-4 flex items-center gap-2 text-sm">
-          <span className="size-2 rounded-full bg-emerald-400" />
-          Disponibile · pronta per la spedizione
+          <span
+            className={cn(
+              "size-2 rounded-full",
+              isAvailable ? "bg-emerald-400" : "bg-text-muted",
+            )}
+          />
+          {isAvailable
+            ? "Disponibile · pronta per la spedizione"
+            : "Temporaneamente non disponibile"}
         </p>
       </div>
 
@@ -105,6 +116,7 @@ export function ProductPurchasePanel({
           <Button
             fullWidth
             size="lg"
+            disabled={!isAvailable}
             onClick={() => addToCart(product.slug, quantity)}
           >
             <BagIcon className="size-5" />
@@ -137,10 +149,12 @@ export function ProductPurchasePanel({
 
       <div className="border-border-subtle bg-surface/60 mt-6 border p-5">
         <p className="text-text-strong font-serif text-lg">
-          Spedizione gratuita sopra 60 €
+          Spedizione gratuita sopra{" "}
+          {formatEuroMinor(businessInfo.freeShippingThresholdMinor)}
         </p>
         <p className="text-text-muted mt-2 text-sm">
-          Imballaggio protettivo e consegna indicativa entro 72 ore dalla
+          Imballaggio protettivo e consegna indicativa entro{" "}
+          {shippingConfig.indicativeDeliveryHoursFromDispatch} ore dalla
           spedizione.
         </p>
       </div>

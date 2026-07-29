@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 import { Container } from "@/components/ui/container";
 import { Section } from "@/components/ui/section";
@@ -16,6 +17,15 @@ export const metadata: Metadata = {
 };
 
 export default function BrandsPage() {
+  const verifiedBrands = catalogBrands.filter((brand) => !brand.needsReview);
+  const featuredBrands = [...verifiedBrands]
+    .sort(
+      (left, right) =>
+        right.productCount - left.productCount ||
+        left.name.localeCompare(right.name, "it"),
+    )
+    .slice(0, 24);
+
   return (
     <main id="main-content">
       <Breadcrumbs
@@ -30,7 +40,37 @@ export default function BrandsPage() {
       />
       <Section spacing="standard">
         <Container>
-          <BrandGrid brands={catalogBrands} />
+          <BrandGrid brands={featuredBrands} />
+          <section
+            className="border-border-subtle mt-20 border-t pt-12"
+            aria-labelledby="brand-directory-title"
+          >
+            <h2
+              id="brand-directory-title"
+              className="text-text-strong font-serif text-3xl"
+            >
+              Tutti i marchi verificati
+            </h2>
+            <p className="text-text-muted mt-3 max-w-2xl text-sm">
+              Consulta l’elenco alfabetico delle maison e distillerie
+              identificate con corrispondenza univoca nel catalogo.
+            </p>
+            <ul className="mt-8 grid grid-cols-2 gap-x-6 border-t border-[var(--color-border-subtle)] sm:grid-cols-3 lg:grid-cols-4">
+              {verifiedBrands.map((brand) => (
+                <li key={brand.slug} className="border-border-subtle border-b">
+                  <Link
+                    href={`/marchio/${brand.slug}`}
+                    className="hover:text-accent-soft flex min-h-12 items-center justify-between gap-3 text-sm transition-colors"
+                  >
+                    <span>{brand.name}</span>
+                    <span className="text-text-muted text-xs">
+                      {brand.productCount}
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
         </Container>
       </Section>
     </main>

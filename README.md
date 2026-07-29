@@ -1,13 +1,14 @@
 # La Botola e Mietto
 
 E-commerce premium italiano **La Botola e Mietto**. Il repository comprende la
-fondazione tecnica della Milestone 0 e l’esperienza frontend della Milestone
-1A: homepage editoriale, catalogo navigabile, categorie, marchi, schede
-prodotto, ricerca, carrello e preferiti.
+fondazione tecnica e l’esperienza frontend della Milestone 1A: homepage
+editoriale, catalogo reale navigabile, categorie, marchi, schede prodotto,
+ricerca, carrello e preferiti.
 
-I dati commerciali della Milestone 1A sono statici e tipizzati. Database,
-autenticazione, checkout, pagamenti e ordini reali restano intenzionalmente
-fuori dallo scope.
+Il catalogo statico e tipizzato è stato generato dal listino cliente: 2.124
+prodotti e 2.123 fotografie sorgente convertite in varianti WebP full e
+thumbnail. Database, autenticazione, checkout, pagamenti e ordini reali restano
+intenzionalmente fuori dallo scope.
 
 ## Stack
 
@@ -54,7 +55,7 @@ npx playwright install chromium
 - `src/components`: primitive UI, layout e motion
 - `src/features`: catalogo, ricerca, carrello, preferiti, age gate e consensi
 - `src/content/catalog`: dataset tipizzati di prodotti, categorie, marchi e collezioni
-- `src/content/demo-assets`: riferimenti centralizzati agli asset editoriali provvisori
+- `src/content/demo-assets`: riferimenti centralizzati agli asset editoriali sostituibili
 - `src/config`: business, commercio, brand, consensi e metadata
 - `src/lib`: utility condivise e client browser
 - `src/server`: logica e segreti esclusivamente server
@@ -65,27 +66,32 @@ npx playwright install chromium
 ## Dati privati
 
 `reference-private/`, listini, archivi e documenti del cliente sono esclusi da
-Git. Non spostare asset originali o segreti in `public/`. Le icone presenti in
-`public/brand/` e le immagini in `public/images/demo/` sono asset provvisori
-isolati e sostituibili dopo la consegna dei materiali definitivi.
+Git e non devono essere modificati. In `public/` sono presenti soltanto copie
+elaborate per il sito: logo raster ottimizzato, 2.123 immagini prodotto WebP e
+gli asset editoriali sostituibili.
 
 ## Stato funzionale
 
 Funzionano realmente nel browser:
 
 - age gate persistente, gestione focus e blocco del contenuto;
-- navigazione tra catalogo, categorie, marchi e schede prodotto;
+- navigazione tra 2.124 prodotti, categorie, marchi e schede prodotto;
 - filtri, ordinamento, ricerca e drawer mobile;
 - carrello, quantità, soglia di spedizione gratuita e preferiti;
 - persistenza locale di carrello, wishlist e prodotti visti di recente;
+- preference center cookie e newsletter con stati accessibili;
 - metadata, sitemap e route informative.
 
 Sono simulati o statici:
 
-- disponibilità e contenuti prodotto;
-- dataset commerciale derivato da una selezione del listino cliente;
+- disponibilità commerciale;
+- catalogo generato dal listino e non sincronizzato in tempo reale;
 - newsletter, area personale e checkout;
-- immagini prodotto e immagini editoriali.
+- salvataggio locale di carrello e preferiti;
+- immagini editoriali di hero, categorie e racconto.
+
+Il report completo dell’importazione è disponibile in
+[`docs/catalog-import-report.md`](docs/catalog-import-report.md).
 
 ## Documentazione
 

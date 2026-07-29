@@ -14,7 +14,9 @@ export type CatalogCategory = {
 export type CatalogBrand = {
   slug: string;
   name: string;
-  country: string;
+  country: string | null;
+  productCount: number;
+  needsReview: boolean;
   description: string;
   story: string;
   media: DemoMediaAsset;
@@ -29,10 +31,12 @@ export type CatalogProduct = {
   brandSlug: string;
   categorySlug: string;
   subcategory: string;
-  capacityMl: number;
+  capacityMl: number | null;
+  capacityLabel: string;
+  packQuantity: number | null;
   alcoholPercentage: string | null;
-  country: string;
-  producer: string;
+  country: string | null;
+  producer: string | null;
   netPriceMinor: bigint;
   stockQuantity: number;
   isNew: boolean;
@@ -40,9 +44,9 @@ export type CatalogProduct = {
   badges: readonly ProductBadge[];
   media: readonly [DemoMediaAsset, ...DemoMediaAsset[]];
   overview: string;
-  tastingNotes: string;
-  service: string;
-  origin: string;
+  tastingNotes: string | null;
+  service: string | null;
+  origin: string | null;
   pairings: readonly string[];
   characteristics: readonly {
     label: string;
@@ -50,17 +54,32 @@ export type CatalogProduct = {
   }[];
 };
 
-export type CatalogProductView = Omit<
+export type CatalogProductSummaryView = Omit<
   CatalogProduct,
-  "netPriceMinor" | "media"
+  | "netPriceMinor"
+  | "overview"
+  | "tastingNotes"
+  | "service"
+  | "origin"
+  | "pairings"
+  | "characteristics"
 > & {
   brandName: string;
   categoryName: string;
-  capacityLabel: string;
   grossPriceMinor: number;
   grossPrice: string;
-  media: readonly [DemoMediaAsset, ...DemoMediaAsset[]];
 };
+
+export type CatalogProductView = CatalogProductSummaryView &
+  Pick<
+    CatalogProduct,
+    | "overview"
+    | "tastingNotes"
+    | "service"
+    | "origin"
+    | "pairings"
+    | "characteristics"
+  >;
 
 export type CatalogCollection = {
   slug: string;

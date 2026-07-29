@@ -10,7 +10,7 @@ import {
 } from "react";
 
 import { businessInfo } from "@/config/business";
-import type { CatalogProductView } from "@/content/catalog/types";
+import type { CatalogProductSummaryView } from "@/content/catalog/types";
 import {
   demoCartLines,
   demoWishlistSlugs,
@@ -32,7 +32,7 @@ type ToastMessage = {
 };
 
 type CommerceContextValue = {
-  products: readonly CatalogProductView[];
+  products: readonly CatalogProductSummaryView[];
   cart: CartSummary;
   shippingProgress: ReturnType<typeof calculateShippingProgress>;
   wishlist: readonly string[];
@@ -60,7 +60,7 @@ export function CommerceProvider({
   products,
 }: {
   children: ReactNode;
-  products: readonly CatalogProductView[];
+  products: readonly CatalogProductSummaryView[];
 }) {
   const [state, setState] = useState<CommerceState>(initialState);
   const [hydrated, setHydrated] = useState(false);

@@ -19,19 +19,19 @@ export const cookieConsentConfig = {
       label: "Preferenze",
       required: false,
       description:
-        "Categoria predisposta per funzioni facoltative non ancora installate.",
+        "Ricordano scelte facoltative per rendere la navigazione più personale.",
     },
     analytics: {
-      label: "Misurazione",
+      label: "Statistiche",
       required: false,
       description:
-        "Categoria predisposta per strumenti di analisi non ancora installati.",
+        "Aiutano a comprendere in forma aggregata come viene utilizzato il sito.",
     },
     marketing: {
       label: "Marketing",
       required: false,
       description:
-        "Categoria predisposta per servizi promozionali non ancora installati.",
+        "Consentono contenuti promozionali pertinenti sui canali autorizzati.",
     },
   },
 } as const;

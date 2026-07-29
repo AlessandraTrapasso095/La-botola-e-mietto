@@ -1,4 +1,3 @@
-import { catalogCollections } from "@/content/catalog/collections";
 import { catalogProducts } from "@/content/catalog/products";
 import { CategoryShowcase } from "@/features/home/category-showcase";
 import {
@@ -14,21 +13,19 @@ import { ProductShelf } from "@/features/home/product-shelf";
 import { createCatalogProductViews } from "@/server/catalog-view";
 
 export default function HomePage() {
-  const newArrivalSlugs: readonly string[] =
-    catalogCollections.find((collection) => collection.slug === "nuovi-arrivi")
-      ?.productSlugs ?? [];
-  const rareSlugs: readonly string[] =
-    catalogCollections.find(
-      (collection) => collection.slug === "distillati-rari",
-    )?.productSlugs ?? [];
   const newArrivals = createCatalogProductViews(
-    catalogProducts
-      .filter((product) => newArrivalSlugs.includes(product.slug))
-      .slice(0, 4),
+    catalogProducts.filter((product) => product.isNew).slice(0, 4),
   );
   const rareSelection = createCatalogProductViews(
     catalogProducts
-      .filter((product) => rareSlugs.includes(product.slug))
+      .filter((product) => product.isLimited)
+      .sort((left, right) =>
+        left.netPriceMinor === right.netPriceMinor
+          ? 0
+          : left.netPriceMinor > right.netPriceMinor
+            ? -1
+            : 1,
+      )
       .slice(0, 4),
   );
 
@@ -40,7 +37,7 @@ export default function HomePage() {
         id="nuovi-arrivi"
         eyebrow="Appena arrivati"
         title="Nuove bottiglie da scoprire."
-        description="Una selezione reale dal catalogo cliente: release recenti, edizioni speciali e interpretazioni contemporanee."
+        description="Release recenti, edizioni speciali e interpretazioni contemporanee scelte per distinguersi."
         products={newArrivals}
       />
       <ProductShelf

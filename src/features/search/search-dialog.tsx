@@ -64,8 +64,10 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
           product.categoryName,
           product.subcategory,
           product.country,
-        ].some((value) =>
-          normalizeSearchValue(value).includes(normalizedQuery),
+        ].some(
+          (value) =>
+            value !== null &&
+            normalizeSearchValue(value).includes(normalizedQuery),
         ),
       )
       .slice(0, 7);
@@ -223,19 +225,19 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
                       {productResults.map((product) => {
                         const media = product.media[0];
                         return (
-                          <li key={product.code}>
+                          <li key={product.slug}>
                             <Link
                               href={`/prodotto/${product.slug}`}
                               className="group border-border-subtle hover:border-accent flex gap-4 border p-3 transition-colors"
                               onClick={closeSearch}
                             >
-                              <div className="bg-surface relative size-20 shrink-0 overflow-hidden">
+                              <div className="product-packshot-frame relative size-20 shrink-0 overflow-hidden">
                                 <Image
-                                  src={media.src}
+                                  src={media.thumbnailSrc ?? media.src}
                                   alt=""
                                   fill
                                   sizes="80px"
-                                  className="object-cover transition-transform duration-[var(--motion-standard)] group-hover:scale-[var(--image-zoom)]"
+                                  className="product-packshot p-2 transition-transform duration-[var(--motion-standard)] group-hover:scale-[var(--image-zoom)]"
                                   style={{ objectPosition: media.position }}
                                 />
                               </div>

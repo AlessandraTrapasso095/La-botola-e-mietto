@@ -6,7 +6,7 @@ import Link from "next/link";
 import { BagIcon, HeartIcon } from "@/components/icons";
 import { Badge } from "@/components/ui/badge";
 import { IconButton } from "@/components/ui/icon-button";
-import type { CatalogProductView } from "@/content/catalog/types";
+import type { CatalogProductSummaryView } from "@/content/catalog/types";
 import { useCommerce } from "@/features/commerce/commerce-provider";
 import { cn } from "@/lib/cn";
 
@@ -14,7 +14,7 @@ export function ProductCard({
   product,
   featured = false,
 }: {
-  product: CatalogProductView;
+  product: CatalogProductSummaryView;
   featured?: boolean;
 }) {
   const { addToCart, isWishlisted, toggleWishlist } = useCommerce();
@@ -25,7 +25,7 @@ export function ProductCard({
     <article className="product-card group flex h-full flex-col">
       <div
         className={cn(
-          "image-hover border-border-subtle bg-surface relative overflow-hidden border",
+          "image-hover product-packshot-frame border-border-subtle relative overflow-hidden border",
           featured ? "aspect-[4/5]" : "aspect-[3/4]",
         )}
       >
@@ -36,7 +36,7 @@ export function ProductCard({
         />
         {media ? (
           <Image
-            src={media.src}
+            src={media.thumbnailSrc ?? media.src}
             alt={media.alt}
             fill
             sizes={
@@ -44,7 +44,7 @@ export function ProductCard({
                 ? "(min-width: 1024px) 42vw, 90vw"
                 : "(min-width: 1280px) 20vw, (min-width: 768px) 42vw, 78vw"
             }
-            className="object-cover"
+            className="product-packshot"
             style={{ objectPosition: media.position }}
           />
         ) : (
@@ -52,7 +52,6 @@ export function ProductCard({
             <span className="text-accent/70 font-serif text-5xl">L·M</span>
           </div>
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-transparent to-black/15" />
         <div className="absolute top-3 left-3 z-20 flex max-w-[70%] flex-wrap gap-2 sm:top-4 sm:left-4">
           {product.badges.slice(0, 2).map((badge) => (
             <Badge key={badge} className="bg-background/85 backdrop-blur-md">

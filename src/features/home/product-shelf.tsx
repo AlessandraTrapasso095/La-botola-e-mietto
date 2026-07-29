@@ -6,7 +6,7 @@ import { Container } from "@/components/ui/container";
 import { Heading } from "@/components/ui/heading";
 import { Section } from "@/components/ui/section";
 import { Text } from "@/components/ui/text";
-import type { CatalogProductView } from "@/content/catalog/types";
+import type { CatalogProductSummaryView } from "@/content/catalog/types";
 import { ProductCard } from "@/features/catalog/product-card";
 import { cn } from "@/lib/cn";
 
@@ -15,7 +15,7 @@ type ProductShelfProps = {
   eyebrow: string;
   title: string;
   description: string;
-  products: CatalogProductView[];
+  products: CatalogProductSummaryView[];
   tone?: "default" | "surface";
 };
 
@@ -59,7 +59,7 @@ export function ProductShelf({
         <div className="scrollbar-hidden -mx-[var(--container-gutter)] mt-12 flex snap-x snap-mandatory gap-4 overflow-x-auto px-[var(--container-gutter)] pb-4 md:mx-0 md:grid md:grid-cols-2 md:overflow-visible md:px-0 lg:grid-cols-4">
           {products.map((product, index) => (
             <Reveal
-              key={product.code}
+              key={product.slug}
               delayStep={index}
               className="w-[78vw] max-w-[21rem] shrink-0 snap-start md:w-auto md:max-w-none"
             >

@@ -20,14 +20,16 @@ pubblicazione commerciale.
 - assicurazione su richiesta;
 - spedizione gratuita sopra 60 €;
 - reso indicativo entro 14 giorni per bottiglie integre e sigillate;
-- necessità di eccezioni e procedura per difetto da tappo.
+- eccezioni al reso riportate nel documento cliente;
+- conservazione di bottiglia, tappo e contenuto residuo per la verifica del
+  difetto da tappo.
 
 ## Da validare
 
 - formulazioni legali e basi normative aggiornate;
 - responsabili, finalità e conservazione dati;
 - elenco reale di cookie e terze parti;
-- diritto di recesso, eccezioni, costi e procedura completa;
+- diritto di recesso, costi, autorizzazione e indirizzo di rientro;
 - condizioni definitive del difetto da tappo;
 - accettazione delle condizioni nel futuro checkout;
 - eventuale requisito di verifica età più forte.
@@ -45,3 +47,6 @@ come consensi distinti.
 - le preferenze cookie restano separate e non dichiarano servizi inesistenti;
 - il checkout non raccoglie ancora accettazioni o dati personali;
 - newsletter e area personale non inviano né registrano dati.
+
+Il preference center registra esclusivamente la scelta dell’utente nel browser.
+Non sono installati strumenti facoltativi di statistica o marketing.

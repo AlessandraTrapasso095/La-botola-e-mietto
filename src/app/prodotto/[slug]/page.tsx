@@ -24,10 +24,6 @@ type ProductPageProps = {
   params: Promise<{ slug: string }>;
 };
 
-export function generateStaticParams() {
-  return catalogProducts.map((product) => ({ slug: product.slug }));
-}
-
 export async function generateMetadata({
   params,
 }: ProductPageProps): Promise<Metadata> {
@@ -101,7 +97,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
           </div>
           <div className="mt-10 grid grid-cols-2 gap-x-4 gap-y-12 md:grid-cols-4 lg:gap-x-6">
             {relatedProducts.map((relatedProduct) => (
-              <ProductCard key={relatedProduct.code} product={relatedProduct} />
+              <ProductCard key={relatedProduct.slug} product={relatedProduct} />
             ))}
           </div>
           <RecentlyViewed

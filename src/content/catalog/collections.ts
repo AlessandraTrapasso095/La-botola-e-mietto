@@ -1,4 +1,5 @@
 import { demoMedia } from "@/content/demo-assets/media";
+import { catalogProducts } from "@/content/catalog/products";
 import type { CatalogCollection } from "@/content/catalog/types";
 
 export const catalogCollections = [
@@ -7,13 +8,10 @@ export const catalogCollections = [
     title: "Nuovi arrivi",
     description:
       "Release recenti e bottiglie appena entrate nella selezione della boutique.",
-    productSlugs: [
-      "yamazaki-18-years-old",
-      "hendricks-another-gin",
-      "caprisius-43",
-      "roku-noryo-tea-edition",
-      "clase-azul-gold",
-    ],
+    productSlugs: catalogProducts
+      .filter((product) => product.isNew)
+      .slice(0, 12)
+      .map((product) => product.slug),
     media: demoMedia.ginTea,
   },
   {
@@ -21,12 +19,10 @@ export const catalogCollections = [
     title: "Distillati rari",
     description:
       "Cuvée di prestigio, lunghe maturazioni e decanter da collezione.",
-    productSlugs: [
-      "the-macallan-18-double-cask",
-      "yamazaki-18-years-old",
-      "clase-azul-anejo",
-      "the-macallan-rare-cask-2023",
-    ],
+    productSlugs: catalogProducts
+      .filter((product) => product.isLimited)
+      .slice(0, 12)
+      .map((product) => product.slug),
     media: demoMedia.rareCollection,
   },
 ] as const satisfies readonly CatalogCollection[];

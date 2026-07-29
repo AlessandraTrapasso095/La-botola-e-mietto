@@ -6,11 +6,11 @@ import { HeartIcon } from "@/components/icons";
 import { Heading } from "@/components/ui/heading";
 import { ProductCard } from "@/features/catalog/product-card";
 import { useCommerce } from "@/features/commerce/commerce-provider";
-import type { CatalogProductView } from "@/content/catalog/types";
+import type { CatalogProductSummaryView } from "@/content/catalog/types";
 
 function isCatalogProduct(
-  product: CatalogProductView | undefined,
-): product is CatalogProductView {
+  product: CatalogProductSummaryView | undefined,
+): product is CatalogProductSummaryView {
   return Boolean(product);
 }
 
@@ -61,7 +61,7 @@ export function WishlistPageContent() {
       </div>
       <div className="mt-10 grid grid-cols-2 gap-x-4 gap-y-12 md:grid-cols-3 lg:grid-cols-4 lg:gap-x-6">
         {wishlistedProducts.map((product) => (
-          <ProductCard key={product.code} product={product} />
+          <ProductCard key={product.slug} product={product} />
         ))}
       </div>
     </>

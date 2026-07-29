@@ -35,31 +35,30 @@ export function ProductGallery({
               type="button"
               aria-label={`Mostra immagine ${index + 1} di ${productName}`}
               aria-pressed={index === activeIndex}
-              className="border-border-subtle aria-pressed:border-accent bg-surface relative aspect-[3/4] w-20 shrink-0 overflow-hidden border transition-colors md:w-full"
+              className="product-packshot-frame border-border-subtle aria-pressed:border-accent relative aspect-[3/4] w-20 shrink-0 overflow-hidden border transition-colors md:w-full"
               onClick={() => setActiveIndex(index)}
             >
               <Image
-                src={asset.src}
+                src={asset.thumbnailSrc ?? asset.src}
                 alt=""
                 fill
                 sizes="84px"
-                className="object-cover"
+                className="product-packshot p-2"
                 style={{ objectPosition: asset.position }}
               />
             </button>
           ))}
         </div>
-        <div className="image-hover border-border-subtle bg-surface group relative order-1 aspect-[4/5] overflow-hidden border md:order-2">
+        <div className="image-hover product-packshot-frame border-border-subtle group relative order-1 aspect-[4/5] overflow-hidden border md:order-2">
           <Image
             src={activeMedia.src}
             alt={`${productName}: vista principale`}
             fill
             priority
             sizes="(min-width: 1024px) 48vw, 100vw"
-            className="object-cover"
+            className="product-packshot"
             style={{ objectPosition: activeMedia.position }}
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-black/5" />
           <IconButton
             aria-label={`Ingrandisci immagine di ${productName}`}
             className="bg-background/80 absolute right-4 bottom-4 backdrop-blur-md"

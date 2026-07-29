@@ -278,7 +278,7 @@ export function SiteHeaderClient({
         onOpenChange={setMobileMenuOpen}
         onSearch={() => {
           setMobileMenuOpen(false);
-          setSearchOpen(true);
+          requestAnimationFrame(() => setSearchOpen(true));
         }}
         onUtility={(panel) => {
           setMobileMenuOpen(false);

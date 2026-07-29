@@ -12,20 +12,21 @@ export function BrandGrid({ brands }: { brands: readonly CatalogBrand[] }) {
         <Reveal key={brand.slug} delayStep={index % 3}>
           <Link
             href={`/marchio/${brand.slug}`}
-            className="image-hover border-border-subtle hover:border-accent group relative block min-h-96 overflow-hidden border transition-colors"
+            className="image-hover product-packshot-frame border-border-subtle hover:border-accent group relative block min-h-96 overflow-hidden border transition-colors"
           >
             <Image
               src={brand.media.src}
               alt=""
               fill
               sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-              className="object-cover"
+              className="product-packshot pb-24"
               style={{ objectPosition: brand.media.position }}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-black/10" />
             <div className="absolute inset-x-0 bottom-0 p-6">
               <p className="text-accent text-[0.65rem] font-semibold tracking-[var(--letter-spacing-label)] uppercase">
-                {brand.country}
+                {brand.productCount}{" "}
+                {brand.productCount === 1 ? "etichetta" : "etichette"}
               </p>
               <div className="mt-2 flex items-end justify-between gap-4">
                 <div>

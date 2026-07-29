@@ -9,25 +9,30 @@
 - schema prezzi netti e RLS iniziale;
 - test, sicurezza e documentazione.
 
-## Milestone 1A — Esperienza frontend
+## Milestone 1A — Esperienza frontend e catalogo statico
 
 - homepage premium completa e responsive;
 - header, mega menu, ricerca e menu mobile;
 - catalogo, categorie, marchi e schede prodotto navigabili;
 - filtri desktop e mobile, ordinamento, stati vuoti e skeleton;
 - carrello, mini-carrello e wishlist con persistenza locale;
-- prodotti e prezzi netti reali selezionati dal listino, senza import automatico;
+- 2.124 prodotti e prezzi netti reali importati dal listino cliente;
+- 2.123 fotografie prodotto convertite in WebP full e thumbnail;
+- associazione esatta di tutte le righe catalogo alle immagini disponibili;
+- logo raster ufficiale e asset editoriali sostituibili;
+- newsletter, age gate e preference center cookie;
+- pagine Chi siamo, Contatti, Spedizioni e resi e bozze legali;
 - asset editoriali provvisori centralizzati e sostituibili;
-- test unitari, componenti ed E2E dei flussi principali;
 - nessun backend commerciale, account o ordine reale.
 
-## Milestone 1B — Catalogo con dati reali
+## Milestone 1B — Catalogo server-side
 
-- normalizzazione delle 105 sottocategorie;
-- pipeline di importazione verificabile;
-- validazione e deduplicazione dei 2.124 prodotti;
+- revisione dei 247 marchi estratti con confidenza ridotta;
+- validazione delle anomalie documentate nel report di importazione;
+- pipeline di aggiornamento ripetibile e verificabile;
 - collegamento delle UI esistenti a Supabase;
-- gestione immagini definitive, ricerca, filtri e paginazione server-side;
+- ricerca, filtri e paginazione server-side;
+- caricamento del catalogo per richiesta, senza indice globale nel client;
 - strategia cache e revalidation.
 
 ## Milestone 2 — Account e stato cliente

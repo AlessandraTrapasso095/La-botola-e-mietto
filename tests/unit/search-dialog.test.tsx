@@ -22,10 +22,10 @@ describe("ricerca catalogo", () => {
     await user.type(input, "Yamazaki");
     await waitFor(() =>
       expect(
-        screen.getByRole("link", { name: /Yamazaki 18 Years Old/ }),
+        screen.getByRole("link", { name: /Suntory Yamazaki 18 Y.O./ }),
       ).toBeVisible(),
     );
-    expect(screen.getByRole("heading", { name: "Marchi" })).toBeVisible();
+    expect(screen.getByRole("heading", { name: "Prodotti" })).toBeVisible();
 
     await user.clear(input);
     await user.type(input, "termine inesistente");
@@ -50,7 +50,7 @@ describe("ricerca catalogo", () => {
     await user.keyboard("{ArrowDown}");
     expect(
       screen.getByRole("link", {
-        name: /Scopri|The Macallan 12 Double Cask/,
+        name: /Scopri|The Macallan 12 Y.O. Double Cask/,
       }),
     ).toHaveFocus();
   });

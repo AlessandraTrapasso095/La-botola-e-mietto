@@ -21,6 +21,7 @@
   --color-surface: var(--color-graphite-850);
   --color-surface-elevated: var(--color-graphite-800);
   --color-surface-strong: var(--color-graphite-700);
+  --color-packshot: #e8e4dc;
   --color-text: var(--color-ivory-200);
   --color-text-strong: var(--color-ivory-100);
   --color-text-muted: var(--color-ivory-400);

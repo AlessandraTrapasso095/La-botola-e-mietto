@@ -16,14 +16,15 @@ export default function ShippingReturnsPage() {
   return (
     <LegalPage
       title="Spedizioni e resi"
-      intro="Riepilogo operativo provvisorio basato sulle informazioni fornite dal cliente."
+      intro="Informazioni essenziali sulla consegna delle bottiglie e sulla gestione dei resi."
     >
       <section>
         <Heading as="h2" size="md">
           Spedizioni in Italia
         </Heading>
         <Text tone="muted" className="mt-3">
-          Corriere indicato: {shippingConfig.courier}. Consegna indicativa entro{" "}
+          Le spedizioni vengono effettuate in Italia tramite corriere espresso{" "}
+          {shippingConfig.courier}. La consegna è indicativamente prevista entro{" "}
           {shippingConfig.indicativeDeliveryHoursFromDispatch} ore dalla
           spedizione, con imballaggio protettivo. Assicurazione disponibile su
           richiesta e previa quotazione.
@@ -38,19 +39,29 @@ export default function ShippingReturnsPage() {
           Resi
         </Heading>
         <Text tone="muted" className="mt-3">
-          Finestra indicativa di {shippingConfig.returnWindowDays} giorni per
-          bottiglie integre e sigillate. Eccezioni, costi, modalità di
-          autorizzazione e indirizzo di rientro devono essere validati.
+          Il reso può essere richiesto entro {shippingConfig.returnWindowDays}{" "}
+          giorni dall’acquisto per{" "}
+          {shippingConfig.returnCondition.toLowerCase()}, senza segni di
+          manomissione o danneggiamento.
         </Text>
+        <h3 className="text-text-strong mt-6 font-serif text-xl">Eccezioni</h3>
+        <ul className="text-text-muted mt-4 grid gap-3 pl-5 text-sm leading-relaxed">
+          {shippingConfig.returnExceptions.map((exception) => (
+            <li key={exception} className="list-disc">
+              {exception}
+            </li>
+          ))}
+        </ul>
       </section>
       <section>
         <Heading as="h2" size="md">
           Difetto da tappo
         </Heading>
         <Text tone="muted" className="mt-3">
-          È prevista una procedura specifica con conservazione di bottiglia,
-          contenuto residuo e tappo. Condizioni e rimedi devono essere
-          verificati prima della pubblicazione.
+          In caso di sospetto difetto da tappo è necessario contattarci prima di
+          eliminare il prodotto. {shippingConfig.corkDefectProcedure} In assenza
+          di questi elementi non sarà possibile procedere alle verifiche o alla
+          sostituzione.
         </Text>
       </section>
     </LegalPage>

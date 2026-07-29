@@ -17,7 +17,7 @@ describe("filtri catalogo", () => {
       onlyAvailable: true,
     });
 
-    expect(filtered.map((product) => product.slug)).toEqual(["caprisius-43"]);
+    expect(filtered.map((product) => product.slug)).toEqual(["caprisius"]);
   });
 
   it("filtra importi, capacità e gradazione usando valori numerici interi", () => {
@@ -28,7 +28,7 @@ describe("filtri catalogo", () => {
       alcoholRanges: ["over-40"],
     });
 
-    expect(filtered.map((product) => product.slug)).toEqual(["caprisius-43"]);
+    expect(filtered.map((product) => product.slug)).toEqual(["caprisius"]);
   });
 
   it("ordina per prezzo e priorità editoriale", () => {
@@ -37,12 +37,12 @@ describe("filtri catalogo", () => {
         (product) => product.slug,
       ),
     ).toEqual([
-      "caprisius-43",
-      "the-macallan-12-double-cask",
-      "yamazaki-18-years-old",
+      "caprisius",
+      "the-macallan-12-y-o-double-cask",
+      "suntory-yamazaki-18-y-o",
     ]);
     expect(
       sortCatalogProducts(catalogProductFixtures, "featured")[0]?.slug,
-    ).toBe("yamazaki-18-years-old");
+    ).toBe("suntory-yamazaki-18-y-o");
   });
 });

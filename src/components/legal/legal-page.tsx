@@ -35,8 +35,8 @@ export function LegalPage({ children, intro, title }: LegalPageProps) {
               Contenuto da validare e aggiornare prima della pubblicazione.
             </strong>
             <Text tone="muted" size="sm" className="mt-2">
-              La pagina è una struttura editoriale provvisoria e non costituisce
-              consulenza legale.
+              Le informazioni sono in revisione e non costituiscono consulenza
+              legale.
             </Text>
           </SiteNotice>
           <div className="legal-content grid gap-8">{children}</div>

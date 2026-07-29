@@ -6,6 +6,7 @@ import {
   ArrowRightIcon,
   CloseIcon,
   HeartIcon,
+  InstagramIcon,
   SearchIcon,
   UserIcon,
 } from "@/components/icons";
@@ -123,16 +124,72 @@ export function MobileNavigation({
               ))}
             </div>
           </div>
+
+          <nav aria-label="Informazioni" className="mt-9">
+            <p className="text-accent text-[0.65rem] font-semibold tracking-[var(--letter-spacing-label)] uppercase">
+              Boutique e assistenza
+            </p>
+            <ul className="mt-3 grid grid-cols-2 gap-x-5">
+              {[
+                { label: "Chi siamo", href: "/chi-siamo" },
+                { label: "Contatti", href: "/contatti" },
+                { label: "Spedizioni e resi", href: "/spedizioni-e-resi" },
+                { label: "Privacy", href: "/privacy-policy" },
+                { label: "Cookie", href: "/cookie-policy" },
+                { label: "Termini", href: "/termini-e-condizioni" },
+              ].map((link) => (
+                <li key={link.href} className="border-border-subtle border-b">
+                  <Link
+                    href={link.href}
+                    className="text-text-muted hover:text-accent-soft flex min-h-12 items-center text-sm"
+                    onClick={() => onOpenChange(false)}
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          <div className="mt-9 grid gap-3">
+            <a
+              href="https://www.instagram.com/labotolaemietto/"
+              target="_blank"
+              rel="noreferrer"
+              className="border-border-subtle hover:border-accent flex min-h-12 items-center justify-between border px-4 text-sm transition-colors"
+            >
+              Seguici su Instagram
+              <InstagramIcon className="size-5" />
+            </a>
+            <button
+              type="button"
+              className="border-border-subtle hover:border-accent min-h-12 border px-4 text-left text-sm transition-colors"
+              onClick={() => {
+                onOpenChange(false);
+                requestAnimationFrame(() =>
+                  window.dispatchEvent(
+                    new Event("lbm:open-cookie-preferences"),
+                  ),
+                );
+              }}
+            >
+              Modifica preferenze cookie
+            </button>
+            <p className="text-text-muted border-border-subtle border-t pt-5 text-xs leading-relaxed">
+              Vendita responsabile: l’accesso e l’acquisto di bevande alcoliche
+              sono riservati ai maggiori di 18 anni.
+            </p>
+          </div>
         </div>
 
-        <div className="border-border-subtle bg-surface grid grid-cols-2 border-t">
+        <div className="border-border-subtle bg-surface grid grid-cols-2 border-t pb-[env(safe-area-inset-bottom)]">
           <button
             type="button"
             className="border-border-subtle flex min-h-16 items-center justify-center gap-2 border-r text-xs font-semibold tracking-wide uppercase"
             onClick={() => onUtility("wishlist")}
           >
             <HeartIcon className="size-5" />
-            Wishlist
+            Preferiti
           </button>
           <button
             type="button"
@@ -140,7 +197,7 @@ export function MobileNavigation({
             onClick={() => onUtility("account")}
           >
             <UserIcon className="size-5" />
-            Account
+            Area personale
           </button>
         </div>
       </DialogContent>

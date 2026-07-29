@@ -1,4 +1,4 @@
-import type { CatalogProductView } from "@/content/catalog/types";
+import type { CatalogProductSummaryView } from "@/content/catalog/types";
 
 export type CatalogFilters = {
   brands: string[];
@@ -31,7 +31,10 @@ export const emptyCatalogFilters: CatalogFilters = {
   onlyAvailable: false,
 };
 
-function matchesPrice(product: CatalogProductView, ranges: readonly string[]) {
+function matchesPrice(
+  product: CatalogProductSummaryView,
+  ranges: readonly string[],
+) {
   if (ranges.length === 0) return true;
   return ranges.some((range) => {
     if (range === "under-30") return product.grossPriceMinor < 3_000;
@@ -48,20 +51,23 @@ function matchesPrice(product: CatalogProductView, ranges: readonly string[]) {
 }
 
 function matchesCapacity(
-  product: CatalogProductView,
+  product: CatalogProductSummaryView,
   capacities: readonly string[],
 ) {
   if (capacities.length === 0) return true;
+  if (product.capacityMl === null) return false;
+  const capacityMl = product.capacityMl;
+
   return capacities.some((capacity) => {
-    if (capacity === "small") return product.capacityMl <= 500;
-    if (capacity === "700") return product.capacityMl === 700;
-    if (capacity === "750") return product.capacityMl === 750;
-    return product.capacityMl >= 1000;
+    if (capacity === "small") return capacityMl <= 500;
+    if (capacity === "700") return capacityMl === 700;
+    if (capacity === "750") return capacityMl === 750;
+    return capacityMl >= 1000;
   });
 }
 
 function matchesAlcohol(
-  product: CatalogProductView,
+  product: CatalogProductSummaryView,
   ranges: readonly string[],
 ) {
   if (ranges.length === 0) return true;
@@ -77,7 +83,7 @@ function matchesAlcohol(
 }
 
 export function filterCatalogProducts(
-  products: readonly CatalogProductView[],
+  products: readonly CatalogProductSummaryView[],
   filters: CatalogFilters,
 ) {
   return products.filter(
@@ -87,7 +93,8 @@ export function filterCatalogProducts(
       (filters.categories.length === 0 ||
         filters.categories.includes(product.categorySlug)) &&
       (filters.countries.length === 0 ||
-        filters.countries.includes(product.country)) &&
+        (product.country !== null &&
+          filters.countries.includes(product.country))) &&
       matchesPrice(product, filters.priceRanges) &&
       matchesCapacity(product, filters.capacities) &&
       matchesAlcohol(product, filters.alcoholRanges) &&
@@ -98,7 +105,7 @@ export function filterCatalogProducts(
 }
 
 export function sortCatalogProducts(
-  products: readonly CatalogProductView[],
+  products: readonly CatalogProductSummaryView[],
   sort: CatalogSort,
 ) {
   return [...products].sort((left, right) => {

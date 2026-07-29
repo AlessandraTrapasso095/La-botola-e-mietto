@@ -34,12 +34,10 @@ describe("filtri catalogo mobile", () => {
 
     await waitFor(() => expect(dialog).not.toBeInTheDocument());
     expect(trigger).toHaveFocus();
-    expect(
-      screen.getByRole("heading", { name: "Caprisius 43 Gin" }),
-    ).toBeVisible();
+    expect(screen.getByRole("heading", { name: "Caprisius" })).toBeVisible();
     expect(
       screen.queryByRole("heading", {
-        name: "The Macallan 12 Double Cask",
+        name: "The Macallan 12 Y.O. Double Cask",
       }),
     ).not.toBeInTheDocument();
     expect(trigger).toHaveAccessibleName("Filtri (1)");

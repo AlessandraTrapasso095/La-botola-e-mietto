@@ -15,6 +15,10 @@ export function getProductBySlug(slug: string) {
 }
 
 export function getProductsByCategory(categorySlug: string) {
+  if (categorySlug === "bottiglie-rare") {
+    return catalogProducts.filter((product) => product.isLimited);
+  }
+
   return catalogProducts.filter(
     (product) => product.categorySlug === categorySlug,
   );

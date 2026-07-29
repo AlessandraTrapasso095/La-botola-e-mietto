@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
 
@@ -22,12 +22,20 @@ describe("carrello e spedizione gratuita", () => {
       grossPrice: "30,00 €",
     });
 
+    window.localStorage.setItem(
+      "lbm-demo-commerce",
+      JSON.stringify({ cart: { [product.slug]: 1 }, wishlist: [] }),
+    );
+
     render(
       <CommerceProvider products={[product]}>
         <CartPageContent />
       </CommerceProvider>,
     );
 
+    await waitFor(() =>
+      expect(screen.getByText(/Aggiungi 30,00 € per/)).toBeVisible(),
+    );
     expect(screen.getByText(/Aggiungi 30,00 € per/)).toBeVisible();
     await user.selectOptions(
       screen.getByLabelText(`Quantità di ${product.name}`),
@@ -51,7 +59,7 @@ describe("carrello e spedizione gratuita", () => {
     });
     expect(
       createCartSummary(
-        { cart: { "caprisius-43": 2 }, wishlist: [] },
+        { cart: { caprisius: 2 }, wishlist: [] },
         catalogProductFixtures,
       ).subtotalMinor,
     ).toBe(7_784);
@@ -62,18 +70,33 @@ describe("wishlist", () => {
   it("mostra la selezione persistente e permette la rimozione", async () => {
     const user = userEvent.setup();
 
+    window.localStorage.setItem(
+      "lbm-demo-commerce",
+      JSON.stringify({
+        cart: {},
+        wishlist: ["suntory-yamazaki-18-y-o"],
+      }),
+    );
+
     render(
       <CommerceProvider products={catalogProductFixtures}>
         <WishlistPageContent />
       </CommerceProvider>,
     );
 
+    await waitFor(() =>
+      expect(
+        screen.getByRole("heading", { name: "Suntory Yamazaki 18 Y.O." }),
+      ).toBeVisible(),
+    );
     expect(
-      screen.getByRole("heading", { name: "Yamazaki 18 Years Old" }),
+      screen.getByRole("button", {
+        name: "Rimuovi Suntory Yamazaki 18 Y.O. dai preferiti",
+      }),
     ).toBeVisible();
     await user.click(
       screen.getByRole("button", {
-        name: "Rimuovi Yamazaki 18 Years Old dai preferiti",
+        name: "Rimuovi Suntory Yamazaki 18 Y.O. dai preferiti",
       }),
     );
     expect(screen.getByText("Crea la tua collezione personale.")).toBeVisible();

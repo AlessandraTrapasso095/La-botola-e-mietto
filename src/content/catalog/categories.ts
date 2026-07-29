@@ -91,6 +91,24 @@ export const catalogCategories = [
     media: demoMedia.whiskyCellar,
   },
   {
+    slug: "brandy-distillati",
+    name: "Brandy e altri distillati",
+    shortName: "Brandy",
+    eyebrow: "Tradizioni internazionali",
+    description:
+      "Brandy, aquavit, pisco, aguardiente e distillati tradizionali selezionati dal catalogo.",
+    introduction:
+      "Una raccolta trasversale dedicata alle grandi tradizioni di distillazione europee e internazionali, ordinata per tipologia e stile.",
+    subcategories: [
+      "Brandy Europeo",
+      "Brandy Italiano",
+      "Aquavit / Akvavit",
+      "Pisco",
+      "Distillati Tradizionali - Altri",
+    ],
+    media: demoMedia.curation,
+  },
+  {
     slug: "tequila-mezcal",
     name: "Tequila e Mezcal",
     shortName: "Agave",

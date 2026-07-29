@@ -1,11 +1,9 @@
-export const demoCartLines = [
-  {
-    productSlug: "the-macallan-12-double-cask",
-    quantity: 1,
-  },
-] as const;
+export const demoCartLines: readonly {
+  productSlug: string;
+  quantity: number;
+}[] = [];
 
-export const demoWishlistSlugs = ["yamazaki-18-years-old"] as const;
+export const demoWishlistSlugs: readonly string[] = [];
 
 export const catalogBanners = {
   catalog: {

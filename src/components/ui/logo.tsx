@@ -27,10 +27,10 @@ export function Logo({
       <Image
         src={brandAssets.compactLogo}
         alt=""
-        width={40}
-        height={40}
+        width={98}
+        height={60}
         priority={priority}
-        className="size-9"
+        className="h-9 w-auto shrink-0"
       />
       {compact ? null : (
         <span

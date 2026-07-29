@@ -39,13 +39,13 @@ describe("ProductCard", () => {
         name: `Aggiungi ${product.name} ai preferiti`,
       }),
     );
-    expect(screen.getByText(/preferiti 2/)).toBeVisible();
+    expect(screen.getByText(/preferiti 1/)).toBeVisible();
 
     await user.click(
       screen.getByRole("button", {
         name: `Aggiungi ${product.name} al carrello`,
       }),
     );
-    expect(screen.getByText(/Carrello 2/)).toBeVisible();
+    expect(screen.getByText(/Carrello 1/)).toBeVisible();
   });
 });

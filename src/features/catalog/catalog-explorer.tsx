@@ -13,7 +13,7 @@ import {
 import { IconButton } from "@/components/ui/icon-button";
 import type {
   CatalogCategory,
-  CatalogProductView,
+  CatalogProductSummaryView,
 } from "@/content/catalog/types";
 import {
   emptyCatalogFilters,
@@ -39,7 +39,7 @@ export function CatalogExplorer({
   categories,
   fixedCategory,
 }: {
-  products: readonly CatalogProductView[];
+  products: readonly CatalogProductSummaryView[];
   categories: readonly CatalogCategory[];
   fixedCategory?: string;
 }) {
@@ -64,7 +64,13 @@ export function CatalogExplorer({
         value: category.slug,
         label: category.name,
       })),
-      countries: [...new Set(products.map((product) => product.country))]
+      countries: [
+        ...new Set(
+          products
+            .map((product) => product.country)
+            .filter((country): country is string => Boolean(country)),
+        ),
+      ]
         .sort((left, right) => left.localeCompare(right, "it"))
         .map((country) => ({ value: country, label: country })),
     };
@@ -82,6 +88,14 @@ export function CatalogExplorer({
     (page - 1) * productsPerPage,
     page * productsPerPage,
   );
+  const visiblePageNumbers = [1, page - 1, page, page + 1, totalPages]
+    .filter(
+      (pageNumber, index, pageNumbers) =>
+        pageNumber >= 1 &&
+        pageNumber <= totalPages &&
+        pageNumbers.indexOf(pageNumber) === index,
+    )
+    .sort((left, right) => left - right);
   const activeFilterCount =
     filters.brands.length +
     filters.priceRanges.length +
@@ -192,7 +206,7 @@ export function CatalogExplorer({
         {visibleProducts.length > 0 ? (
           <div className="mt-8 grid grid-cols-2 gap-x-4 gap-y-12 md:grid-cols-3 xl:gap-x-6">
             {visibleProducts.map((product) => (
-              <ProductCard key={product.code} product={product} />
+              <ProductCard key={product.slug} product={product} />
             ))}
           </div>
         ) : (
@@ -216,14 +230,29 @@ export function CatalogExplorer({
         {filteredProducts.length > productsPerPage ? (
           <nav
             aria-label="Paginazione catalogo"
-            className="border-border-subtle mt-14 flex items-center justify-center gap-2 border-t pt-8"
+            className="border-border-subtle mt-14 flex flex-wrap items-center justify-center gap-2 border-t pt-8"
           >
-            {Array.from({ length: totalPages }, (_, index) => index + 1).map(
-              (pageNumber) => (
+            <button
+              type="button"
+              disabled={page === 1}
+              className="border-border-subtle min-h-11 border px-4 text-sm disabled:opacity-[var(--opacity-disabled)]"
+              onClick={() => setPage((current) => Math.max(1, current - 1))}
+            >
+              Precedente
+            </button>
+            {visiblePageNumbers.map((pageNumber, index) => (
+              <div key={pageNumber} className="contents">
+                {index > 0 &&
+                pageNumber - (visiblePageNumbers[index - 1] ?? pageNumber) >
+                  1 ? (
+                  <span className="text-text-muted px-1" aria-hidden="true">
+                    …
+                  </span>
+                ) : null}
                 <button
-                  key={pageNumber}
                   type="button"
                   aria-current={pageNumber === page ? "page" : undefined}
+                  aria-label={`Pagina ${pageNumber}`}
                   className="border-border-subtle aria-[current=page]:border-accent aria-[current=page]:text-accent min-h-11 min-w-11 border px-3 text-sm transition-colors"
                   onClick={() => {
                     setPage(pageNumber);
@@ -232,8 +261,18 @@ export function CatalogExplorer({
                 >
                   {pageNumber}
                 </button>
-              ),
-            )}
+              </div>
+            ))}
+            <button
+              type="button"
+              disabled={page === totalPages}
+              className="border-border-subtle min-h-11 border px-4 text-sm disabled:opacity-[var(--opacity-disabled)]"
+              onClick={() =>
+                setPage((current) => Math.min(totalPages, current + 1))
+              }
+            >
+              Successiva
+            </button>
           </nav>
         ) : null}
       </div>

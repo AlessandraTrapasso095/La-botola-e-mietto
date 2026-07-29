@@ -1,0 +1,1396 @@
+{
+  "generatedAt": "2026-07-29T10:28:54.872Z",
+  "sourceWorkbook": "reference-private/catalog/listino_completo_la_botola.xlsx",
+  "totalProductsImported": 2124,
+  "sourceImages": 2123,
+  "imagesAssociatedAutomatically": 2124,
+  "imagesMissing": 0,
+  "imagesDoubtful": 0,
+  "imageProcessingErrors": [],
+  "productsWithoutSourceDescription": ["AB3614", "AB1239", "AB1329"],
+  "productsWithoutSubcategory": [
+    "AB0954",
+    "AB2425",
+    "AB3390",
+    "AB1211",
+    "AB5296",
+    "AB1283",
+    "AB6826",
+    "AB5538",
+    "AB0072",
+    "AB0056",
+    "AB6355",
+    "AB2283",
+    "AB1134",
+    "AB2380",
+    "AB5566",
+    "AB4749"
+  ],
+  "productsWithoutAlcoholPercentage": [
+    "AB2727",
+    "AB2726",
+    "AB6835",
+    "AB4320",
+    "AB5158",
+    "AB5836",
+    "AB5837",
+    "AB1222",
+    "AB4850",
+    "AB4771",
+    "AB6307",
+    "AB6309",
+    "AB6308",
+    "AB6635",
+    "AB6771",
+    "AB6206",
+    "AB6205",
+    "AB5477",
+    "AB3341",
+    "AB4179",
+    "AB1321",
+    "AB6170",
+    "AB6260",
+    "AB5375",
+    "AB1701",
+    "AB1170"
+  ],
+  "capacitiesToReview": [
+    {
+      "code": "AB6707",
+      "product": "GIFT VODKA CALM HEAD BLACK 40% + 2 BICC.",
+      "sourceCapacity": "40cl"
+    },
+    {
+      "code": "AB2179",
+      "product": "GIFT IRISH WHISKEY CLONTARF 40% 3*200+3BICCHIERI",
+      "sourceCapacity": "40cl"
+    },
+    {
+      "code": "AB6508",
+      "product": "GIFT IRISH WHISKEY SHANKYS WHIP BLACK LIQUEUR 33% +4 SHOT CT*6 **NEW**",
+      "sourceCapacity": "33cl"
+    },
+    {
+      "code": "AB6228",
+      "product": "GIFT IRISH WHISKEY TEELING SMALL BATCH 46% +2BICCHIERI CT*4",
+      "sourceCapacity": "46cl"
+    },
+    {
+      "code": "AB1321",
+      "product": "GIFT RUM DIPLOMATICO EXCLUSIVA 12 YO +2BICCHIERI CT*3",
+      "sourceCapacity": "12cl"
+    },
+    {
+      "code": "AB6170",
+      "product": "GIFT RUM DIPLOMATICO SELECCION DE FAMILIA +2BICCHIERI CT*6",
+      "sourceCapacity": "2cl"
+    },
+    {
+      "code": "AB1699",
+      "product": "GIFT RUM DON PAPA BAROKO 40% +1FIASCHETTA CT*6",
+      "sourceCapacity": "40cl"
+    },
+    {
+      "code": "AB4280",
+      "product": "GIFT RUM NAGA 40% +2 BICCHIERI",
+      "sourceCapacity": "40cl"
+    },
+    {
+      "code": "AB3659",
+      "product": "GIFT RUM PLANTATION XO 20 ANNIVERSARY 40%+2 BICC. CT*5",
+      "sourceCapacity": "20cl"
+    },
+    {
+      "code": "AB6489",
+      "product": "GIFT RUM RYOMA JAPANESE 40%+2 BICC. CT*5 **NEW**",
+      "sourceCapacity": "40cl"
+    },
+    {
+      "code": "AB6260",
+      "product": "GIFT GIN AMUERTE *METAL BOX*  VUOTO +2BICCHIERI CT*6 **NEW**",
+      "sourceCapacity": "2cl"
+    },
+    {
+      "code": "AB6252",
+      "product": "GIFT SCOTCH WHISKY HIGHLAND PARK 10 Y.O. 40% +2BICCHIERI CT*6 **NEW**",
+      "sourceCapacity": "10cl"
+    },
+    {
+      "code": "AB1308",
+      "product": "GIFT SCOTCH WHISKY JOHNNIE WALKER BLACK 12 Y.O. 40% +2BICCHIERI",
+      "sourceCapacity": "12cl"
+    },
+    {
+      "code": "AB1280",
+      "product": "GIFT SCOTCH WHISKY KNOCKANDO 18 YO 43% +2BICCHIERI CT*6",
+      "sourceCapacity": "18cl"
+    },
+    {
+      "code": "AB0545",
+      "product": "GIFT LIQUORE ACHOUFFE COFFEE 20% 70c+2B CT*3",
+      "sourceCapacity": "20cl"
+    },
+    {
+      "code": "AB6470",
+      "product": "GIFT LIQUORE ACHOUFFE CREAM 20% 70cl +2B CT*3 **NEW**",
+      "sourceCapacity": "20cl"
+    }
+  ],
+  "brandsToReview": [
+    {
+      "code": "AB6735",
+      "product": "0500 DISTILLATO AGAVESANTA 40% CT*6 **NEW**",
+      "importedBrand": "Agavesanta"
+    },
+    {
+      "code": "AB6085",
+      "product": "0700 DISTILLATO YENI RAKY 45% CT*6 (TURCHIA)",
+      "importedBrand": "Yeni"
+    },
+    {
+      "code": "AB2903",
+      "product": "0700 VODKA 42 BELOW 40%",
+      "importedBrand": "42"
+    },
+    {
+      "code": "AB1404",
+      "product": "0700 VODKA ABNORMAL 40%",
+      "importedBrand": "Abnormal"
+    },
+    {
+      "code": "AB6837",
+      "product": "0700 VODKA AK47 ABSOLUTE STANDARD 38% GB CT*6 **NEW**",
+      "importedBrand": "Ak47"
+    },
+    {
+      "code": "AB6114",
+      "product": "0700 VODKA BISTRO 40% CT*6 **NEW**",
+      "importedBrand": "Bistro"
+    },
+    {
+      "code": "AB4230",
+      "product": "1000 VODKA BLAVOD PURE BLACK 40% 1 LITER",
+      "importedBrand": "Blavod"
+    },
+    {
+      "code": "AB0547",
+      "product": "0700 VODKA BLUE 42 LUXURY SMOOTH 42%",
+      "importedBrand": "Blue"
+    },
+    {
+      "code": "AB1405",
+      "product": "0700 VODKA CIROC 40%",
+      "importedBrand": "Ciroc"
+    },
+    {
+      "code": "AB3983",
+      "product": "0700 VODKA DIAMOND STANDARD 40%  **NEW**",
+      "importedBrand": "Diamond"
+    },
+    {
+      "code": "AB2599",
+      "product": "0700 VODKA DRUMSHAMBO SAUSAGE TREE 43% CT*6  **NEW**",
+      "importedBrand": "Drumshambo"
+    },
+    {
+      "code": "AB3660",
+      "product": "0700 VODKA IMPAVID LUXURY 40% GBOX CT*6",
+      "importedBrand": "Impavid"
+    },
+    {
+      "code": "AB4481",
+      "product": "0700 VODKA KARLSSON'S GOLD 40%",
+      "importedBrand": "Karlsson's"
+    },
+    {
+      "code": "AB1743",
+      "product": "0700 VODKA KETEL ONE 40%",
+      "importedBrand": "Ketel"
+    },
+    {
+      "code": "AB1216",
+      "product": "1000 VODKA LOUERS 40% WITH LIGHT CT*4",
+      "importedBrand": "Louers"
+    },
+    {
+      "code": "AB5137",
+      "product": "0100 VODKA MAKAROV PISTOLA ABSOLUT STANDARD 38% GB CT*6 **NEW**",
+      "importedBrand": "Makarov"
+    },
+    {
+      "code": "AB1221",
+      "product": "0700 VODKA MAMONT 40% CT*6",
+      "importedBrand": "Mamont"
+    },
+    {
+      "code": "AB5522",
+      "product": "0700 VODKA OUTERSPACE ALIEN 40% CT*6  **NEW**",
+      "importedBrand": "Outerspace"
+    },
+    {
+      "code": "AB6388",
+      "product": "1000 VODKA PERFEKTA 40% CT*6 **NEW**",
+      "importedBrand": "Perfekta"
+    },
+    {
+      "code": "AB3366",
+      "product": "0700 VODKA PRAVDA 40%  **NEW**",
+      "importedBrand": "Pravda"
+    },
+    {
+      "code": "AB0845",
+      "product": "0700 VODKA ROYAL DRAGON IMPERIAL 40%+GBOX",
+      "importedBrand": "Royal"
+    },
+    {
+      "code": "AB4221",
+      "product": "1500 VODKA VKA ORGANIC BIO 40% MAGNUM",
+      "importedBrand": "Vka"
+    },
+    {
+      "code": "AB3133",
+      "product": "0700 VODKA XELLENT SWISS VODKA 40%",
+      "importedBrand": "Xellent"
+    },
+    {
+      "code": "AB5136",
+      "product": "0500 VODKA ZLATOGOR M16 \"MITRA\" 38% GBOX",
+      "importedBrand": "Zlatogor"
+    },
+    {
+      "code": "AB0115",
+      "product": "0700 GIN 135° EAST HYOGO DRY 42% CT*6",
+      "importedBrand": "135°"
+    },
+    {
+      "code": "AB6232",
+      "product": "0500 GIN 4ME 45% GBOX CT*6",
+      "importedBrand": "4ME"
+    },
+    {
+      "code": "AB3130",
+      "product": "0700 GIN 9 MASCARO' 40% CT*6",
+      "importedBrand": "9"
+    },
+    {
+      "code": "AB4332",
+      "product": "0700 GIN ALKKEMIST 40% CT*6",
+      "importedBrand": "Alkkemist"
+    },
+    {
+      "code": "AB5441",
+      "product": "0700 GIN AMAZONIAN GIN COMPANY 41% CT*6",
+      "importedBrand": "Amazonian"
+    },
+    {
+      "code": "AB6189",
+      "product": "0700 GIN BACUR BOTTEGA 40% CT*6",
+      "importedBrand": "Bacur"
+    },
+    {
+      "code": "AB1726",
+      "product": "0700 GIN BOE  41.5% CT*6",
+      "importedBrand": "Boe"
+    },
+    {
+      "code": "AB1860",
+      "product": "0700 GIN BOODLES 40% CT*6",
+      "importedBrand": "Boodles"
+    },
+    {
+      "code": "AB1684",
+      "product": "0700 GIN BROKER'S LONDON DRY 40% CT*6",
+      "importedBrand": "Broker's"
+    },
+    {
+      "code": "AB1746",
+      "product": "0700 GIN BROOKLYN 40% CT*6",
+      "importedBrand": "Brooklyn"
+    },
+    {
+      "code": "AB1816",
+      "product": "1000 GIN BULLDOG 40% 1 LITER CT*6",
+      "importedBrand": "Bulldog"
+    },
+    {
+      "code": "AB5288",
+      "product": "0700 GIN CANNABIS SATIVA 40% CT*6",
+      "importedBrand": "Cannabis"
+    },
+    {
+      "code": "AB0544",
+      "product": "0700 GIN CROSS KEYS 41% CT*6",
+      "importedBrand": "Cross"
+    },
+    {
+      "code": "AB6324",
+      "product": "0700 GIN DEI SOSPIRI 40% CT*6",
+      "importedBrand": "Dei"
+    },
+    {
+      "code": "AB0516",
+      "product": "0700 GIN DR. SQUID 40% CT*24",
+      "importedBrand": "Dr."
+    },
+    {
+      "code": "AB6440",
+      "product": "0700 GIN EDEN MILL LOVE 40% CT*6",
+      "importedBrand": "Eden"
+    },
+    {
+      "code": "AB3404",
+      "product": "0700 GIN GASTRO GIN&JONNIE 45% CT*6",
+      "importedBrand": "Gastro"
+    },
+    {
+      "code": "AB3224",
+      "product": "0700 GIN GERANIUM 44% CT*6",
+      "importedBrand": "Geranium"
+    },
+    {
+      "code": "AB6099",
+      "product": "0700 GIN GINEPRAIO ORGANIC TUSCAN DRY BIO 45%",
+      "importedBrand": "Ginepraio"
+    },
+    {
+      "code": "AB2182",
+      "product": "0700 GIN GINIU 40%  CT*4   SARDO IN WOODEN BOX",
+      "importedBrand": "Giniu"
+    },
+    {
+      "code": "AB4241",
+      "product": "0700 GIN GINRAW 42.3% CT*6",
+      "importedBrand": "Ginraw"
+    },
+    {
+      "code": "AB3407",
+      "product": "0700 GIN GRANIT BAVARIAN BIO 42% CT*6",
+      "importedBrand": "Granit"
+    },
+    {
+      "code": "AB4430",
+      "product": "0700 GIN GREENALS 37.5% CT*6",
+      "importedBrand": "Greenals"
+    },
+    {
+      "code": "AB5198",
+      "product": "0700 GIN HAPUSA HIMALAYAN DRY 43% CT*6",
+      "importedBrand": "Hapusa"
+    },
+    {
+      "code": "AB4925",
+      "product": "0700 GIN HASTINGS 1066 LONDON 40% CT*6",
+      "importedBrand": "Hastings"
+    },
+    {
+      "code": "AB3118",
+      "product": "0700 GIN HASWELL 47% CT*6",
+      "importedBrand": "Haswell"
+    },
+    {
+      "code": "AB6670",
+      "product": "0700 GIN HAYMANS CLEMENTINE 23KT GOLD 20% CT*6",
+      "importedBrand": "Haymans"
+    },
+    {
+      "code": "AB4704",
+      "product": "0700 GIN HENDRICKS FLORA ADORA 43.4% CT*6",
+      "importedBrand": "Hendricks"
+    },
+    {
+      "code": "AB3444",
+      "product": "0700 GIN HILLS & HARBOUR 40% CT*6",
+      "importedBrand": "Hills & Harbour"
+    },
+    {
+      "code": "AB6691",
+      "product": "0500 GIN HOLYWATERGIN 42,5% CT*6 **NEW**",
+      "importedBrand": "Holywatergin"
+    },
+    {
+      "code": "AB4004",
+      "product": "0700 GIN IMPAVID LUXURY 40% GBOX CT*6",
+      "importedBrand": "Impavid"
+    },
+    {
+      "code": "AB5736",
+      "product": "0700 GIN ISLE OF HARRIS 45% CT*6",
+      "importedBrand": "Isle"
+    },
+    {
+      "code": "AB4123",
+      "product": "0700 GIN JAWBOX DRY OF BELFAST 43% CT*6",
+      "importedBrand": "Jawbox"
+    },
+    {
+      "code": "AB6435",
+      "product": "0500 GIN KAIZA 5 43% CT*6",
+      "importedBrand": "Kaiza"
+    },
+    {
+      "code": "AB6748",
+      "product": "1000 GIN LARIOS DRY 37.5%  CT*6 **NEW**",
+      "importedBrand": "Larios"
+    },
+    {
+      "code": "AB5635",
+      "product": "0700 GIN LIND & LIME 44% CT*6",
+      "importedBrand": "Lind & Lime"
+    },
+    {
+      "code": "AB6117",
+      "product": "0500 GIN LUPULUS 40% CT*6",
+      "importedBrand": "Lupulus"
+    },
+    {
+      "code": "AB1664",
+      "product": "0700 GIN MACARONESIAN  37.5% CT*6",
+      "importedBrand": "Macaronesian"
+    },
+    {
+      "code": "AB1707",
+      "product": "0700 GIN MAGELLAN BLUE 44% CT*6",
+      "importedBrand": "Magellan"
+    },
+    {
+      "code": "AB2909",
+      "product": "0700 GIN MCQUEEN VIOLET FOG 40% CT*6",
+      "importedBrand": "Mcqueen"
+    },
+    {
+      "code": "AB5915",
+      "product": "0700 GIN MINTIS ORIGINALE 41.8%  **NEW**",
+      "importedBrand": "Mintis"
+    },
+    {
+      "code": "AB0102",
+      "product": "1000 GIN MOM 39.5% 1 LITER CRT*6",
+      "importedBrand": "Mom"
+    },
+    {
+      "code": "AB0249",
+      "product": "0700 GIN N.3 LONDON DRY 46% CT*6",
+      "importedBrand": "N.3"
+    },
+    {
+      "code": "AB2899",
+      "product": "0700 GIN NOLET'S SILVER DRY 47.6% CT*4",
+      "importedBrand": "Nolet's"
+    },
+    {
+      "code": "AB1727",
+      "product": "0700 GIN ONE KEY 40% CT*6",
+      "importedBrand": "One"
+    },
+    {
+      "code": "AB6561",
+      "product": "0700 GIN P.A./311 40% CT*6 **NEW**",
+      "importedBrand": "P.a./311"
+    },
+    {
+      "code": "AB3219",
+      "product": "0700 GIN PINK 47 47% CT*6",
+      "importedBrand": "Pink"
+    },
+    {
+      "code": "AB6311",
+      "product": "0700 GIN RAASAY 46% CT*6",
+      "importedBrand": "Raasay"
+    },
+    {
+      "code": "AB3121",
+      "product": "0700 GIN SAFFRON 40% CT*6",
+      "importedBrand": "Saffron"
+    },
+    {
+      "code": "AB5841",
+      "product": "0700 GIN SAIGON BAIGUR PREMIUM DRY 43% CT*6 **NEW**",
+      "importedBrand": "Saigon"
+    },
+    {
+      "code": "AB0926",
+      "product": "0700 GIN SEA 40% CT*6",
+      "importedBrand": "Sea"
+    },
+    {
+      "code": "AB1624",
+      "product": "0500 GIN SIX RAVENS LONDON DRY 46% CT*6",
+      "importedBrand": "Six"
+    },
+    {
+      "code": "AB6842",
+      "product": "0700 GIN STILL 42.5% CT*6 **NEW**",
+      "importedBrand": "Still"
+    },
+    {
+      "code": "AB5924",
+      "product": "0500 GIN SUL 43%",
+      "importedBrand": "Sul"
+    },
+    {
+      "code": "AB3054",
+      "product": "0700 GIN TANN'S 40% CT*6",
+      "importedBrand": "Tann's"
+    },
+    {
+      "code": "AB4747",
+      "product": "0500 GIN TONKA ITALIA 2021 47% CT*6",
+      "importedBrand": "Tonka"
+    },
+    {
+      "code": "AB5599",
+      "product": "0500 GIN TROPEZ 40% CT*6",
+      "importedBrand": "Tropez"
+    },
+    {
+      "code": "AB3441",
+      "product": "0700 GIN TWISTED NOSE 40% CT*6  **NEW**",
+      "importedBrand": "Twisted"
+    },
+    {
+      "code": "AB1858",
+      "product": "0700 GIN UNGAVA 43.1% CT*6",
+      "importedBrand": "Ungava"
+    },
+    {
+      "code": "AB1595",
+      "product": "0700 GIN UPPERCUT 49.6% CT*6",
+      "importedBrand": "Uppercut"
+    },
+    {
+      "code": "AB6375",
+      "product": "0500 GIN UPPERHAND IRISH GIN 40% CT*6",
+      "importedBrand": "Upperhand"
+    },
+    {
+      "code": "AB4039",
+      "product": "0700 GIN VOR ISLANDA 47%  CT*6",
+      "importedBrand": "Vor"
+    },
+    {
+      "code": "AB4803",
+      "product": "0500 GIN WINDSPIEL PREMIUM DRY 47% CT*6",
+      "importedBrand": "Windspiel"
+    },
+    {
+      "code": "AB0457",
+      "product": "0700 GIN WINT & LILA 40% CT*6",
+      "importedBrand": "Wint & Lila"
+    },
+    {
+      "code": "AB5793",
+      "product": "0700 GIN YU 43% CT*6",
+      "importedBrand": "Yu"
+    },
+    {
+      "code": "AB0517",
+      "product": "0700 RUM A.H. RIISE NON PLUS ULTRA BLACK EDITION 42% GBOX **NEW**",
+      "importedBrand": "A.h."
+    },
+    {
+      "code": "AB6516",
+      "product": "0700 RUM A.H. RIISE NON PLUS ULTRA LA GALANTE 43.4% GBOX **NEW**",
+      "importedBrand": "A.h."
+    },
+    {
+      "code": "AB2549",
+      "product": "0700 RUM A.H. RIISE NON PLUS ULTRA VERY RARE 42% GBOX **NEW**",
+      "importedBrand": "A.h."
+    },
+    {
+      "code": "AB6774",
+      "product": "0700 RUM BELIZEAN BLUE RARE BLEND 48% GB CT*6 **NEW**",
+      "importedBrand": "Belizean"
+    },
+    {
+      "code": "AB5323",
+      "product": "0700 RUM BOUKMAN 45% CT*6",
+      "importedBrand": "Boukman"
+    },
+    {
+      "code": "AB6574",
+      "product": "0700 RUM CAB RON TRIPLE OAK SHERRY CASK FINISHED 40% CT*6 **NEW**",
+      "importedBrand": "Cab"
+    },
+    {
+      "code": "AB6603",
+      "product": "0700 RUM EMINENTE 10Y.O. 43.5% CT*6 **NEW**",
+      "importedBrand": "Eminente"
+    },
+    {
+      "code": "AB5946",
+      "product": "0700 RUM EQUIANO LIGHT 43% CT*6 **NEW**",
+      "importedBrand": "Equiano"
+    },
+    {
+      "code": "AB4705",
+      "product": "1000 RUM GOSLINGS BLACK SEAL 40% 1 LITER CT*6",
+      "importedBrand": "Goslings"
+    },
+    {
+      "code": "AB6046",
+      "product": "0700 RUM KONG 40% CERAMIC GB CT*4",
+      "importedBrand": "Kong"
+    },
+    {
+      "code": "AB5213",
+      "product": "0700 RUM MIRACIELO RESERVA ESPECIAL 38% CT*6",
+      "importedBrand": "Miracielo"
+    },
+    {
+      "code": "AB4854",
+      "product": "1000 RUM MYERS'S ORIGINAL DARK 40% CT*12",
+      "importedBrand": "Myers's"
+    },
+    {
+      "code": "AB4447",
+      "product": "1000 RUM POTT 54% 1 LITER CT*6",
+      "importedBrand": "Pott"
+    },
+    {
+      "code": "AB2340",
+      "product": "0700 RUM PYRAT X.O. RESERVE 40% SENZA ASTUCCIO",
+      "importedBrand": "Pyrat"
+    },
+    {
+      "code": "AB4133",
+      "product": "0700 RUM R.L. SEALE'S BARBADOS 10 Y.O. 46% CT*6",
+      "importedBrand": "R.l."
+    },
+    {
+      "code": "AB1227",
+      "product": "0700 RUM SMITH AND CROSS 57% CT*6",
+      "importedBrand": "Smith"
+    },
+    {
+      "code": "AB6273",
+      "product": "0700 RUM TROIS RIVIERES VSOP 40% GB CT*6 **NEW**",
+      "importedBrand": "Trois"
+    },
+    {
+      "code": "AB4590",
+      "product": "0500 RUM UNHIQ XO 42% CT*6",
+      "importedBrand": "Unhiq"
+    },
+    {
+      "code": "AB1594",
+      "product": "0700 RUM WRAY & NEPHEW OVERPROOF 63% CT*6 **NEW**",
+      "importedBrand": "Wray & Nephew"
+    },
+    {
+      "code": "AB6560",
+      "product": "0700 LIQUORE \"Z\" PISTACCHIO 20% CT*6 **NEW**",
+      "importedBrand": "\"z\""
+    },
+    {
+      "code": "AB6526",
+      "product": "0700 LIQUORE 24KT CREMA AL CIOCCOLATO E GRAPPA 17% CT*6 **NEW**",
+      "importedBrand": "24KT"
+    },
+    {
+      "code": "AB6662",
+      "product": "1000 LIQUORE AGWA DE BOLIVIA COCA LEAF 30%",
+      "importedBrand": "Agwa De Bolivia"
+    },
+    {
+      "code": "AB4482",
+      "product": "0700 LIQUORE AGWA DE BOLIVIA COCA LEAF 30%",
+      "importedBrand": "Agwa De Bolivia"
+    },
+    {
+      "code": "AB1568",
+      "product": "0075 LIQUORE AMARGO CHUNCHO COCKTAIL BITTER 40% CT*24",
+      "importedBrand": "Amargo"
+    },
+    {
+      "code": "AB1329",
+      "product": "1000 LIQUORE AVERNA AMARO SICILIANO 29 % LITRO*6 BT",
+      "importedBrand": "Averna"
+    },
+    {
+      "code": "AB6827",
+      "product": "1000 LIQUORE BAILEYS 17% LITRO CT*6 **NEW**",
+      "importedBrand": "Baileys"
+    },
+    {
+      "code": "AB6198",
+      "product": "0700 LIQUORE BORSCI ELISIR SAN MARZANO 38%  CT*6",
+      "importedBrand": "Borsci"
+    },
+    {
+      "code": "AB5003",
+      "product": "1000 LIQUORE CAMPARI BITTER 25% CT*12",
+      "importedBrand": "Campari"
+    },
+    {
+      "code": "AB1715",
+      "product": "0500 LIQUORE CHAMBORD 16.5% GB CT*6",
+      "importedBrand": "Chambord"
+    },
+    {
+      "code": "AB2109",
+      "product": "0700 LIQUORE CHERRY HEERING 24% CT*6",
+      "importedBrand": "Cherry"
+    },
+    {
+      "code": "AB3442",
+      "product": "0700 LIQUORE CORDIALE 40% CT*6",
+      "importedBrand": "Cordiale"
+    },
+    {
+      "code": "AB5893",
+      "product": "0700 LIQUORE ELLENOR ELDERFLOWER SAMBUCO 18% CT*6  **NEW**",
+      "importedBrand": "Ellenor"
+    },
+    {
+      "code": "AB6583",
+      "product": "0700 LIQUORE FIVE FARMS IRISH CREAM 17% CT*9 **NEW**",
+      "importedBrand": "Five"
+    },
+    {
+      "code": "AB6425",
+      "product": "1000 LIQUORE FRANGELICO 20% LITRO CT*12 **NEW**",
+      "importedBrand": "Frangelico"
+    },
+    {
+      "code": "AB6190",
+      "product": "0700 LIQUORE GECKO CARAMEL LIQUEUR 27% CT*6 **NEW**",
+      "importedBrand": "Gecko"
+    },
+    {
+      "code": "AB5321",
+      "product": "0700 LIQUORE HENRI BARDOUIN PASTIS 45% CT*6",
+      "importedBrand": "Henri"
+    },
+    {
+      "code": "AB5800",
+      "product": "0700 LIQUORE ITALICUS 20% CT*6 **NEW**",
+      "importedBrand": "Italicus"
+    },
+    {
+      "code": "AB6096",
+      "product": "1000 LIQUORE KAHLUA 16% LITRO **NEW** CT*6",
+      "importedBrand": "Kahlua"
+    },
+    {
+      "code": "AB5013",
+      "product": "0700 LIQUORE KINOBAI PLUM AND BERRY 29.5% GBOX CT*6",
+      "importedBrand": "Kinobai"
+    },
+    {
+      "code": "AB6400",
+      "product": "0700 LIQUORE KULTU GINJA 18% CT*6 **NEW**",
+      "importedBrand": "Kultu"
+    },
+    {
+      "code": "AB6078",
+      "product": "0700 LIQUORE LAMARO CAFFE' E MENTA LUXURY 25% AMARO ITALIANO CT*6 **NEW**",
+      "importedBrand": "Lamaro"
+    },
+    {
+      "code": "AB6199",
+      "product": "0700 LIQUORE LIMONCINO PORTOFINO 30%  CT*6",
+      "importedBrand": "Limoncino"
+    },
+    {
+      "code": "AB5963",
+      "product": "0700 LIQUORE MANDARINE NAPOLEN 38% CT*6",
+      "importedBrand": "Mandarine"
+    },
+    {
+      "code": "AB6646",
+      "product": "1000 LIQUORE MANGAROCA BATIDA DE COCO 16% LITER CT*6 **NEW**",
+      "importedBrand": "Mangaroca"
+    },
+    {
+      "code": "AB0566",
+      "product": "1000 LIQUORE MIDORI 20% LITER CRT*12",
+      "importedBrand": "Midori"
+    },
+    {
+      "code": "AB3927",
+      "product": "0700 LIQUORE MIRTO DI SARDEGNA ZEDDA PIRAS 32% CT*6",
+      "importedBrand": "Mirto DI Sardegna"
+    },
+    {
+      "code": "AB5640",
+      "product": "1000 LIQUORE P31 APERITIVO GREEN 11% CT*6 **NEW**",
+      "importedBrand": "P31"
+    },
+    {
+      "code": "AB5834",
+      "product": "1000 LIQUORE PASTIS 51 45% **NEW**",
+      "importedBrand": "Pastis"
+    },
+    {
+      "code": "AB6696",
+      "product": "0700 LIQUORE PECHERY DUBAI CHOCOLATE CREAM 17% CT*6 **NEW**",
+      "importedBrand": "Pechery"
+    },
+    {
+      "code": "AB6569",
+      "product": "0148 LIQUORE PEYCHAUD'S BITTER 35% CT*12",
+      "importedBrand": "Peychaud's"
+    },
+    {
+      "code": "AB4648",
+      "product": "1000 LIQUORE PONTIANE APERITIVO 16% CT*12",
+      "importedBrand": "Pontiane"
+    },
+    {
+      "code": "AB5757",
+      "product": "0500 LIQUORE RIGA BLACK ORIGINAL 45% CT*12",
+      "importedBrand": "Riga"
+    },
+    {
+      "code": "AB6655",
+      "product": "1000 LIQUORE SAMBUCA MOLINARI 40% LITRO CT*6",
+      "importedBrand": "Sambuca"
+    },
+    {
+      "code": "AB6065",
+      "product": "0700 LIQUORE SPINELLO 28% CT*6",
+      "importedBrand": "Spinello"
+    },
+    {
+      "code": "AB1593",
+      "product": "0700 LIQUORE ST.GERMAIN 20% CT*6",
+      "importedBrand": "St.germain"
+    },
+    {
+      "code": "AB2080",
+      "product": "0700 LIQUORE STREGA ALBERTI 40% CT*6 **NEW**",
+      "importedBrand": "Strega"
+    },
+    {
+      "code": "AB6196",
+      "product": "0700 LIQUORE VECCHIO AMARO DEL CAPO 35%  CT*6",
+      "importedBrand": "Vecchio"
+    },
+    {
+      "code": "AB6664",
+      "product": "12*0050 COGNAC MEUKOW VS 40% PET CT*14",
+      "importedBrand": "Meukow"
+    },
+    {
+      "code": "AB0203",
+      "product": "12*0050 GIN GORDON  37.5% MINIATURES PET CT*16",
+      "importedBrand": "Gordon"
+    },
+    {
+      "code": "AB2319",
+      "product": "12*0050 IRISH WHISKEY BUSHMILL 40% MINIATURES VETRO",
+      "importedBrand": "Bushmill"
+    },
+    {
+      "code": "AB5565",
+      "product": "25*0030 LIQUORE MOLINARI 42% MINIATURES PET",
+      "importedBrand": "Molinari"
+    },
+    {
+      "code": "AB6512",
+      "product": "12*0050 LIQUORE TIA MARIA 20% PET CT*5 **NEW**",
+      "importedBrand": "Tia"
+    },
+    {
+      "code": "AB6715",
+      "product": "12*0050 RUM ABUELO ANEJO MINIATURES PET 40% CT*12",
+      "importedBrand": "Abuelo"
+    },
+    {
+      "code": "AB3456",
+      "product": "10*0050 RUM GOSLING BLACK SEAL 40% MINIATURES CT*12 **NEW**",
+      "importedBrand": "Gosling"
+    },
+    {
+      "code": "AB1633",
+      "product": "12*0050 SCOTCH WHISKY BELLS 40% MINIATURES PET CT*16",
+      "importedBrand": "Bells"
+    },
+    {
+      "code": "AB6205",
+      "product": "03*0200 SCOTCH WHISKY GLENLIVET TASTING EXPERIENCE CT*6",
+      "importedBrand": "Glenlivet"
+    },
+    {
+      "code": "AB1487",
+      "product": "06*0100 VODKA CHRISTIANIA 40% MINIATURES VETRO CT*4",
+      "importedBrand": "Christiania"
+    },
+    {
+      "code": "AB6791",
+      "product": "04*0050 VODKA DANZKA (FORTY/APPLE/CITRUS/CRANRAZ) 40% MINIATURES CT*24 **new**",
+      "importedBrand": "Danzka"
+    },
+    {
+      "code": "AB5012",
+      "product": "12*0050 VODKA FINLANDIA 40% MINIATURES PET CT*10",
+      "importedBrand": "Finlandia"
+    },
+    {
+      "code": "AB4110",
+      "product": "24*0050 VODKA RUSSIAN STANDARD ORIGINAL 40% MINIATURES PET CT*12",
+      "importedBrand": "Russian"
+    },
+    {
+      "code": "AB6427",
+      "product": "12*0050 VODKA STOLICHNAYA 40% MINIATURES PET CT*10 **NEW**",
+      "importedBrand": "Stolichnaya"
+    },
+    {
+      "code": "AB6708",
+      "product": "0200 BRANDY ISTRIANA 36% VETRO CT*24",
+      "importedBrand": "Istriana"
+    },
+    {
+      "code": "AB2090",
+      "product": "0200 VODKA ERISTOFF 37.5% CT*24 VETRO",
+      "importedBrand": "Eristoff"
+    },
+    {
+      "code": "AB1610",
+      "product": "0200 DISTILLATO DI BIRRA SCHNEIDER AVENTINUS 40% VETRO",
+      "importedBrand": "Schneider"
+    },
+    {
+      "code": "AB0689",
+      "product": "0700 TEQUILA BUEN VATO BLANCO 38% **NEW**",
+      "importedBrand": "Buen"
+    },
+    {
+      "code": "AB6074",
+      "product": "0700 TEQUILA CASA DRAGONES JOVEN 40% CT*3",
+      "importedBrand": "Casa"
+    },
+    {
+      "code": "AB6164",
+      "product": "1000 TEQUILA CASCO VIEJO GOLD 38% CT*6",
+      "importedBrand": "Casco"
+    },
+    {
+      "code": "AB6822",
+      "product": "0700 SOTOL LA ESCONDIDA BLANCO 40% CT*6 **NEW**",
+      "importedBrand": "Sotol La Escondida"
+    },
+    {
+      "code": "AB1243",
+      "product": "0700 MEZCAL GUSANO ROJO 38%",
+      "importedBrand": "Gusano"
+    },
+    {
+      "code": "AB5717",
+      "product": "0700 MEZCAL MONTE ALBAN 40%  CT*6 **NEW**",
+      "importedBrand": "Monte"
+    },
+    {
+      "code": "AB3267",
+      "product": "0700 MEZCAL SAN COSME JOVEN 40%",
+      "importedBrand": "San"
+    },
+    {
+      "code": "AB3399",
+      "product": "0700 MEZCAL XIAMAN 44% CT*6",
+      "importedBrand": "Xiaman"
+    },
+    {
+      "code": "AB2048",
+      "product": "0700 AMERICAN WHISKEY HERITAGE 40% CT*6",
+      "importedBrand": "Heritage"
+    },
+    {
+      "code": "AB3651",
+      "product": "0700 AMERICAN WHISKEY WOOD'S TENDERFOOT 45%",
+      "importedBrand": "Wood's"
+    },
+    {
+      "code": "AB5683",
+      "product": "1000 WHISKEY GEORGE DICKEL TABASCO 40% 1 LITER CT*12",
+      "importedBrand": "George"
+    },
+    {
+      "code": "AB1069",
+      "product": "0700 BOURBON WHISKEY ANGELS ENVY 43.3% CT*6",
+      "importedBrand": "Angels"
+    },
+    {
+      "code": "AB0121",
+      "product": "0700 BOURBON WHISKEY BAKER'S 7 YO 53.5% CT*6",
+      "importedBrand": "Baker's"
+    },
+    {
+      "code": "AB4469",
+      "product": "1000 BOURBON WHISKEY BASIL HAYDEN'S 40% 1 LITER CT*12 **NEW**",
+      "importedBrand": "Basil"
+    },
+    {
+      "code": "AB0120",
+      "product": "0700 BOURBON WHISKEY BASIL HAYDEN'S 40%",
+      "importedBrand": "Basil"
+    },
+    {
+      "code": "AB5781",
+      "product": "0700 BOURBON WHISKEY BOWSAW 100% STRAIGHT AMERICAN 40% CT*6",
+      "importedBrand": "Bowsaw"
+    },
+    {
+      "code": "AB2072",
+      "product": "0700 BOURBON WHISKEY EAGLE RARE 10 Y.O. 45%",
+      "importedBrand": "Eagle"
+    },
+    {
+      "code": "AB2049",
+      "product": "0700 BOURBON WHISKEY EZRA BROOKS BLACK LABEL 40%",
+      "importedBrand": "Ezra"
+    },
+    {
+      "code": "AB4064",
+      "product": "1000 BOURBON WHISKEY HEAVEN HILL 40%  CT*12",
+      "importedBrand": "Heaven"
+    },
+    {
+      "code": "AB4930",
+      "product": "0700 BOURBON WHISKEY HIGH WEST AMERICAN PRAIRIE RESERVE 46%",
+      "importedBrand": "High"
+    },
+    {
+      "code": "AB2877",
+      "product": "0700 BOURBON WHISKEY JEFFERSON'S RESERVE 45.1% CT*6",
+      "importedBrand": "Jefferson's"
+    },
+    {
+      "code": "AB4150",
+      "product": "1000 BOURBON WHISKEY JOHN MEDLEY'S RICH & MILD 40% 1 LITER  **NEW**",
+      "importedBrand": "John"
+    },
+    {
+      "code": "AB2266",
+      "product": "0700 BOURBON WHISKEY JOHNNY DRUM PRIVATE STOCK 50.5% CT*6",
+      "importedBrand": "Johnny"
+    },
+    {
+      "code": "AB0122",
+      "product": "0700 BOURBON WHISKEY KNOB CREEK 50% CT*6",
+      "importedBrand": "Knob"
+    },
+    {
+      "code": "AB2293",
+      "product": "0700 BOURBON WHISKEY LARCENY 92 PROOF 46%",
+      "importedBrand": "Larceny"
+    },
+    {
+      "code": "AB0057",
+      "product": "0700 BOURBON WHISKEY MICHTER'S SMALL BATCH 45.7% GBOX CT*6",
+      "importedBrand": "Michter's"
+    },
+    {
+      "code": "AB4339",
+      "product": "0700 BOURBON WHISKEY NOAH'S MILL 57.15%",
+      "importedBrand": "Noah's"
+    },
+    {
+      "code": "AB2873",
+      "product": "0700 BOURBON WHISKEY PENNY PACKER 40% CT*6",
+      "importedBrand": "Penny"
+    },
+    {
+      "code": "AB4340",
+      "product": "0700 BOURBON WHISKEY PURE KENTUCKY XO 53.5%",
+      "importedBrand": "Pure"
+    },
+    {
+      "code": "AB1346",
+      "product": "0700 BOURBON WHISKEY SMOOTH AMBLER OLD SCOUT  7 Y.O. 49.5%",
+      "importedBrand": "Smooth"
+    },
+    {
+      "code": "AB2869",
+      "product": "1000 BOURBON WHISKEY SZENE 40% 1 LITER",
+      "importedBrand": "Szene"
+    },
+    {
+      "code": "AB3600",
+      "product": "1750 BOURBON WHISKEY WILLETT POT STILL RESERVE 47% MAGNUM CT*3 **NEW**",
+      "importedBrand": "Willett"
+    },
+    {
+      "code": "AB3599",
+      "product": "0700 BOURBON WHISKEY WILLETT POT STILL RESERVE 47% CT*6",
+      "importedBrand": "Willett"
+    },
+    {
+      "code": "AB0579",
+      "product": "0700 SCOTCH WHISKY ABERFELDY 12 Y.O. 40% GB CT*6",
+      "importedBrand": "Aberfeldy"
+    },
+    {
+      "code": "AB1102",
+      "product": "1000 SCOTCH WHISKY AUCHENTOSHAN AMERICAN OAK 40% GBOX CT*12",
+      "importedBrand": "Auchentoshan"
+    },
+    {
+      "code": "AB0153",
+      "product": "0700 SCOTCH WHISKY BENRIACH 10 Y.O. 43% GBOX CT*6 **NEW**",
+      "importedBrand": "Benriach"
+    },
+    {
+      "code": "AB1001",
+      "product": "0700 SCOTCH WHISKY BENROMACH 10 Y.O 43% GBOX CT*6",
+      "importedBrand": "Benromach"
+    },
+    {
+      "code": "AB2912",
+      "product": "1000 SCOTCH WHISKY BUCHANAN'S 12 Y.O. DE LUXE 40% CT*12",
+      "importedBrand": "Buchanan's"
+    },
+    {
+      "code": "AB0687",
+      "product": "0700 SCOTCH WHISKY BUNNAHABHAIN STIUIREADAIR 46.3% GB CT*6 **NEW**",
+      "importedBrand": "Bunnahabhain"
+    },
+    {
+      "code": "AB5494",
+      "product": "0700 SCOTCH WHISKY FIRESIDE 12 Y.O. 40% GBOX CT*6 **NEW**",
+      "importedBrand": "Fireside"
+    },
+    {
+      "code": "AB0817",
+      "product": "0700 SCOTCH WHISKY GLENFARCLAS 15 Y.O. 46% GBOX CT*6 **NEW**",
+      "importedBrand": "Glenfarclas"
+    },
+    {
+      "code": "AB3018",
+      "product": "0700 SCOTCH WHISKY GLENGOYNE 12 YO 43% GBOX CT*6 **NEW**",
+      "importedBrand": "Glengoyne"
+    },
+    {
+      "code": "AB3021",
+      "product": "0700 SCOTCH WHISKY INCHMURRIN 12 Y.O. LOCH LOMOND 46%  GBOX CT*6 **NEW**",
+      "importedBrand": "Inchmurrin"
+    },
+    {
+      "code": "AB3412",
+      "product": "0700 SCOTCH WHISKY PIG'S NOSE 43% NEW** CT*6",
+      "importedBrand": "Pig's"
+    },
+    {
+      "code": "AB0812",
+      "product": "0700 SCOTCH WHISKY RUTHERFORD'S 40% CT*6 **NEW**",
+      "importedBrand": "Rutherford's"
+    },
+    {
+      "code": "AB6386",
+      "product": "0700 SCOTCH WHISKY SMOKEHEAD HIGH VOLTAGE 58% CT*6",
+      "importedBrand": "Smokehead"
+    },
+    {
+      "code": "AB6641",
+      "product": "1000 SCOTCH WHISKY TEACHER'S LITRO 40% CT*12 **NEW**",
+      "importedBrand": "Teacher's"
+    },
+    {
+      "code": "AB3388",
+      "product": "0700 COSA NOSTRA MITRA CON SCOTCH WHISKY 40%",
+      "importedBrand": "Cosa"
+    },
+    {
+      "code": "AB6350",
+      "product": "0700 IRISH WHISKEY DINGLE SINGLE MALT 46.3% GB CT*6 **NEW**",
+      "importedBrand": "Dingle"
+    },
+    {
+      "code": "AB4166",
+      "product": "0700 IRISH WHISKEY EGAN'S 10 Y.O. 47%",
+      "importedBrand": "Egan's"
+    },
+    {
+      "code": "AB4049",
+      "product": "0700 IRISH WHISKEY KINAHAN'S 10 Y.O. SINGLE MALT  46%  **NEW**",
+      "importedBrand": "Kinahan's"
+    },
+    {
+      "code": "AB4168",
+      "product": "0700 IRISH WHISKEY ROE&CO 45%  CT*6",
+      "importedBrand": "Roe&co"
+    },
+    {
+      "code": "AB4608",
+      "product": "0700 IRISH WHISKEY SEXTON SINGLE MALT 40% CT*6",
+      "importedBrand": "Sexton"
+    },
+    {
+      "code": "AB6241",
+      "product": "0700 IRISH WHISKEY SHANKYS WHIP BLACK LIQUEUR 33% CT*6 **NEW**",
+      "importedBrand": "Shankys"
+    },
+    {
+      "code": "AB1648",
+      "product": "0700 IRISH WHISKEY WRITERS TEARS CASK STRENGTH 54.8%",
+      "importedBrand": "Writers"
+    },
+    {
+      "code": "AB3153",
+      "product": "0700 IRISH WHISKEY YELLOW SPOT 12 Y.O. 46% CT*3",
+      "importedBrand": "Yellow"
+    },
+    {
+      "code": "AB2027",
+      "product": "0700 WHISKEY GOUDEN CAROLUS SINGLE MALT 46%",
+      "importedBrand": "Gouden"
+    },
+    {
+      "code": "AB6270",
+      "product": "0700 JAPANESE WHISKY AKKESHI 2022 TAISHO BLENDED 48% GBOX CT*6 **NEW**",
+      "importedBrand": "Akkeshi"
+    },
+    {
+      "code": "AB5350",
+      "product": "0700 JAPANESE WHISKY ENSO 40% CT*6",
+      "importedBrand": "Enso"
+    },
+    {
+      "code": "AB6328",
+      "product": "0500 JAPANESE WHISKY KAMIKI 48% GBOX CT*6",
+      "importedBrand": "Kamiki"
+    },
+    {
+      "code": "AB6306",
+      "product": "0700 JAPANESE WHISKY KUJIRA 10YO RYUKYU 43% CT*6 **NEW**",
+      "importedBrand": "Kujira"
+    },
+    {
+      "code": "AB3227",
+      "product": "0750 VERMOUTH DUBONNET RED 14.8% CT*6",
+      "importedBrand": "Dubonnet"
+    },
+    {
+      "code": "AB1883",
+      "product": "0750 VERMOUTH NORDESIA BIANCO 16%",
+      "importedBrand": "Nordesia"
+    },
+    {
+      "code": "AB1933",
+      "product": "0750 VERMOUTH ROSSO FRED JERBIS 18% CT*6",
+      "importedBrand": "Rosso"
+    },
+    {
+      "code": "AB2091",
+      "product": "1000 VERMOUTH TIO PEPE SHERRY 15% CT*12",
+      "importedBrand": "Tio"
+    },
+    {
+      "code": "AB4183",
+      "product": "1000 VERMOUTH YZAGUIRRE BLANCO RESERVA18% 1 LITRO",
+      "importedBrand": "Yzaguirre"
+    },
+    {
+      "code": "AB5322",
+      "product": "1000 CARPANO FORMULA ANTICA 16.5% CT*6",
+      "importedBrand": "Carpano"
+    },
+    {
+      "code": "AB3503",
+      "product": "0700 BRANDY ALMA DE MAGNO SOLERA RESERVA 36% CT*6",
+      "importedBrand": "Alma De Magno"
+    },
+    {
+      "code": "AB6416",
+      "product": "0700 COGNAC MARTELL XO 40% GBOX CT*3",
+      "importedBrand": "Martell"
+    },
+    {
+      "code": "AB0444",
+      "product": "0700 ASSENZIO ABSENTE 55% CT*6",
+      "importedBrand": "Absente"
+    },
+    {
+      "code": "AB6568",
+      "product": "0700 ASSENZIO I FIORI DEL MARE VERDE 65% CT*6 **NEW**",
+      "importedBrand": "I"
+    },
+    {
+      "code": "AB1407",
+      "product": "0700 ASSENZIO MANSINTHE 66.6% CT*6",
+      "importedBrand": "Mansinthe"
+    },
+    {
+      "code": "AB0238",
+      "product": "0700 ASSENZIO XENTA 70% CT*6",
+      "importedBrand": "Xenta"
+    },
+    {
+      "code": "AB6707",
+      "product": "GIFT VODKA CALM HEAD BLACK 40% + 2 BICC.",
+      "importedBrand": "Calm"
+    },
+    {
+      "code": "AB3341",
+      "product": "GIFT VODKA SAPER 3 BOTT. 0.20 LEGNO CT*3 FORMA BOMBA MANO",
+      "importedBrand": "Saper"
+    },
+    {
+      "code": "AB2179",
+      "product": "GIFT IRISH WHISKEY CLONTARF 40% 3*200+3BICCHIERI",
+      "importedBrand": "Clontarf"
+    },
+    {
+      "code": "AB6508",
+      "product": "GIFT IRISH WHISKEY SHANKYS WHIP BLACK LIQUEUR 33% +4 SHOT CT*6 **NEW**",
+      "importedBrand": "Shankys"
+    },
+    {
+      "code": "AB6473",
+      "product": "GIFT WHISKY TIMBERMAN 3 Y.O. 0.50 40% BORRACCIA **NEW**",
+      "importedBrand": "Timberman"
+    },
+    {
+      "code": "AB6527",
+      "product": "GIFT RUM BARCELO IMPERIAL 0.70 38% +2 BICCHIERI CT*6 **NEW**",
+      "importedBrand": "Barcelo"
+    },
+    {
+      "code": "AB6862",
+      "product": "GIFT RUM SANTIAGO DE CUBA 11Y.O. 0.70 43% +2BICCHIERI CT*6 **NEW**",
+      "importedBrand": "Santiago De Cuba"
+    },
+    {
+      "code": "AB6166",
+      "product": "0700 GIN CHRISTMAS GLOBE SPICED ORANGE & CRANBERRY 20% GBOX CT*6",
+      "importedBrand": "Christmas"
+    },
+    {
+      "code": "AB6165",
+      "product": "0700 GIN SNOWGLOBE ORANGE & GINGERBREAD 20% GBOX CT*6",
+      "importedBrand": "Snowglobe"
+    },
+    {
+      "code": "AB1170",
+      "product": "GIFT SCOTCH WHISKY GLEN GRANT 12YO 0.70 +2 BICCHIERI CT*3",
+      "importedBrand": "Glen"
+    },
+    {
+      "code": "AB6458",
+      "product": "0700 LIQUORE PUMPKIN POTION 12% CT*6 **NEW**",
+      "importedBrand": "Pumpkin"
+    }
+  ],
+  "brandsImported": 589,
+  "categoriesImported": {
+    "whisky-whiskey": 621,
+    "rum-rhum": 352,
+    "gin": 547,
+    "vodka": 183,
+    "cognac": 10,
+    "armagnac": 4,
+    "tequila-mezcal": 92,
+    "grappe": 4,
+    "liquori": 184,
+    "amari": 28,
+    "vermouth": 29,
+    "aperitivi": 16,
+    "brandy-distillati": 54
+  },
+  "duplicateCodes": [["AB1293", 2]],
+  "duplicateImages": [
+    ["1000_BRANDY_VECCHIA_ROMAGNA_NERA_38%_LITRO_CT_6.jpg", 2]
+  ]
+}

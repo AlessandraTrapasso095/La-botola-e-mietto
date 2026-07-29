@@ -163,6 +163,17 @@ a {
   filter: saturate(1.05);
 }
 
+.product-packshot-frame {
+  background:
+    radial-gradient(circle at 50% 42%, rgb(255 255 255 / 72%), transparent 52%),
+    var(--color-packshot);
+}
+
+.product-packshot {
+  object-fit: contain;
+  padding: clamp(0.75rem, 4vw, 1.5rem);
+}
+
 .site-header {
   transition:
     background-color var(--motion-standard) var(--ease-functional),

@@ -1,5 +1,7 @@
 "use client";
 
+import { useMemo, useState, type ReactNode } from "react";
+
 import type {
   CatalogFilters,
   CatalogSort,
@@ -68,17 +70,20 @@ function FilterGroup({
   options,
   selected,
   onChange,
+  beforeOptions,
 }: {
   legend: string;
   name: Parameters<CatalogFiltersPanelProps["onListFilterChange"]>[0];
   options: readonly FilterOption[];
   selected: readonly string[];
   onChange: CatalogFiltersPanelProps["onListFilterChange"];
+  beforeOptions?: ReactNode;
 }) {
   return (
     <fieldset className="border-border-subtle border-b py-5">
       <legend className="text-text-strong font-serif text-lg">{legend}</legend>
-      <div className="mt-3 grid gap-1">
+      {beforeOptions}
+      <div className="mt-3 grid max-h-72 gap-1 overflow-y-auto">
         {options.map((option) => (
           <label
             key={option.value}
@@ -105,6 +110,17 @@ export function CatalogFiltersPanel({
   onBooleanFilterChange,
   onReset,
 }: CatalogFiltersPanelProps) {
+  const [brandQuery, setBrandQuery] = useState("");
+  const visibleBrands = useMemo(() => {
+    const normalizedQuery = brandQuery.trim().toLocaleLowerCase("it-IT");
+    if (!normalizedQuery) return options.brands.slice(0, 48);
+    return options.brands
+      .filter((brand) =>
+        brand.label.toLocaleLowerCase("it-IT").includes(normalizedQuery),
+      )
+      .slice(0, 48);
+  }, [brandQuery, options.brands]);
+
   return (
     <div>
       <div className="flex items-center justify-between gap-4">
@@ -122,9 +138,21 @@ export function CatalogFiltersPanel({
       <FilterGroup
         legend="Marca"
         name="brands"
-        options={options.brands}
+        options={visibleBrands}
         selected={filters.brands}
         onChange={onListFilterChange}
+        beforeOptions={
+          <label className="mt-4 block">
+            <span className="sr-only">Cerca una marca</span>
+            <input
+              type="search"
+              value={brandQuery}
+              onChange={(event) => setBrandQuery(event.target.value)}
+              placeholder="Cerca una marca"
+              className="border-border-subtle bg-surface focus:border-accent min-h-11 w-full border px-3 text-sm outline-none"
+            />
+          </label>
+        }
       />
       <FilterGroup
         legend="Prezzo"
@@ -154,13 +182,15 @@ export function CatalogFiltersPanel({
         selected={filters.alcoholRanges}
         onChange={onListFilterChange}
       />
-      <FilterGroup
-        legend="Paese"
-        name="countries"
-        options={options.countries}
-        selected={filters.countries}
-        onChange={onListFilterChange}
-      />
+      {options.countries.length > 0 ? (
+        <FilterGroup
+          legend="Paese"
+          name="countries"
+          options={options.countries}
+          selected={filters.countries}
+          onChange={onListFilterChange}
+        />
+      ) : null}
       <fieldset className="grid gap-1 pt-5">
         <legend className="text-text-strong mb-3 font-serif text-lg">
           Disponibilità

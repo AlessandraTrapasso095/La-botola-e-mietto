@@ -5,6 +5,7 @@ export const primaryCatalogCategories = [
   "Vodka",
   "Cognac",
   "Armagnac",
+  "Brandy e altri distillati",
   "Tequila e Mezcal",
   "Grappe",
   "Vini",
@@ -42,7 +43,8 @@ const menuCategoryRoutes: Record<string, string> = {
   Vodka: "/categoria/vodka",
   Tequila: "/categoria/tequila-mezcal",
   Mezcal: "/categoria/tequila-mezcal",
-  Calvados: "/catalogo",
+  Calvados: "/categoria/brandy-distillati",
+  Brandy: "/categoria/brandy-distillati",
   Cognac: "/categoria/cognac",
   Armagnac: "/categoria/armagnac",
   Grappe: "/categoria/grappe",
@@ -89,7 +91,7 @@ export const catalogMenuGroups = [
   {
     title: "Distillati",
     description: "Classici internazionali e produzioni di ricerca.",
-    links: ["Gin", "Vodka", "Tequila", "Mezcal", "Calvados"],
+    links: ["Gin", "Vodka", "Tequila", "Mezcal", "Brandy", "Calvados"],
   },
   {
     title: "Fine degustazione",

@@ -4,7 +4,6 @@ import { notFound } from "next/navigation";
 import { Container } from "@/components/ui/container";
 import { Heading } from "@/components/ui/heading";
 import { Section } from "@/components/ui/section";
-import { catalogBrands } from "@/content/catalog/brands";
 import {
   getBrandBySlug,
   getProductsByBrand,
@@ -17,10 +16,6 @@ import { createCatalogProductViews } from "@/server/catalog-view";
 type BrandPageProps = {
   params: Promise<{ slug: string }>;
 };
-
-export function generateStaticParams() {
-  return catalogBrands.map((brand) => ({ slug: brand.slug }));
-}
 
 export async function generateMetadata({
   params,
@@ -53,7 +48,7 @@ export default async function BrandPage({ params }: BrandPageProps) {
         ]}
       />
       <CatalogHero
-        eyebrow={brand.country}
+        eyebrow={brand.country ?? "Selezione del catalogo"}
         title={brand.name}
         description={brand.description}
         introduction={brand.story}
@@ -77,7 +72,7 @@ export default async function BrandPage({ params }: BrandPageProps) {
           {products.length > 0 ? (
             <div className="mt-10 grid grid-cols-2 gap-x-4 gap-y-12 md:grid-cols-3 lg:grid-cols-4 lg:gap-x-6">
               {products.map((product) => (
-                <ProductCard key={product.code} product={product} />
+                <ProductCard key={product.slug} product={product} />
               ))}
             </div>
           ) : (

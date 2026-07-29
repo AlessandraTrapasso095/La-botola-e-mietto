@@ -16,8 +16,8 @@ import { Section } from "@/components/ui/section";
 import { Text } from "@/components/ui/text";
 import { businessInfo } from "@/config/business";
 import { shippingConfig } from "@/config/commerce";
+import { catalogBrands } from "@/content/catalog/brands";
 import {
-  featuredBrands,
   instagramStories,
   serviceHighlights,
 } from "@/content/demo-assets/home";
@@ -25,6 +25,11 @@ import { demoMedia } from "@/content/demo-assets/media";
 import { formatEuroMinor } from "@/lib/money";
 
 export function BrandSection() {
+  const featuredBrands = [...catalogBrands]
+    .filter((brand) => !brand.needsReview)
+    .sort((left, right) => right.productCount - left.productCount)
+    .slice(0, 8);
+
   return (
     <Section id="marchi" spacing="standard">
       <Container>
@@ -36,12 +41,13 @@ export function BrandSection() {
         </Reveal>
         <Reveal className="border-border-subtle mt-12 grid grid-cols-2 border-t border-l sm:grid-cols-4">
           {featuredBrands.map((brand) => (
-            <div
-              key={brand}
+            <Link
+              key={brand.slug}
+              href={`/marchio/${brand.slug}`}
               className="border-border-subtle text-text-muted hover:text-accent-soft flex min-h-28 items-center justify-center border-r border-b px-4 text-center font-serif text-lg transition-colors sm:min-h-36 sm:text-xl"
             >
-              {brand}
-            </div>
+              {brand.name}
+            </Link>
           ))}
         </Reveal>
       </Container>

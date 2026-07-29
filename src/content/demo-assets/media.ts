@@ -1,5 +1,6 @@
 export type DemoMediaAsset = {
   src: string;
+  thumbnailSrc?: string;
   alt: string;
   width: number;
   height: number;

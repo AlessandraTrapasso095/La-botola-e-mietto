@@ -23,15 +23,15 @@ export function CartLine({
     <article className="border-border-subtle grid grid-cols-[5.5rem_1fr_auto] gap-4 border-b py-5">
       <Link
         href={`/prodotto/${line.product.slug}`}
-        className="bg-surface relative aspect-[3/4] overflow-hidden"
+        className="product-packshot-frame relative aspect-[3/4] overflow-hidden"
         onClick={() => setCartOpen(false)}
       >
         <Image
-          src={media.src}
+          src={media.thumbnailSrc ?? media.src}
           alt=""
           fill
           sizes="88px"
-          className="object-cover"
+          className="product-packshot p-2"
           style={{ objectPosition: media.position }}
         />
       </Link>

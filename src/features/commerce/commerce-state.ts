@@ -1,4 +1,4 @@
-import type { CatalogProductView } from "@/content/catalog/types";
+import type { CatalogProductSummaryView } from "@/content/catalog/types";
 
 export type CommerceState = {
   cart: Record<string, number>;
@@ -6,7 +6,7 @@ export type CommerceState = {
 };
 
 export type CartLineView = {
-  product: CatalogProductView;
+  product: CatalogProductSummaryView;
   quantity: number;
   lineTotalMinor: number;
 };
@@ -19,7 +19,7 @@ export type CartSummary = {
 
 export function createCartSummary(
   state: CommerceState,
-  products: readonly CatalogProductView[],
+  products: readonly CatalogProductSummaryView[],
 ): CartSummary {
   const productsBySlug = new Map(
     products.map((product) => [product.slug, product]),
