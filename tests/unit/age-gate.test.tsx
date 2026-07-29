@@ -3,6 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
 
 import { AgeGate } from "@/features/age-gate/age-gate";
+import { ageGateConfig } from "@/config/consent";
 
 function renderAgeGate() {
   return render(
@@ -63,5 +64,24 @@ describe("AgeGate", () => {
     );
     expect(document.getElementById("site-shell")).not.toHaveAttribute("inert");
     expect(document.cookie).toContain("lbm_age_confirmed=");
+  });
+
+  it("può essere riaperto dalle preferenze", async () => {
+    render(
+      <>
+        <div id="site-shell">Contenuto</div>
+        <AgeGate initiallyConfirmed />
+      </>,
+    );
+
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    window.dispatchEvent(new Event(ageGateConfig.reopenEventName));
+
+    expect(
+      await screen.findByRole("dialog", {
+        name: /Per accedere a La Botola e Mietto/i,
+      }),
+    ).toBeVisible();
+    expect(document.getElementById("site-shell")).toHaveAttribute("inert");
   });
 });

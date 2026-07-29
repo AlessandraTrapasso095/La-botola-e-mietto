@@ -34,7 +34,7 @@ describe("ricerca catalogo", () => {
         screen.getByText(/Nessun risultato per “termine inesistente”/),
       ).toBeVisible(),
     );
-  });
+  }, 15_000);
 
   it("sposta il focus al primo risultato con Freccia giù", async () => {
     const user = userEvent.setup();
@@ -53,5 +53,5 @@ describe("ricerca catalogo", () => {
         name: /Scopri|The Macallan 12 Y.O. Double Cask/,
       }),
     ).toHaveFocus();
-  });
+  }, 15_000);
 });

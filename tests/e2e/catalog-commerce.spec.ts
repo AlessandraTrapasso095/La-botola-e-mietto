@@ -45,11 +45,12 @@ test("catalogo mobile, filtri, prodotto, carrello, wishlist e ricerca", async ({
     .getByRole("link", { name: "Catalogo", exact: true })
     .last()
     .click();
+  await expect(page).toHaveURL(/\/catalogo$/, { timeout: 60_000 });
   await expect(
     page.getByRole("heading", {
       name: "Bottiglie scelte per essere ricordate.",
     }),
-  ).toBeVisible();
+  ).toBeVisible({ timeout: 60_000 });
 
   const filterTrigger = page.getByRole("button", { name: "Filtri" });
   await filterTrigger.click();

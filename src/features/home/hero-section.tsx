@@ -26,8 +26,8 @@ export function HeroSection() {
       <div className="absolute inset-0 -z-20 bg-[linear-gradient(90deg,rgba(12,12,12,0.98)_0%,rgba(12,12,12,0.88)_42%,rgba(12,12,12,0.22)_78%),linear-gradient(0deg,#131313_0%,transparent_42%)] max-md:bg-[linear-gradient(0deg,rgba(12,12,12,0.98)_0%,rgba(12,12,12,0.78)_56%,rgba(12,12,12,0.18)_100%)]" />
       <div className="hero-glow absolute inset-0 -z-10" />
 
-      <Container className="flex min-h-[46rem] items-end pb-16 md:min-h-[50rem] md:items-center md:pb-0 xl:max-h-[62rem] xl:min-h-[calc(100svh-2.5rem)]">
-        <div className="hero-copy max-w-3xl pt-32">
+      <Container className="hero-container flex min-h-[46rem] items-end pb-16 md:min-h-[50rem] md:items-center md:pb-0 xl:max-h-[62rem] xl:min-h-[calc(100svh-2.5rem)]">
+        <div className="hero-copy max-w-3xl pt-24 md:pt-8 xl:pt-0">
           <Badge className="bg-background/45 backdrop-blur-md">
             Boutique italiana di distillati
           </Badge>

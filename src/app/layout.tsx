@@ -59,7 +59,9 @@ export default async function RootLayout({
     <html
       lang="it"
       data-scroll-behavior="smooth"
-      className={`${manrope.variable} ${playfair.variable}`}
+      className={`${manrope.variable} ${playfair.variable} ${
+        initiallyConfirmed ? "" : "age-gate-active"
+      }`}
       suppressHydrationWarning
     >
       <body>

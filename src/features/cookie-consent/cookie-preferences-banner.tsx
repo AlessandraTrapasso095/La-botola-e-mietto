@@ -11,7 +11,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { SiteNotice } from "@/components/ui/site-notice";
-import { cookieConsentConfig } from "@/config/consent";
+import { ageGateConfig, cookieConsentConfig } from "@/config/consent";
 import {
   persistCookiePreferences,
   readCookiePreferences,
@@ -193,6 +193,30 @@ export function CookiePreferencesBanner({
                 }
               >
                 Salva preferenze
+              </Button>
+            </div>
+            <div className="border-border-subtle bg-surface/55 border p-4">
+              <p className="text-text-strong font-semibold">
+                Conferma dell’età
+              </p>
+              <p className="text-text-muted mt-1 text-sm">
+                Puoi richiedere nuovamente la verifica dell’età in qualsiasi
+                momento.
+              </p>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="mt-2"
+                onClick={() => {
+                  setPreferenceCenterOpen(false);
+                  requestAnimationFrame(() =>
+                    window.dispatchEvent(
+                      new Event(ageGateConfig.reopenEventName),
+                    ),
+                  );
+                }}
+              >
+                Verifica di nuovo l’età
               </Button>
             </div>
             <Link

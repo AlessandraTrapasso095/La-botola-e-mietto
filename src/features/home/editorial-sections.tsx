@@ -24,11 +24,23 @@ import {
 import { demoMedia } from "@/content/demo-assets/media";
 import { formatEuroMinor } from "@/lib/money";
 
+const featuredBrandSlugs = [
+  "jack-daniel-s",
+  "johnnie-walker",
+  "hendrick-s",
+  "tanqueray",
+  "diplomatico",
+  "plantation",
+  "ardbeg",
+  "glenfiddich",
+] as const;
+
 export function BrandSection() {
-  const featuredBrands = [...catalogBrands]
-    .filter((brand) => !brand.needsReview)
-    .sort((left, right) => right.productCount - left.productCount)
-    .slice(0, 8);
+  const featuredBrands = featuredBrandSlugs.flatMap((slug) => {
+    const brand = catalogBrands.find((candidate) => candidate.slug === slug);
+
+    return brand ? [brand] : [];
+  });
 
   return (
     <Section id="marchi" spacing="standard">

@@ -1,5 +1,6 @@
 export const ageGateConfig = {
   cookieName: "lbm_age_confirmed",
+  reopenEventName: "lbm:open-age-gate",
   validityDays: 180,
   minimumAge: 18,
   exitDestination: "https://www.google.it/",

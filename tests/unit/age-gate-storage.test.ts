@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { ageGateConfig } from "@/config/consent";
 import {
+  clearAgeConfirmation,
   createAgeConfirmationExpiry,
   isAgeConfirmationValueValid,
   serializeAgeConfirmation,
@@ -28,5 +29,14 @@ describe("persistenza age gate", () => {
     expect(isAgeConfirmationValueValid(String(now - 1), now)).toBe(false);
     expect(isAgeConfirmationValueValid("valore-non-valido", now)).toBe(false);
     expect(isAgeConfirmationValueValid(undefined, now)).toBe(false);
+  });
+
+  it("rimuove la conferma quando viene richiesta una nuova verifica", () => {
+    document.cookie = serializeAgeConfirmation(now);
+    expect(document.cookie).toContain(ageGateConfig.cookieName);
+
+    clearAgeConfirmation(document);
+
+    expect(document.cookie).not.toContain(ageGateConfig.cookieName);
   });
 });

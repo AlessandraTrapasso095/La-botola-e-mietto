@@ -22,7 +22,10 @@ export function Logo({
     <Link
       href="/"
       aria-label={`${businessInfo.brandName}, homepage`}
-      className={cn("inline-flex min-h-11 items-center gap-3", className)}
+      className={cn(
+        "inline-flex min-h-11 shrink-0 items-center gap-3 transition-opacity duration-[var(--motion-fast)] hover:opacity-90",
+        className,
+      )}
     >
       <Image
         src={brandAssets.compactLogo}

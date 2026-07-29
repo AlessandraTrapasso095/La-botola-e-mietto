@@ -57,6 +57,7 @@ export function SiteHeaderClient({
   const [utilityPanel, setUtilityPanel] = useState<UtilityPanel>(null);
   const headerRef = useRef<HTMLElement>(null);
   const catalogButtonRef = useRef<HTMLButtonElement>(null);
+  const mobileMenuButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const updateHeader = () => setIsScrolled(window.scrollY > 24);
@@ -108,10 +109,7 @@ export function SiteHeaderClient({
         className="site-header border-border-subtle bg-background/92 sticky top-0 z-[var(--z-header)] border-b"
       >
         <Container className="flex min-h-[4.5rem] items-center justify-between gap-3 xl:min-h-20">
-          <Logo
-            priority
-            wordmarkClassName="hidden min-[25rem]:inline xl:text-xl"
-          />
+          <Logo priority wordmarkClassName="hidden md:inline xl:text-xl" />
 
           <nav aria-label="Navigazione principale" className="hidden xl:block">
             <ul className="flex items-center gap-7">
@@ -199,6 +197,7 @@ export function SiteHeaderClient({
               </span>
             </IconButton>
             <IconButton
+              ref={mobileMenuButtonRef}
               aria-label="Apri menu"
               className="xl:hidden"
               onClick={() => setMobileMenuOpen(true)}
@@ -285,6 +284,7 @@ export function SiteHeaderClient({
           if (panel === "wishlist") router.push("/preferiti");
           else setUtilityPanel("account");
         }}
+        triggerRef={mobileMenuButtonRef}
       />
 
       <Dialog

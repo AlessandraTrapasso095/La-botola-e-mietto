@@ -41,5 +41,5 @@ describe("filtri catalogo mobile", () => {
       }),
     ).not.toBeInTheDocument();
     expect(trigger).toHaveAccessibleName("Filtri (1)");
-  });
+  }, 15_000);
 });

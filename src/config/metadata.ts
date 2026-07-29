@@ -19,14 +19,17 @@ export const baseMetadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: brandAssets.favicon16, sizes: "16x16", type: "image/svg+xml" },
-      { url: brandAssets.favicon32, sizes: "32x32", type: "image/svg+xml" },
+      { url: brandAssets.faviconIco },
+      { url: brandAssets.favicon16, sizes: "16x16", type: "image/png" },
+      { url: brandAssets.favicon32, sizes: "32x32", type: "image/png" },
+      { url: brandAssets.favicon48, sizes: "48x48", type: "image/png" },
     ],
+    shortcut: [{ url: brandAssets.faviconIco }],
     apple: [
       {
         url: brandAssets.appleTouchIcon,
         sizes: "180x180",
-        type: "image/svg+xml",
+        type: "image/png",
       },
     ],
   },

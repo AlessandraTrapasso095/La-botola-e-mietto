@@ -12,7 +12,10 @@ import {
 } from "@/components/ui/dialog";
 import { Logo } from "@/components/ui/logo";
 import { ageGateConfig } from "@/config/consent";
-import { persistAgeConfirmation } from "@/features/age-gate/age-gate-storage";
+import {
+  clearAgeConfirmation,
+  persistAgeConfirmation,
+} from "@/features/age-gate/age-gate-storage";
 
 type AgeGateProps = {
   initiallyConfirmed: boolean;
@@ -22,6 +25,17 @@ export function AgeGate({ initiallyConfirmed }: AgeGateProps) {
   const [isConfirmed, setIsConfirmed] = useState(initiallyConfirmed);
   const confirmButtonRef = useRef<HTMLButtonElement>(null);
   const isOpen = !isConfirmed;
+
+  useEffect(() => {
+    const reopenAgeGate = () => {
+      clearAgeConfirmation(document);
+      setIsConfirmed(false);
+    };
+
+    window.addEventListener(ageGateConfig.reopenEventName, reopenAgeGate);
+    return () =>
+      window.removeEventListener(ageGateConfig.reopenEventName, reopenAgeGate);
+  }, []);
 
   useEffect(() => {
     const siteShell = document.getElementById("site-shell");
@@ -54,14 +68,20 @@ export function AgeGate({ initiallyConfirmed }: AgeGateProps) {
       <DialogContent
         dismissible={false}
         showClose={false}
-        className="max-w-2xl p-0"
+        className="max-w-2xl overflow-hidden [background-image:radial-gradient(circle_at_90%_5%,rgb(230_196_91_/_12%),transparent_18rem)] p-0"
         onOpenAutoFocus={(event) => {
           event.preventDefault();
           confirmButtonRef.current?.focus();
         }}
       >
-        <div className="border-border-subtle border-b px-6 py-5 md:px-10">
-          <Logo priority />
+        <div className="border-border-subtle flex items-center justify-between gap-5 border-b px-6 py-5 md:px-10">
+          <Logo priority wordmarkClassName="hidden min-[27rem]:inline" />
+          <span
+            aria-hidden="true"
+            className="border-accent/45 text-accent flex size-12 shrink-0 items-center justify-center rounded-full border font-serif text-sm font-semibold"
+          >
+            18+
+          </span>
         </div>
         <div className="grid gap-6 px-6 py-8 md:gap-8 md:px-10 md:py-10">
           <p className="text-accent text-xs font-semibold tracking-[var(--letter-spacing-label)] uppercase">

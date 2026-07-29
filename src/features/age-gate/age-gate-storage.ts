@@ -45,3 +45,18 @@ export function persistAgeConfirmation(
   const secure = globalThis.location?.protocol === "https:";
   documentTarget.cookie = serializeAgeConfirmation(now, secure);
 }
+
+export function clearAgeConfirmation(
+  documentTarget: Pick<Document, "cookie">,
+): void {
+  const secure = globalThis.location?.protocol === "https:";
+  documentTarget.cookie = [
+    `${ageGateConfig.cookieName}=`,
+    "Max-Age=0",
+    "Path=/",
+    "SameSite=Lax",
+    secure ? "Secure" : null,
+  ]
+    .filter(Boolean)
+    .join("; ");
+}

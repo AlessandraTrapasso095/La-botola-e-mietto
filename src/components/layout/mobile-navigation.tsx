@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import type { RefObject } from "react";
 
 import {
   ArrowRightIcon,
@@ -30,6 +31,7 @@ type MobileNavigationProps = {
   onOpenChange: (open: boolean) => void;
   onSearch: () => void;
   onUtility: (panel: "wishlist" | "account") => void;
+  triggerRef: RefObject<HTMLButtonElement | null>;
 };
 
 export function MobileNavigation({
@@ -37,11 +39,16 @@ export function MobileNavigation({
   onOpenChange,
   onSearch,
   onUtility,
+  triggerRef,
 }: MobileNavigationProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         showClose={false}
+        onCloseAutoFocus={(event) => {
+          event.preventDefault();
+          triggerRef.current?.focus();
+        }}
         className="bg-background inset-0 top-0 left-0 flex h-dvh max-h-none w-full max-w-none translate-x-0 translate-y-0 flex-col overflow-hidden rounded-none border-0 p-0"
       >
         <div className="border-border-subtle flex min-h-[4.5rem] items-center justify-between border-b px-5">
