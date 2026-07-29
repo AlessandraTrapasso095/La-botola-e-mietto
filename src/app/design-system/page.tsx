@@ -157,7 +157,7 @@ export default function DesignSystemPage() {
                 />
               </div>
               <div className="bg-surface grid content-center gap-4 p-8">
-                <Badge>Card demo</Badge>
+                <Badge>Card prodotto</Badge>
                 <Heading as="h3" size="md">
                   Etichetta in preparazione
                 </Heading>

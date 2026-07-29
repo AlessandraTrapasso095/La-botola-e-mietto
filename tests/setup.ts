@@ -16,6 +16,7 @@ afterEach(() => {
   document.body.removeAttribute("data-scroll-locked");
   document.body.removeAttribute("style");
   document.documentElement.className = "";
+  window.localStorage.clear();
   vi.restoreAllMocks();
 });
 

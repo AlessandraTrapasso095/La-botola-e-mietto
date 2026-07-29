@@ -68,8 +68,8 @@ export function CookiePreferencesBanner({
           Preferenze cookie
         </h2>
         <p className="text-text-muted mt-2 text-sm">
-          In questa milestone non sono installati servizi facoltativi. La
-          struttura separa già cookie necessari e future categorie opzionali.
+          Al momento sono utilizzate solo preferenze necessarie al funzionamento
+          del sito. Puoi mantenere disattivate le categorie facoltative.
         </p>
         <div className="mt-5 grid gap-2 sm:grid-cols-2">
           <Button variant="secondary" size="sm" onClick={chooseNecessaryOnly}>

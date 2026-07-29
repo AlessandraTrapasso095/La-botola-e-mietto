@@ -20,9 +20,9 @@ export default function CookiePolicyPage() {
           Stato attuale
         </Heading>
         <Text tone="muted" className="mt-3">
-          In questa milestone non sono installati strumenti facoltativi di
-          analisi o marketing. La conferma dell’età e le preferenze espresse
-          dall’utente sono gestite separatamente.
+          Non sono attualmente utilizzati strumenti facoltativi di analisi o
+          marketing. La conferma dell’età e le preferenze espresse dall’utente
+          sono gestite separatamente.
         </Text>
       </section>
       <section>

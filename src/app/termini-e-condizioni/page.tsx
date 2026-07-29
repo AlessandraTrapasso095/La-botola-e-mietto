@@ -30,9 +30,9 @@ export default function TermsPage() {
           Accettazione
         </Heading>
         <Text tone="muted" className="mt-3">
-          L’accettazione delle condizioni di vendita verrà richiesta nel
-          checkout in una milestone successiva e non è collegata all’age gate o
-          al consenso cookie.
+          L’accettazione delle condizioni di vendita viene richiesta
+          separatamente durante il checkout e non è collegata alla conferma
+          dell’età o alle preferenze cookie.
         </Text>
       </section>
     </LegalPage>

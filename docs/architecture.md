@@ -45,3 +45,14 @@ cookie hanno un proprio modello e un proprio cookie.
 
 Il target è Vercel. Nessun progetto o ambiente remoto è stato creato in questa
 milestone.
+
+## Demo Milestone 1A
+
+La homepage editoriale resta server-first. Testi, prodotti dimostrativi e
+riferimenti media sono centralizzati in `src/content/demo-assets`; i componenti
+non dipendono dai nomi fisici delle immagini. I prezzi demo conservano il netto
+in `bigint` e ricevono il prezzo B2C formattato dopo il calcolo lato server.
+
+Header, mega menu, ricerca e menu mobile condividono configurazione e tassonomia.
+Le sole parti client gestiscono focus, dialoghi, stato di apertura e feedback
+dimostrativi. Nessuna interazione crea ordini, account o dati persistenti.

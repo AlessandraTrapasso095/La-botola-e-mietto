@@ -1,9 +1,13 @@
 # La Botola e Mietto
 
-Fondazione tecnica dell’e-commerce premium italiano **La Botola e Mietto**.
-Questa repository contiene esclusivamente la Milestone 0: architettura,
-design system, prototipi di consenso e route informative. Catalogo reale,
-autenticazione, checkout, pagamenti e ordini non sono ancora implementati.
+E-commerce premium italiano **La Botola e Mietto**. Il repository comprende la
+fondazione tecnica della Milestone 0 e l’esperienza frontend della Milestone
+1A: homepage editoriale, catalogo navigabile, categorie, marchi, schede
+prodotto, ricerca, carrello e preferiti.
+
+I dati commerciali della Milestone 1A sono statici e tipizzati. Database,
+autenticazione, checkout, pagamenti e ordini reali restano intenzionalmente
+fuori dallo scope.
 
 ## Stack
 
@@ -35,6 +39,7 @@ npm run typecheck
 npm test
 npm run test:e2e
 npm run build
+git diff --check
 ```
 
 Per la prima esecuzione E2E:
@@ -47,7 +52,9 @@ npx playwright install chromium
 
 - `src/app`: route, metadata e layout App Router
 - `src/components`: primitive UI, layout e motion
-- `src/features`: age gate, preferenze cookie e demo design system
+- `src/features`: catalogo, ricerca, carrello, preferiti, age gate e consensi
+- `src/content/catalog`: dataset tipizzati di prodotti, categorie, marchi e collezioni
+- `src/content/demo-assets`: riferimenti centralizzati agli asset editoriali provvisori
 - `src/config`: business, commercio, brand, consensi e metadata
 - `src/lib`: utility condivise e client browser
 - `src/server`: logica e segreti esclusivamente server
@@ -59,8 +66,26 @@ npx playwright install chromium
 
 `reference-private/`, listini, archivi e documenti del cliente sono esclusi da
 Git. Non spostare asset originali o segreti in `public/`. Le icone presenti in
-`public/brand/` sono proposte provvisorie isolate e devono essere sostituite
-dopo la consegna di asset brand adatti al web.
+`public/brand/` e le immagini in `public/images/demo/` sono asset provvisori
+isolati e sostituibili dopo la consegna dei materiali definitivi.
+
+## Stato funzionale
+
+Funzionano realmente nel browser:
+
+- age gate persistente, gestione focus e blocco del contenuto;
+- navigazione tra catalogo, categorie, marchi e schede prodotto;
+- filtri, ordinamento, ricerca e drawer mobile;
+- carrello, quantità, soglia di spedizione gratuita e preferiti;
+- persistenza locale di carrello, wishlist e prodotti visti di recente;
+- metadata, sitemap e route informative.
+
+Sono simulati o statici:
+
+- disponibilità e contenuti prodotto;
+- dataset commerciale derivato da una selezione del listino cliente;
+- newsletter, area personale e checkout;
+- immagini prodotto e immagini editoriali.
 
 ## Documentazione
 
@@ -70,4 +95,6 @@ dopo la consegna di asset brand adatti al web.
 - [Motion system](docs/motion-system.md)
 - [Sicurezza](docs/security.md)
 - [Stato contenuti legali](docs/legal-content-status.md)
+- [Dati dimostrativi](docs/demo-data.md)
+- [Inventario contenuti](docs/content-inventory.md)
 - [Roadmap](docs/project-roadmap.md)

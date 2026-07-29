@@ -6,14 +6,18 @@ import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { ageGateConfig, cookieConsentConfig } from "@/config/consent";
 import { baseMetadata } from "@/config/metadata";
+import { catalogProducts } from "@/content/catalog/products";
 import { AgeGate } from "@/features/age-gate/age-gate";
+import { CommerceOverlays } from "@/features/commerce/commerce-overlays";
+import { CommerceProvider } from "@/features/commerce/commerce-provider";
 import { isAgeConfirmationValueValid } from "@/features/age-gate/age-gate-storage";
 import { CookiePreferencesBanner } from "@/features/cookie-consent/cookie-preferences-banner";
+import { createCatalogProductViews } from "@/server/catalog-view";
 
 import "@/styles/globals.css";
 
 const manrope = localFont({
-  src: "../../node_modules/@fontsource-variable/manrope/files/manrope-latin-wght-normal.woff2",
+  src: "../assets/fonts/manrope-latin-variable.woff2",
   display: "swap",
   variable: "--font-manrope",
   weight: "200 800",
@@ -22,12 +26,12 @@ const manrope = localFont({
 const playfair = localFont({
   src: [
     {
-      path: "../../node_modules/@fontsource-variable/playfair-display/files/playfair-display-latin-wght-normal.woff2",
+      path: "../assets/fonts/playfair-display-latin-variable.woff2",
       style: "normal",
       weight: "400 900",
     },
     {
-      path: "../../node_modules/@fontsource-variable/playfair-display/files/playfair-display-latin-wght-italic.woff2",
+      path: "../assets/fonts/playfair-display-latin-variable-italic.woff2",
       style: "italic",
       weight: "400 900",
     },
@@ -49,10 +53,12 @@ export default async function RootLayout({
   const cookiePreferencesConfigured = cookieStore.has(
     cookieConsentConfig.cookieName,
   );
+  const commerceProducts = createCatalogProductViews(catalogProducts);
 
   return (
     <html
       lang="it"
+      data-scroll-behavior="smooth"
       className={`${manrope.variable} ${playfair.variable}`}
       suppressHydrationWarning
     >
@@ -60,14 +66,17 @@ export default async function RootLayout({
         <a className="skip-link" href="#main-content">
           Vai al contenuto
         </a>
-        <div id="site-shell">
-          <SiteHeader />
-          {children}
-          <SiteFooter />
-          <CookiePreferencesBanner
-            initiallyConfigured={cookiePreferencesConfigured}
-          />
-        </div>
+        <CommerceProvider products={commerceProducts}>
+          <div id="site-shell">
+            <SiteHeader />
+            {children}
+            <SiteFooter />
+            <CookiePreferencesBanner
+              initiallyConfigured={cookiePreferencesConfigured}
+            />
+          </div>
+          <CommerceOverlays />
+        </CommerceProvider>
         <AgeGate initiallyConfirmed={initiallyConfirmed} />
       </body>
     </html>

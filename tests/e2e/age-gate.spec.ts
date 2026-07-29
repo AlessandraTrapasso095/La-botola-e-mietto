@@ -27,7 +27,9 @@ test("age gate, persistenza, tastiera e viewport mobile", async ({
   await confirmButton.click();
   await expect(dialog).toBeHidden();
   await expect(
-    page.getByRole("heading", { name: /Curatela, carattere/i }),
+    page.getByRole("heading", {
+      name: /Ogni bottiglia racconta una storia rara/i,
+    }),
   ).toBeVisible();
 
   await page.reload();
@@ -36,11 +38,27 @@ test("age gate, persistenza, tastiera e viewport mobile", async ({
   await page.setViewportSize({ width: 375, height: 812 });
   await page.reload();
   await expect(page.getByRole("banner")).toBeVisible();
+  await expect(
+    page.getByRole("heading", {
+      name: /Ogni bottiglia racconta una storia rara/i,
+    }),
+  ).toBeVisible();
 
   const hasHorizontalOverflow = await page.evaluate(
     () => document.documentElement.scrollWidth > window.innerWidth,
   );
   expect(hasHorizontalOverflow).toBe(false);
+
+  const menuButton = page.getByRole("button", { name: "Apri menu" });
+  await menuButton.focus();
+  await page.keyboard.press("Enter");
+  await expect(
+    page.getByRole("dialog", { name: "Menu principale" }),
+  ).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(
+    page.getByRole("dialog", { name: "Menu principale" }),
+  ).toBeHidden();
 
   await page.emulateMedia({ reducedMotion: "reduce" });
   const reveal = page.locator("[data-reveal]").first();
