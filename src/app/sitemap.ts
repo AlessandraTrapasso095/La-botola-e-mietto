@@ -3,11 +3,13 @@ import type { MetadataRoute } from "next";
 import { defaultSiteUrl } from "@/config/metadata";
 import { catalogBrands } from "@/content/catalog/brands";
 import { catalogCategories } from "@/content/catalog/categories";
+import { catalogCollections } from "@/content/catalog/collections";
 import { catalogProducts } from "@/content/catalog/products";
 
 const staticRoutes = [
   "",
   "/catalogo",
+  "/in-offerta",
   "/marchi",
   "/preferiti",
   "/carrello",
@@ -24,6 +26,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     (category) => `/categoria/${category.slug}`,
   );
   const brandRoutes = catalogBrands.map((brand) => `/marchio/${brand.slug}`);
+  const collectionRoutes = catalogCollections
+    .filter((collection) => collection.productSlugs.length > 0)
+    .map((collection) => collection.href);
   const productRoutes = catalogProducts.map(
     (product) => `/prodotto/${product.slug}`,
   );
@@ -32,6 +37,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...staticRoutes,
     ...categoryRoutes,
     ...brandRoutes,
+    ...collectionRoutes,
     ...productRoutes,
   ].map((route) => ({
     url: `${defaultSiteUrl}${route}`,

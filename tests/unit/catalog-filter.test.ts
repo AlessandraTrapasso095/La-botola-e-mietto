@@ -45,4 +45,27 @@ describe("filtri catalogo", () => {
       sortCatalogProducts(catalogProductFixtures, "featured")[0]?.slug,
     ).toBe("suntory-yamazaki-18-y-o");
   });
+
+  it("filtra esclusivamente i prodotti in offerta", () => {
+    const offerProduct = {
+      ...catalogProductFixtures[0],
+      offer: {
+        isActive: true,
+        previousGrossPriceMinor: null,
+        previousGrossPrice: null,
+        discountPercentage: null,
+      } as const,
+    };
+    const filtered = filterCatalogProducts(
+      [offerProduct, ...catalogProductFixtures.slice(1)],
+      {
+        ...emptyCatalogFilters,
+        onlyOnOffer: true,
+      },
+    );
+
+    expect(filtered.map((product) => product.slug)).toEqual([
+      offerProduct.slug,
+    ]);
+  });
 });

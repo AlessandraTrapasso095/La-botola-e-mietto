@@ -10,6 +10,7 @@ import { IconButton } from "@/components/ui/icon-button";
 import { businessInfo } from "@/config/business";
 import { shippingConfig } from "@/config/commerce";
 import type { CatalogProductSummaryView } from "@/content/catalog/types";
+import { ProductPrice } from "@/features/catalog/product-price";
 import { useCommerce } from "@/features/commerce/commerce-provider";
 import { cn } from "@/lib/cn";
 import { formatEuroMinor } from "@/lib/money";
@@ -75,10 +76,7 @@ export function ProductPurchasePanel({
       </p>
 
       <div className="border-border-subtle mt-8 border-y py-6">
-        <p className="text-text-strong text-3xl font-semibold">
-          {product.grossPrice}
-        </p>
-        <p className="text-text-muted mt-1 text-xs uppercase">IVA inclusa</p>
+        <ProductPrice product={product} size="lg" />
         <p className="mt-4 flex items-center gap-2 text-sm">
           <span
             className={cn(

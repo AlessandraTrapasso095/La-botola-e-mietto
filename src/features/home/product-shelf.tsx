@@ -17,6 +17,10 @@ type ProductShelfProps = {
   description: string;
   products: CatalogProductSummaryView[];
   tone?: "default" | "surface";
+  cta?: {
+    label: string;
+    href: string;
+  };
 };
 
 export function ProductShelf({
@@ -26,6 +30,7 @@ export function ProductShelf({
   description,
   products,
   tone = "default",
+  cta = { label: "Chiedi informazioni", href: "/contatti" },
 }: ProductShelfProps) {
   return (
     <Section
@@ -48,10 +53,10 @@ export function ProductShelf({
             </Text>
           </div>
           <Link
-            href="/contatti"
+            href={cta.href}
             className="animated-underline text-accent-soft inline-flex min-h-11 items-center gap-2 self-start text-xs font-semibold tracking-[var(--letter-spacing-label)] uppercase md:self-auto"
           >
-            Richiedi la lista completa
+            {cta.label}
             <ArrowRightIcon className="size-5" />
           </Link>
         </Reveal>

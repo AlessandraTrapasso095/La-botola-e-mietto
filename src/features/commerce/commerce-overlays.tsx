@@ -19,8 +19,8 @@ export function CommerceOverlays() {
   return (
     <>
       <Dialog open={cartOpen} onOpenChange={setCartOpen}>
-        <DialogContent className="commerce-drawer bg-background inset-y-0 top-0 right-0 left-auto flex h-dvh max-h-none w-full max-w-md translate-x-0 translate-y-0 flex-col rounded-none border-y-0 border-r-0 p-0 sm:w-[min(100%,30rem)]">
-          <div className="border-border-subtle border-b px-5 py-6 pr-16 sm:px-7">
+        <DialogContent className="commerce-drawer bg-background inset-y-0 top-0 right-0 left-auto flex h-dvh max-h-none w-full max-w-md translate-x-0 translate-y-0 flex-col overflow-hidden rounded-none border-y-0 border-r-0 p-0 sm:w-[min(100%,30rem)] sm:p-0">
+          <div className="commerce-drawer-header border-border-subtle shrink-0 border-b px-5 py-5 pr-16 sm:px-7">
             <DialogTitle>Il tuo carrello</DialogTitle>
             <DialogDescription className="mt-1">
               {cart.itemCount === 0
@@ -31,13 +31,13 @@ export function CommerceOverlays() {
 
           {cart.lines.length > 0 ? (
             <>
-              <div className="min-h-0 flex-1 overflow-y-auto px-5 sm:px-7">
+              <div className="commerce-drawer-products min-h-0 flex-1 overflow-y-auto px-5 sm:px-7">
                 {cart.lines.map((line) => (
                   <CartLine key={line.product.slug} line={line} compact />
                 ))}
               </div>
-              <div className="border-border-subtle bg-surface/35 border-t p-5 sm:p-7">
-                <CartTotals />
+              <div className="commerce-drawer-summary border-border-subtle bg-surface/35 shrink-0 border-t p-4 sm:p-5">
+                <CartTotals compact />
               </div>
             </>
           ) : (

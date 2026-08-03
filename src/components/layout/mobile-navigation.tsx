@@ -20,11 +20,7 @@ import {
 } from "@/components/ui/dialog";
 import { IconButton } from "@/components/ui/icon-button";
 import { Logo } from "@/components/ui/logo";
-import {
-  catalogMenuGroups,
-  getCatalogMenuHref,
-  primaryNavigation,
-} from "@/config/catalog";
+import { primaryNavigation, type CatalogMenuGroup } from "@/config/catalog";
 
 type MobileNavigationProps = {
   open: boolean;
@@ -32,6 +28,7 @@ type MobileNavigationProps = {
   onSearch: () => void;
   onUtility: (panel: "wishlist" | "account") => void;
   triggerRef: RefObject<HTMLButtonElement | null>;
+  menuGroups: readonly CatalogMenuGroup[];
 };
 
 export function MobileNavigation({
@@ -40,6 +37,7 @@ export function MobileNavigation({
   onSearch,
   onUtility,
   triggerRef,
+  menuGroups,
 }: MobileNavigationProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -100,7 +98,7 @@ export function MobileNavigation({
               Esplora il catalogo
             </p>
             <div className="mt-3 grid">
-              {catalogMenuGroups.map((group) => (
+              {menuGroups.map((group) => (
                 <details
                   key={group.title}
                   className="group border-border-subtle border-b"
@@ -115,14 +113,14 @@ export function MobileNavigation({
                     </span>
                   </summary>
                   <ul className="grid gap-1 pb-5">
-                    {group.links.map((label) => (
-                      <li key={label}>
+                    {group.links.map((link) => (
+                      <li key={`${link.href}-${link.label}`}>
                         <Link
-                          href={getCatalogMenuHref(label)}
+                          href={link.href}
                           className="text-text-muted hover:text-accent-soft flex min-h-11 items-center text-sm"
                           onClick={() => onOpenChange(false)}
                         >
-                          {label}
+                          {link.label}
                         </Link>
                       </li>
                     ))}

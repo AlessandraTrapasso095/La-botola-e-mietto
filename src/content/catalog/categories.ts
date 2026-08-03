@@ -4,7 +4,7 @@ import type { CatalogCategory } from "@/content/catalog/types";
 export const catalogCategories = [
   {
     slug: "whisky-whiskey",
-    name: "Whisky e Whiskey",
+    name: "Whisky | Whiskey",
     shortName: "Whisky",
     eyebrow: "Scozia, Irlanda, Americhe e Giappone",
     description:
@@ -15,14 +15,14 @@ export const catalogCategories = [
       "Single Malt Scotch",
       "Blended Scotch",
       "Irish Whiskey",
-      "Bourbon e Rye",
+      "Bourbon | Rye",
       "Whisky Giapponese",
     ],
     media: demoMedia.whiskyCellar,
   },
   {
     slug: "rum-rhum",
-    name: "Rum e Rhum",
+    name: "Rum | Rhum",
     shortName: "Rum",
     eyebrow: "Caraibi e America Latina",
     description:
@@ -50,7 +50,7 @@ export const catalogCategories = [
       "London Dry Gin",
       "Distilled Gin",
       "Contemporary Gin",
-      "Pink e Flavored Gin",
+      "Pink | Flavored Gin",
     ],
     media: demoMedia.ginBotanicals,
   },
@@ -92,7 +92,7 @@ export const catalogCategories = [
   },
   {
     slug: "brandy-distillati",
-    name: "Brandy e altri distillati",
+    name: "Brandy | altri distillati",
     shortName: "Brandy",
     eyebrow: "Tradizioni internazionali",
     description:
@@ -110,7 +110,7 @@ export const catalogCategories = [
   },
   {
     slug: "tequila-mezcal",
-    name: "Tequila e Mezcal",
+    name: "Tequila | Mezcal",
     shortName: "Agave",
     eyebrow: "Messico, agave e maestria",
     description:
@@ -151,7 +151,7 @@ export const catalogCategories = [
   },
   {
     slug: "champagne-spumanti",
-    name: "Champagne e Spumanti",
+    name: "Champagne | Spumanti",
     shortName: "Bollicine",
     eyebrow: "Metodo classico e grandi maison",
     description:

@@ -103,6 +103,7 @@ export function CatalogExplorer({
     filters.alcoholRanges.length +
     filters.countries.length +
     (fixedCategory ? 0 : filters.categories.length) +
+    Number(filters.onlyOnOffer) +
     Number(filters.onlyNew) +
     Number(filters.onlyLimited) +
     Number(filters.onlyAvailable);
@@ -129,7 +130,7 @@ export function CatalogExplorer({
   };
 
   const updateBooleanFilter = (
-    name: "onlyNew" | "onlyLimited" | "onlyAvailable",
+    name: "onlyOnOffer" | "onlyNew" | "onlyLimited" | "onlyAvailable",
     value: boolean,
   ) => {
     setFilters((current) => ({ ...current, [name]: value }));

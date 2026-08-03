@@ -4,6 +4,7 @@ import sitemap from "@/app/sitemap";
 import { defaultSiteUrl } from "@/config/metadata";
 import { catalogBrands } from "@/content/catalog/brands";
 import { catalogCategories } from "@/content/catalog/categories";
+import { catalogCollections } from "@/content/catalog/collections";
 import { catalogProducts } from "@/content/catalog/products";
 
 describe("sitemap catalogo", () => {
@@ -16,6 +17,9 @@ describe("sitemap catalogo", () => {
     catalogBrands.forEach((brand) => {
       expect(urls).toContain(`${defaultSiteUrl}/marchio/${brand.slug}`);
     });
+    catalogCollections.forEach((collection) => {
+      expect(urls).toContain(`${defaultSiteUrl}/collezione/${collection.slug}`);
+    });
     catalogProducts.forEach((product) => {
       expect(urls).toContain(`${defaultSiteUrl}/prodotto/${product.slug}`);
     });
@@ -24,8 +28,10 @@ describe("sitemap catalogo", () => {
   it("include le route pubbliche statiche richieste", () => {
     const urls = sitemap().map((entry) => entry.url);
 
-    ["/catalogo", "/marchi", "/preferiti", "/carrello"].forEach((route) => {
-      expect(urls).toContain(`${defaultSiteUrl}${route}`);
-    });
+    ["/catalogo", "/in-offerta", "/marchi", "/preferiti", "/carrello"].forEach(
+      (route) => {
+        expect(urls).toContain(`${defaultSiteUrl}${route}`);
+      },
+    );
   });
 });

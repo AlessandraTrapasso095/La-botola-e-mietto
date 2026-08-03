@@ -2,7 +2,7 @@ import { demoMedia } from "@/content/demo-assets/media";
 
 export const homeCategories = [
   {
-    title: "Whisky & Whiskey",
+    title: "Whisky | Whiskey",
     eyebrow: "Scozia, Irlanda, Americhe, Giappone",
     description:
       "Single malt, blended, bourbon e rye selezionati per origine e carattere.",
@@ -11,7 +11,7 @@ export const homeCategories = [
     featured: true,
   },
   {
-    title: "Rum & Rhum",
+    title: "Rum | Rhum",
     eyebrow: "Caraibi e America Latina",
     description: "Tradizioni di melassa, agricole e riserve da meditazione.",
     href: "/categoria/rum-rhum",
@@ -25,19 +25,19 @@ export const homeCategories = [
     media: demoMedia.ginBotanicals,
   },
   {
-    title: "Tequila & Mezcal",
+    title: "Tequila | Mezcal",
     eyebrow: "Agave e maestria",
     description: "Blanco, reposado, añejo e mezcal dalla forte identità.",
     href: "/categoria/tequila-mezcal",
     media: demoMedia.curation,
   },
   {
-    title: "Amari & Vermouth",
+    title: "Amari | Vermouth",
     eyebrow: "L’arte italiana del fine pasto",
     description:
       "Erbe, spezie e ricette storiche per degustazione e miscelazione.",
     href: "/categoria/amari",
-    media: demoMedia.ginBotanicals,
+    media: demoMedia.ginMediterranean,
   },
   {
     title: "Bottiglie Rare",

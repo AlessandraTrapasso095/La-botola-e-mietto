@@ -10,9 +10,15 @@ type LegalPageProps = {
   title: string;
   intro: string;
   children: ReactNode;
+  showReviewNotice?: boolean;
 };
 
-export function LegalPage({ children, intro, title }: LegalPageProps) {
+export function LegalPage({
+  children,
+  intro,
+  title,
+  showReviewNotice = true,
+}: LegalPageProps) {
   return (
     <main id="main-content">
       <Section spacing="compact" className="border-border-subtle border-b">
@@ -30,15 +36,17 @@ export function LegalPage({ children, intro, title }: LegalPageProps) {
       </Section>
       <Section>
         <Container className="max-w-[var(--container-reading)]">
-          <SiteNotice tone="accent" className="mb-10">
-            <strong className="text-text-strong block">
-              Contenuto da validare e aggiornare prima della pubblicazione.
-            </strong>
-            <Text tone="muted" size="sm" className="mt-2">
-              Le informazioni sono in revisione e non costituiscono consulenza
-              legale.
-            </Text>
-          </SiteNotice>
+          {showReviewNotice ? (
+            <SiteNotice tone="accent" className="mb-10">
+              <strong className="text-text-strong block">
+                Contenuto da validare e aggiornare prima della pubblicazione.
+              </strong>
+              <Text tone="muted" size="sm" className="mt-2">
+                Le informazioni sono in revisione e non costituiscono consulenza
+                legale.
+              </Text>
+            </SiteNotice>
+          ) : null}
           <div className="legal-content grid gap-8">{children}</div>
         </Container>
       </Section>

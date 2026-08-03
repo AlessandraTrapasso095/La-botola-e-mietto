@@ -22,7 +22,18 @@ export type CatalogBrand = {
   media: DemoMediaAsset;
 };
 
-export type ProductBadge = "Nuovo" | "Edizione limitata" | "Selezione";
+export type ProductBadge =
+  | "Nuovo"
+  | "In offerta"
+  | "Edizione limitata"
+  | "Selezione";
+
+export type CatalogOfferView = {
+  isActive: true;
+  previousGrossPriceMinor: number | null;
+  previousGrossPrice: string | null;
+  discountPercentage: number | null;
+};
 
 export type CatalogProduct = {
   code: string;
@@ -68,6 +79,7 @@ export type CatalogProductSummaryView = Omit<
   categoryName: string;
   grossPriceMinor: number;
   grossPrice: string;
+  offer: CatalogOfferView | null;
 };
 
 export type CatalogProductView = CatalogProductSummaryView &
@@ -82,9 +94,19 @@ export type CatalogProductView = CatalogProductSummaryView &
   >;
 
 export type CatalogCollection = {
+  id: string;
   slug: string;
-  title: string;
+  label: string;
+  sourceType:
+    | "prestashop-category"
+    | "excel-product-field"
+    | "excel-status-field";
+  sourceValue: string;
+  productCount: number;
+  href: string;
+  eyebrow: string;
   description: string;
+  introduction: string;
   productSlugs: readonly string[];
   media: DemoMediaAsset;
 };

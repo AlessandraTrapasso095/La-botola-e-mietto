@@ -8,6 +8,7 @@ import { ageGateConfig, cookieConsentConfig } from "@/config/consent";
 import { baseMetadata } from "@/config/metadata";
 import { catalogProducts } from "@/content/catalog/products";
 import { AgeGate } from "@/features/age-gate/age-gate";
+import { AccountProvider } from "@/features/account/account-provider";
 import { CommerceOverlays } from "@/features/commerce/commerce-overlays";
 import { CommerceProvider } from "@/features/commerce/commerce-provider";
 import { isAgeConfirmationValueValid } from "@/features/age-gate/age-gate-storage";
@@ -68,17 +69,19 @@ export default async function RootLayout({
         <a className="skip-link" href="#main-content">
           Vai al contenuto
         </a>
-        <CommerceProvider products={commerceProducts}>
-          <div id="site-shell">
-            <SiteHeader />
-            {children}
-            <SiteFooter />
-            <CookiePreferencesBanner
-              initiallyConfigured={cookiePreferencesConfigured}
-            />
-          </div>
-          <CommerceOverlays />
-        </CommerceProvider>
+        <AccountProvider>
+          <CommerceProvider products={commerceProducts}>
+            <div id="site-shell">
+              <SiteHeader />
+              {children}
+              <SiteFooter />
+              <CookiePreferencesBanner
+                initiallyConfigured={cookiePreferencesConfigured}
+              />
+            </div>
+            <CommerceOverlays />
+          </CommerceProvider>
+        </AccountProvider>
         <AgeGate initiallyConfirmed={initiallyConfirmed} />
       </body>
     </html>

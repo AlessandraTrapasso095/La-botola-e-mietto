@@ -27,6 +27,7 @@ const baseProduct: CatalogProductView = {
   producer: "The Macallan Distillers",
   grossPriceMinor: 9_104,
   grossPrice: "91,04 €",
+  offer: null,
   stockQuantity: 55,
   isNew: false,
   isLimited: false,

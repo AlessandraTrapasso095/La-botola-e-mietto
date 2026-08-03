@@ -70,12 +70,24 @@ export function CommerceProvider({
   useEffect(() => {
     const hydrationFrame = window.requestAnimationFrame(() => {
       const storedState = readCommerceState(window.localStorage);
-      if (storedState) setState(storedState);
+      if (storedState) {
+        const productSlugs = new Set(products.map((product) => product.slug));
+        setState({
+          cart: Object.fromEntries(
+            Object.entries(storedState.cart).filter(([slug]) =>
+              productSlugs.has(slug),
+            ),
+          ),
+          wishlist: [...new Set(storedState.wishlist)].filter((slug) =>
+            productSlugs.has(slug),
+          ),
+        });
+      }
       setHydrated(true);
     });
 
     return () => window.cancelAnimationFrame(hydrationFrame);
-  }, []);
+  }, [products]);
 
   useEffect(() => {
     if (!hydrated) return;

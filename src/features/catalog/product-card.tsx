@@ -7,6 +7,7 @@ import { BagIcon, HeartIcon } from "@/components/icons";
 import { Badge } from "@/components/ui/badge";
 import { IconButton } from "@/components/ui/icon-button";
 import type { CatalogProductSummaryView } from "@/content/catalog/types";
+import { ProductPrice } from "@/features/catalog/product-price";
 import { useCommerce } from "@/features/commerce/commerce-provider";
 import { cn } from "@/lib/cn";
 
@@ -96,12 +97,7 @@ export function ProductCard({
         </p>
         <div className="border-border-subtle mt-auto flex items-end justify-between gap-4 border-t pt-4">
           <div>
-            <p className="text-text-strong text-lg font-semibold">
-              {product.grossPrice}
-            </p>
-            <p className="text-text-muted mt-0.5 text-[0.65rem] uppercase">
-              IVA inclusa
-            </p>
+            <ProductPrice product={product} />
           </div>
           <IconButton
             aria-label={`Aggiungi ${product.name} al carrello`}

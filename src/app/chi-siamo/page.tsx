@@ -29,14 +29,26 @@ export default function AboutPage() {
               Una boutique costruita intorno alle bottiglie.
             </Heading>
             <Text tone="muted" size="lg" className="mt-6">
-              La Botola e Mietto è l’attività di Mietto Giuliano, con sede a
-              Campo San Martino. La proposta riunisce distillati, liquori,
-              etichette di pregio e prodotti da collezione.
+              La Botola e Mietto nasce da una collaborazione di due personalità
+              distinte e differenti che trovano la forza in comune di creare un
+              concetto di innovazione.
             </Text>
             <Text tone="muted" className="mt-5">
-              Il catalogo è organizzato per tipologia, stile e occasione di
-              degustazione, con particolare attenzione alle confezioni speciali
-              e alle espressioni meno comuni.
+              Si uniscono per selezionare un cerchio ristretto di prodotti,
+              gusti, sapori e profumi da sperimentare loro stessi e trasmettere
+              al prossimo.
+            </Text>
+            <Text tone="muted" className="mt-5">
+              Una squadra dinamica e intraprendente alla ricerca di nuove sfide,
+              travolti da passione e amore per il mondo dello spirits, propone
+              prodotti eccellenti e accuratamente selezionati.
+            </Text>
+            <Text tone="muted" className="mt-5">
+              Attraverso le loro creazioni fotografiche vivono il sentimento e
+              l&apos;arte per il proprio lavoro.
+            </Text>
+            <Text tone="muted" className="mt-5">
+              Presente da oltre 30 anni nel settore Beverage &amp; Food.
             </Text>
             <Link
               href="/catalogo"

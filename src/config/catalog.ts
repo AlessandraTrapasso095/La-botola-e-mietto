@@ -1,15 +1,15 @@
 export const primaryCatalogCategories = [
-  "Whisky e Whiskey",
-  "Rum e Rhum",
+  "Whisky | Whiskey",
+  "Rum | Rhum",
   "Gin",
   "Vodka",
   "Cognac",
   "Armagnac",
-  "Brandy e altri distillati",
-  "Tequila e Mezcal",
+  "Brandy | altri distillati",
+  "Tequila | Mezcal",
   "Grappe",
   "Vini",
-  "Champagne e Spumanti",
+  "Champagne | Spumanti",
   "Liquori",
   "Amari",
   "Vermouth",
@@ -23,7 +23,8 @@ export const primaryCatalogCategories = [
 export const primaryNavigation = [
   { label: "Catalogo", href: "/catalogo", menu: true },
   { label: "Nuovi arrivi", href: "/#nuovi-arrivi" },
-  { label: "Distillati rari", href: "/categoria/bottiglie-rare" },
+  { label: "In offerta", href: "/in-offerta" },
+  { label: "Distillati rari", href: "/#distillati-rari" },
   { label: "Marchi", href: "/marchi" },
   { label: "La nostra selezione", href: "/#la-nostra-selezione" },
 ] as const;
@@ -32,13 +33,12 @@ const menuCategoryRoutes: Record<string, string> = {
   "Single Malt Scotch": "/categoria/whisky-whiskey",
   "Blended Scotch": "/categoria/whisky-whiskey",
   "Irish Whiskey": "/categoria/whisky-whiskey",
-  "Bourbon & Rye": "/categoria/whisky-whiskey",
+  "Bourbon | Rye": "/categoria/whisky-whiskey",
   "Whisky Giapponesi": "/categoria/whisky-whiskey",
   "Rum Invecchiati": "/categoria/rum-rhum",
   "Rum Tradizionali": "/categoria/rum-rhum",
   "Rhum Agricole": "/categoria/rum-rhum",
   Cachaça: "/categoria/rum-rhum",
-  "Edizioni da Collezione": "/categoria/bottiglie-rare",
   Gin: "/categoria/gin",
   Vodka: "/categoria/vodka",
   Tequila: "/categoria/tequila-mezcal",
@@ -55,62 +55,96 @@ const menuCategoryRoutes: Record<string, string> = {
   Spumanti: "/categoria/champagne-spumanti",
   Aperitivi: "/categoria/aperitivi",
   Birre: "/categoria/birre",
-  "Bottiglie Rare": "/categoria/bottiglie-rare",
-  "Etichette di Pregio": "/categoria/bottiglie-rare",
-  "Nuovi Arrivi": "/#nuovi-arrivi",
-  "Confezioni Regalo": "/catalogo",
 };
 
 export function getCatalogMenuHref(label: string) {
   return menuCategoryRoutes[label] ?? "/catalogo";
 }
 
-export const catalogMenuGroups = [
+export type CatalogMenuLink = {
+  label: string;
+  href: string;
+};
+
+export type CatalogMenuGroup = {
+  title: string;
+  description: string;
+  links: readonly CatalogMenuLink[];
+};
+
+function createCategoryLinks(labels: readonly string[]): CatalogMenuLink[] {
+  return labels.map((label) => ({ label, href: getCatalogMenuHref(label) }));
+}
+
+const catalogMenuGroups = [
   {
-    title: "Whisky & Whiskey",
+    title: "Whisky | Whiskey",
     description: "Dalle isole scozzesi alle distillerie del Giappone.",
-    links: [
+    links: createCategoryLinks([
       "Single Malt Scotch",
       "Blended Scotch",
       "Irish Whiskey",
-      "Bourbon & Rye",
+      "Bourbon | Rye",
       "Whisky Giapponesi",
-    ],
+    ]),
   },
   {
-    title: "Rum & Rhum",
+    title: "Rum | Rhum",
     description: "Melassa, puro succo di canna e lunghe maturazioni.",
-    links: [
+    links: createCategoryLinks([
       "Rum Invecchiati",
       "Rum Tradizionali",
       "Rhum Agricole",
       "Cachaça",
-      "Edizioni da Collezione",
-    ],
+    ]),
   },
   {
     title: "Distillati",
     description: "Classici internazionali e produzioni di ricerca.",
-    links: ["Gin", "Vodka", "Tequila", "Mezcal", "Brandy", "Calvados"],
+    links: createCategoryLinks([
+      "Gin",
+      "Vodka",
+      "Tequila",
+      "Mezcal",
+      "Brandy",
+      "Calvados",
+    ]),
   },
   {
     title: "Fine degustazione",
     description: "Selezioni italiane e grandi tradizioni europee.",
-    links: ["Cognac", "Armagnac", "Grappe", "Amari", "Vermouth"],
+    links: createCategoryLinks([
+      "Cognac",
+      "Armagnac",
+      "Grappe",
+      "Amari",
+      "Vermouth",
+    ]),
   },
   {
     title: "Cantina",
     description: "Vini, bollicine e proposte per l’aperitivo.",
-    links: ["Vini", "Champagne", "Spumanti", "Aperitivi", "Birre"],
+    links: createCategoryLinks([
+      "Vini",
+      "Champagne",
+      "Spumanti",
+      "Aperitivi",
+      "Birre",
+    ]),
   },
-  {
-    title: "Collezioni",
-    description: "Bottiglie ricercate per intenditori e collezionisti.",
-    links: [
-      "Bottiglie Rare",
-      "Etichette di Pregio",
-      "Nuovi Arrivi",
-      "Confezioni Regalo",
-    ],
-  },
-] as const;
+] as const satisfies readonly CatalogMenuGroup[];
+
+export function createCatalogMenuGroups(
+  collectionLinks: readonly CatalogMenuLink[],
+): readonly CatalogMenuGroup[] {
+  if (collectionLinks.length === 0) return catalogMenuGroups;
+
+  return [
+    ...catalogMenuGroups,
+    {
+      title: "Collezioni",
+      description: "Bottiglie ricercate per intenditori e collezionisti.",
+      links: collectionLinks,
+    },
+  ];
+}

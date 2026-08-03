@@ -1,4 +1,6 @@
 import { catalogProducts } from "@/content/catalog/products";
+import { isCatalogOfferProductCode } from "@/content/catalog/offers";
+import { getOfferProducts } from "@/content/catalog/selectors";
 import { CategoryShowcase } from "@/features/home/category-showcase";
 import {
   BrandSection,
@@ -14,7 +16,14 @@ import { createCatalogProductViews } from "@/server/catalog-view";
 
 export default function HomePage() {
   const newArrivals = createCatalogProductViews(
-    catalogProducts.filter((product) => product.isNew).slice(0, 4),
+    catalogProducts
+      .filter(
+        (product) => product.isNew && !isCatalogOfferProductCode(product.code),
+      )
+      .slice(0, 4),
+  );
+  const offerSelection = createCatalogProductViews(
+    getOfferProducts().slice(0, 4),
   );
   const rareSelection = createCatalogProductViews(
     catalogProducts
@@ -40,6 +49,19 @@ export default function HomePage() {
         description="Release recenti, edizioni speciali e interpretazioni contemporanee scelte per distinguersi."
         products={newArrivals}
       />
+      {offerSelection.length > 0 ? (
+        <ProductShelf
+          id="in-offerta"
+          eyebrow="Occasioni selezionate"
+          title="In offerta"
+          description="Bottiglie scelte con cura e proposte a condizioni speciali, disponibili per un tempo limitato."
+          products={offerSelection}
+          cta={{
+            label: "Scopri tutte le offerte",
+            href: "/in-offerta",
+          }}
+        />
+      ) : null}
       <ProductShelf
         id="distillati-rari"
         eyebrow="La collezione"

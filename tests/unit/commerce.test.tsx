@@ -3,7 +3,10 @@ import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
 
 import { CartPageContent } from "@/features/commerce/cart-page-content";
-import { CommerceProvider } from "@/features/commerce/commerce-provider";
+import {
+  CommerceProvider,
+  useCommerce,
+} from "@/features/commerce/commerce-provider";
 import {
   calculateShippingProgress,
   createCartSummary,
@@ -67,6 +70,29 @@ describe("carrello e spedizione gratuita", () => {
 });
 
 describe("wishlist", () => {
+  function WishlistCount() {
+    const { wishlist } = useCommerce();
+
+    return <output aria-label="Numero preferiti">{wishlist.length}</output>;
+  }
+
+  it("ignora i preferiti non più presenti nel catalogo", async () => {
+    window.localStorage.setItem(
+      "lbm-demo-commerce",
+      JSON.stringify({ cart: {}, wishlist: ["prodotto-non-disponibile"] }),
+    );
+
+    render(
+      <CommerceProvider products={catalogProductFixtures}>
+        <WishlistCount />
+      </CommerceProvider>,
+    );
+
+    await waitFor(() =>
+      expect(screen.getByLabelText("Numero preferiti")).toHaveTextContent("0"),
+    );
+  });
+
   it("mostra la selezione persistente e permette la rimozione", async () => {
     const user = userEvent.setup();
 

@@ -36,7 +36,7 @@ type CatalogFiltersPanelProps = {
   onBooleanFilterChange: (
     name: keyof Pick<
       CatalogFilters,
-      "onlyNew" | "onlyLimited" | "onlyAvailable"
+      "onlyOnOffer" | "onlyNew" | "onlyLimited" | "onlyAvailable"
     >,
     value: boolean,
   ) => void;
@@ -196,6 +196,7 @@ export function CatalogFiltersPanel({
           Disponibilità
         </legend>
         {[
+          { name: "onlyOnOffer", label: "In offerta" },
           { name: "onlyNew", label: "Nuovi arrivi" },
           { name: "onlyLimited", label: "Edizioni limitate" },
           { name: "onlyAvailable", label: "Disponibili" },
@@ -209,7 +210,11 @@ export function CatalogFiltersPanel({
               checked={filters[option.name as keyof CatalogFilters] as boolean}
               onChange={(event) =>
                 onBooleanFilterChange(
-                  option.name as "onlyNew" | "onlyLimited" | "onlyAvailable",
+                  option.name as
+                    | "onlyOnOffer"
+                    | "onlyNew"
+                    | "onlyLimited"
+                    | "onlyAvailable",
                   event.target.checked,
                 )
               }

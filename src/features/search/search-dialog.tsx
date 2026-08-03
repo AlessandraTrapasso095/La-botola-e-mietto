@@ -2,9 +2,10 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 
 import { ArrowRightIcon, SearchIcon } from "@/components/icons";
+import { Badge } from "@/components/ui/badge";
 import {
   Dialog,
   DialogContent,
@@ -13,8 +14,12 @@ import {
 } from "@/components/ui/dialog";
 import { catalogBrands } from "@/content/catalog/brands";
 import { catalogCategories } from "@/content/catalog/categories";
-import { demoSearchTerms } from "@/content/demo-assets/home";
 import { useCommerce } from "@/features/commerce/commerce-provider";
+import { ProductPrice } from "@/features/catalog/product-price";
+import {
+  isCatalogSearchQuery,
+  searchCatalog,
+} from "@/features/search/catalog-search";
 
 type SearchDialogProps = {
   open: boolean;
@@ -28,10 +33,6 @@ const suggestedCategorySlugs = [
   "tequila-mezcal",
   "bottiglie-rare",
 ] as const;
-
-function normalizeSearchValue(value: string) {
-  return value.trim().toLocaleLowerCase("it-IT");
-}
 
 export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
   const { products } = useCommerce();
@@ -51,61 +52,46 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
     return () => window.clearTimeout(timer);
   }, [query]);
 
-  const normalizedQuery = normalizeSearchValue(settledQuery);
   const isLoading = query !== settledQuery;
-  const productResults = useMemo(() => {
-    if (!normalizedQuery) return products.slice(0, 5);
-
-    return products
-      .filter((product) =>
-        [
-          product.name,
-          product.brandName,
-          product.categoryName,
-          product.subcategory,
-          product.country,
-        ].some(
-          (value) =>
-            value !== null &&
-            normalizeSearchValue(value).includes(normalizedQuery),
+  const searchResults = useMemo(
+    () =>
+      searchCatalog({
+        query: settledQuery,
+        products,
+        brands: catalogBrands,
+        categories: catalogCategories,
+        limits: { products: 7, brands: 4, categories: 4 },
+      }),
+    [products, settledQuery],
+  );
+  const hasQuery = searchResults.normalizedQuery.length > 0;
+  const isShortQuery = hasQuery && !searchResults.isSearchable;
+  const productResults = hasQuery
+    ? searchResults.products
+    : products.slice(0, 5);
+  const brandResults = hasQuery
+    ? searchResults.brands
+    : catalogBrands.slice(0, 3);
+  const categoryResults = hasQuery
+    ? searchResults.categories
+    : catalogCategories.filter((category) =>
+        suggestedCategorySlugs.includes(
+          category.slug as (typeof suggestedCategorySlugs)[number],
         ),
-      )
-      .slice(0, 7);
-  }, [normalizedQuery, products]);
-  const brandResults = useMemo(
-    () =>
-      normalizedQuery
-        ? catalogBrands
-            .filter((brand) =>
-              normalizeSearchValue(
-                `${brand.name} ${brand.country} ${brand.description}`,
-              ).includes(normalizedQuery),
-            )
-            .slice(0, 4)
-        : catalogBrands.slice(0, 3),
-    [normalizedQuery],
-  );
-  const categoryResults = useMemo(
-    () =>
-      normalizedQuery
-        ? catalogCategories
-            .filter((category) =>
-              normalizeSearchValue(
-                `${category.name} ${category.description} ${category.subcategories.join(" ")}`,
-              ).includes(normalizedQuery),
-            )
-            .slice(0, 4)
-        : catalogCategories.filter((category) =>
-            suggestedCategorySlugs.includes(
-              category.slug as (typeof suggestedCategorySlugs)[number],
-            ),
-          ),
-    [normalizedQuery],
-  );
-  const totalResults =
-    productResults.length + brandResults.length + categoryResults.length;
+      );
+  const totalResults = hasQuery
+    ? searchResults.totalCount
+    : productResults.length + brandResults.length + categoryResults.length;
 
   const closeSearch = () => onOpenChange(false);
+  const submitSearch = (event: FormEvent<HTMLFormElement>) => {
+    const nextQuery = query.trim();
+    if (!isCatalogSearchQuery(nextQuery)) {
+      event.preventDefault();
+      setSettledQuery(nextQuery);
+      inputRef.current?.focus();
+    }
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -117,11 +103,17 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
           <DialogDescription className="mt-2">
             Trova una bottiglia, un marchio o un percorso di degustazione.
           </DialogDescription>
-          <div className="border-border bg-surface mt-6 flex min-h-14 items-center gap-3 border px-4 focus-within:border-[var(--color-accent)] focus-within:shadow-[var(--focus-ring)]">
-            <SearchIcon className="text-accent shrink-0" />
+          <form
+            role="search"
+            action="/cerca"
+            method="get"
+            className="border-border bg-surface mt-6 flex min-h-14 items-center gap-3 border px-2 focus-within:border-[var(--color-accent)] focus-within:shadow-[var(--focus-ring)] sm:px-4"
+            onSubmit={submitSearch}
+          >
             <input
               ref={inputRef}
               type="search"
+              name="q"
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               onKeyDown={(event) => {
@@ -134,35 +126,33 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
               placeholder="Prova “Yamazaki”, “gin” o “Islay”"
               aria-label="Cerca prodotti, marchi e categorie"
               aria-controls="search-results"
+              aria-describedby={isShortQuery ? "search-query-hint" : undefined}
               className="search-dialog-input placeholder:text-text-muted min-h-12 w-full bg-transparent outline-none"
             />
+            <button
+              type="submit"
+              aria-label="Avvia ricerca"
+              className="text-accent hover:text-accent-soft flex size-11 shrink-0 items-center justify-center transition-colors focus-visible:shadow-[var(--focus-ring)]"
+            >
+              <SearchIcon />
+            </button>
             <kbd className="border-border-subtle text-text-muted hidden border px-2 py-1 text-[0.65rem] sm:block">
               ESC
             </kbd>
-          </div>
+          </form>
+          {isShortQuery ? (
+            <p id="search-query-hint" className="text-text-muted mt-2 text-xs">
+              Inserisci almeno 2 caratteri per avviare la ricerca.
+            </p>
+          ) : null}
         </div>
 
         <div className="grid min-h-0 overflow-y-auto lg:grid-cols-[16rem_1fr]">
           <aside className="border-border-subtle bg-surface/60 border-b p-5 lg:border-r lg:border-b-0 lg:p-7">
             <p className="text-accent text-[0.65rem] font-semibold tracking-[var(--letter-spacing-label)] uppercase">
-              Ricerche recenti
+              Percorsi suggeriti
             </p>
-            <div className="mt-3 grid gap-2">
-              {demoSearchTerms.map((term) => (
-                <button
-                  key={term}
-                  type="button"
-                  className="border-border-subtle hover:border-accent hover:text-accent-soft min-h-10 w-full border px-3 text-left text-xs transition-colors"
-                  onClick={() => setQuery(term)}
-                >
-                  {term}
-                </button>
-              ))}
-            </div>
-            <p className="text-accent mt-7 text-[0.65rem] font-semibold tracking-[var(--letter-spacing-label)] uppercase">
-              Suggerimenti
-            </p>
-            <ul className="mt-2">
+            <ul className="mt-3">
               {catalogCategories
                 .filter((category) =>
                   suggestedCategorySlugs.includes(
@@ -187,7 +177,7 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
           <div ref={resultsRef} id="search-results" className="p-5 sm:p-7">
             <div className="flex items-center justify-between gap-4">
               <p className="text-text-strong font-serif text-xl">
-                {normalizedQuery ? "Risultati" : "In evidenza"}
+                {hasQuery ? "Risultati" : "In evidenza"}
               </p>
               <p className="text-text-muted text-xs" aria-live="polite">
                 {isLoading
@@ -210,6 +200,15 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
                     </div>
                   </div>
                 ))}
+              </div>
+            ) : isShortQuery ? (
+              <div className="border-border-subtle mt-5 border px-6 py-12 text-center">
+                <p className="text-text-strong font-serif text-2xl">
+                  Continua a scrivere
+                </p>
+                <p className="text-text-muted mx-auto mt-3 max-w-md text-sm">
+                  Servono almeno 2 caratteri per cercare nel catalogo.
+                </p>
               </div>
             ) : totalResults > 0 ? (
               <div className="mt-5 grid gap-8">
@@ -252,10 +251,16 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
                                   {product.categoryName} ·{" "}
                                   {product.capacityLabel}
                                 </p>
+                                {product.offer ? (
+                                  <Badge className="mt-2">In offerta</Badge>
+                                ) : null}
                               </div>
-                              <p className="text-text-strong hidden self-center text-sm font-semibold sm:block">
-                                {product.grossPrice}
-                              </p>
+                              <ProductPrice
+                                product={product}
+                                size="sm"
+                                showVat={false}
+                                className="hidden self-center sm:block"
+                              />
                             </Link>
                           </li>
                         );

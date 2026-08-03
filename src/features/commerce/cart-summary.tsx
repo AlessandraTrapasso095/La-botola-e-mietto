@@ -9,11 +9,20 @@ import { useCommerce } from "@/features/commerce/commerce-provider";
 import { formatEuroMinor } from "@/lib/money";
 import { cn } from "@/lib/cn";
 
-export function CartShippingProgress() {
+export function CartShippingProgress({
+  compact = false,
+}: {
+  compact?: boolean;
+}) {
   const { shippingProgress } = useCommerce();
 
   return (
-    <div className="border-border-subtle bg-surface border p-4">
+    <div
+      className={cn(
+        "cart-shipping-progress border-border-subtle bg-surface border",
+        compact ? "p-3" : "p-4",
+      )}
+    >
       <p className="text-text-strong text-sm">
         {shippingProgress.qualified
           ? "Hai ottenuto la spedizione gratuita in Italia."
@@ -42,15 +51,19 @@ export function CartShippingProgress() {
 export function CartTotals({
   className,
   checkoutLink = true,
+  compact = false,
 }: {
   className?: string;
   checkoutLink?: boolean;
+  compact?: boolean;
 }) {
   const { cart, setCartOpen, shippingProgress } = useCommerce();
 
   return (
-    <div className={cn("grid gap-5", className)}>
-      <CartShippingProgress />
+    <div
+      className={cn("cart-totals grid", compact ? "gap-3" : "gap-5", className)}
+    >
+      <CartShippingProgress compact={compact} />
       <div className="grid gap-3">
         <div className="flex items-center justify-between gap-4 text-sm">
           <span className="text-text-muted">Subtotale</span>
@@ -77,12 +90,14 @@ export function CartTotals({
           </div>
         </div>
       </div>
-      <Button fullWidth disabled>
+      <Button fullWidth disabled size={compact ? "sm" : "md"}>
         Procedi al checkout
       </Button>
-      <p className="text-text-muted text-center text-xs">
-        Spedizione e totale definitivo vengono confermati al checkout.
-      </p>
+      {!compact ? (
+        <p className="text-text-muted text-center text-xs">
+          Spedizione e totale definitivo vengono confermati al checkout.
+        </p>
+      ) : null}
       {checkoutLink ? (
         <Link
           href="/carrello"

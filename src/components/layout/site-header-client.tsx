@@ -14,47 +14,31 @@ import {
 } from "@/components/icons";
 import { MobileNavigation } from "@/components/layout/mobile-navigation";
 import { Container } from "@/components/ui/container";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import { IconButton } from "@/components/ui/icon-button";
 import { Logo } from "@/components/ui/logo";
-import {
-  catalogMenuGroups,
-  getCatalogMenuHref,
-  primaryNavigation,
-} from "@/config/catalog";
+import { accountRoutes } from "@/config/account";
+import { primaryNavigation, type CatalogMenuGroup } from "@/config/catalog";
+import { useAccount } from "@/features/account/account-provider";
 import { useCommerce } from "@/features/commerce/commerce-provider";
 import { SearchDialog } from "@/features/search/search-dialog";
 import { cn } from "@/lib/cn";
 
-type UtilityPanel = "account" | null;
-
 type SiteHeaderClientProps = {
   freeShippingThreshold: string;
+  menuGroups: readonly CatalogMenuGroup[];
 };
-
-const utilityMessages = {
-  account: {
-    title: "Area personale",
-    description:
-      "Uno spazio riservato per ritrovare ordini, indirizzi e preferenze.",
-  },
-} as const;
 
 export function SiteHeaderClient({
   freeShippingThreshold,
+  menuGroups,
 }: SiteHeaderClientProps) {
   const router = useRouter();
+  const { user } = useAccount();
   const { cart, setCartOpen, wishlist } = useCommerce();
   const [isScrolled, setIsScrolled] = useState(false);
   const [megaMenuOpen, setMegaMenuOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
-  const [utilityPanel, setUtilityPanel] = useState<UtilityPanel>(null);
   const headerRef = useRef<HTMLElement>(null);
   const catalogButtonRef = useRef<HTMLButtonElement>(null);
   const mobileMenuButtonRef = useRef<HTMLButtonElement>(null);
@@ -88,8 +72,6 @@ export function SiteHeaderClient({
     };
   }, [megaMenuOpen]);
 
-  const utilityContent = utilityPanel ? utilityMessages[utilityPanel] : null;
-
   return (
     <>
       <div className="border-border-subtle bg-surface border-b">
@@ -108,20 +90,26 @@ export function SiteHeaderClient({
         data-scrolled={isScrolled}
         className="site-header border-border-subtle bg-background/92 sticky top-0 z-[var(--z-header)] border-b"
       >
-        <Container className="flex min-h-[4.5rem] items-center justify-between gap-3 xl:min-h-20">
-          <Logo priority wordmarkClassName="hidden md:inline xl:text-xl" />
+        <Container className="flex min-h-[4.5rem] flex-nowrap items-center justify-between gap-2 px-5 sm:px-6 xl:min-h-20 xl:px-5 2xl:gap-3 2xl:px-8">
+          <Logo
+            priority
+            wordmarkClassName="hidden md:inline xl:text-lg 2xl:text-xl"
+          />
 
-          <nav aria-label="Navigazione principale" className="hidden xl:block">
-            <ul className="flex items-center gap-7">
+          <nav
+            aria-label="Navigazione principale"
+            className="hidden min-w-0 flex-1 xl:block"
+          >
+            <ul className="flex flex-nowrap items-center justify-center gap-3 2xl:gap-5">
               {primaryNavigation.map((link) => (
-                <li key={link.label}>
+                <li key={link.label} className="shrink-0 whitespace-nowrap">
                   {"menu" in link && link.menu ? (
                     <button
                       ref={catalogButtonRef}
                       type="button"
                       aria-expanded={megaMenuOpen}
                       aria-controls="catalog-mega-menu"
-                      className="animated-underline flex min-h-11 items-center gap-1.5 py-3 text-xs font-semibold tracking-[var(--letter-spacing-label)] uppercase"
+                      className="animated-underline flex min-h-11 items-center gap-1 py-3 text-xs font-semibold tracking-[0.08em] whitespace-nowrap uppercase 2xl:gap-1.5 2xl:tracking-[var(--letter-spacing-label)]"
                       onClick={() => setMegaMenuOpen((current) => !current)}
                       onKeyDown={(event) => {
                         if (event.key !== "ArrowDown") return;
@@ -146,7 +134,7 @@ export function SiteHeaderClient({
                     </button>
                   ) : (
                     <Link
-                      className="animated-underline flex min-h-11 items-center py-3 text-xs font-semibold tracking-[var(--letter-spacing-label)] uppercase"
+                      className="animated-underline flex min-h-11 items-center py-3 text-xs font-semibold tracking-[0.08em] whitespace-nowrap uppercase 2xl:tracking-[var(--letter-spacing-label)]"
                       href={link.href}
                     >
                       {link.label}
@@ -157,7 +145,7 @@ export function SiteHeaderClient({
             </ul>
           </nav>
 
-          <div className="flex items-center gap-0.5">
+          <div className="flex shrink-0 flex-nowrap items-center gap-0.5">
             <IconButton
               aria-label="Cerca nel catalogo"
               onClick={() => setSearchOpen(true)}
@@ -179,7 +167,11 @@ export function SiteHeaderClient({
             <IconButton
               aria-label="Apri area personale"
               className="hidden md:inline-flex"
-              onClick={() => setUtilityPanel("account")}
+              onClick={() =>
+                router.push(
+                  user ? accountRoutes.dashboard : accountRoutes.signIn,
+                )
+              }
             >
               <UserIcon />
             </IconButton>
@@ -222,7 +214,7 @@ export function SiteHeaderClient({
             >
               <Container className="grid grid-cols-[1fr_17rem] gap-12 py-10">
                 <div className="grid grid-cols-3 gap-x-10 gap-y-9">
-                  {catalogMenuGroups.map((group) => (
+                  {menuGroups.map((group) => (
                     <div key={group.title}>
                       <p className="text-text-strong font-serif text-lg">
                         {group.title}
@@ -231,14 +223,14 @@ export function SiteHeaderClient({
                         {group.description}
                       </p>
                       <ul className="mt-4 grid gap-1">
-                        {group.links.map((label) => (
-                          <li key={label}>
+                        {group.links.map((link) => (
+                          <li key={`${link.href}-${link.label}`}>
                             <Link
-                              href={getCatalogMenuHref(label)}
+                              href={link.href}
                               className="hover:text-accent-soft flex min-h-9 items-center text-sm transition-colors"
                               onClick={() => setMegaMenuOpen(false)}
                             >
-                              {label}
+                              {link.label}
                             </Link>
                           </li>
                         ))}
@@ -247,7 +239,7 @@ export function SiteHeaderClient({
                   ))}
                 </div>
                 <Link
-                  href="/categoria/bottiglie-rare"
+                  href="/#distillati-rari"
                   className="mega-menu-feature image-hover group relative min-h-72 overflow-hidden border border-[var(--color-border-subtle)]"
                   onClick={() => setMegaMenuOpen(false)}
                 >
@@ -273,6 +265,7 @@ export function SiteHeaderClient({
 
       <SearchDialog open={searchOpen} onOpenChange={setSearchOpen} />
       <MobileNavigation
+        menuGroups={menuGroups}
         open={mobileMenuOpen}
         onOpenChange={setMobileMenuOpen}
         onSearch={() => {
@@ -282,31 +275,11 @@ export function SiteHeaderClient({
         onUtility={(panel) => {
           setMobileMenuOpen(false);
           if (panel === "wishlist") router.push("/preferiti");
-          else setUtilityPanel("account");
+          else
+            router.push(user ? accountRoutes.dashboard : accountRoutes.signIn);
         }}
         triggerRef={mobileMenuButtonRef}
       />
-
-      <Dialog
-        open={Boolean(utilityContent)}
-        onOpenChange={(open) => {
-          if (!open) setUtilityPanel(null);
-        }}
-      >
-        <DialogContent className="sm:max-w-md">
-          <DialogTitle>{utilityContent?.title}</DialogTitle>
-          <DialogDescription className="mt-3">
-            {utilityContent?.description}
-          </DialogDescription>
-          <Link
-            href="/#nuovi-arrivi"
-            className="animated-underline text-accent-soft mt-5 inline-flex min-h-11 items-center text-xs font-semibold tracking-[var(--letter-spacing-label)] uppercase"
-            onClick={() => setUtilityPanel(null)}
-          >
-            Esplora la selezione
-          </Link>
-        </DialogContent>
-      </Dialog>
     </>
   );
 }

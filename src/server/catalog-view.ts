@@ -3,6 +3,10 @@ import "server-only";
 import { commerceConfig } from "@/config/commerce";
 import { getBrandBySlug } from "@/content/catalog/selectors";
 import { getCategoryBySlug } from "@/content/catalog/selectors";
+import {
+  getCatalogOfferView,
+  isCatalogOfferProductCode,
+} from "@/content/catalog/offers";
 import type {
   CatalogProduct,
   CatalogProductSummaryView,
@@ -20,6 +24,11 @@ export function createCatalogProductSummaryView(
     createEuro(product.netPriceMinor),
     commerceConfig.defaultVatRateBasisPoints,
   );
+  const isOnOffer = isCatalogOfferProductCode(product.code);
+  const badges = [
+    ...(isOnOffer ? (["In offerta"] as const) : []),
+    ...product.badges.filter((badge) => !(isOnOffer && badge === "Nuovo")),
+  ];
 
   if (!brand || !category) {
     throw new Error(`Relazione catalogo non valida per ${product.code}.`);
@@ -31,7 +40,7 @@ export function createCatalogProductSummaryView(
     name: product.name,
     brandSlug: product.brandSlug,
     categorySlug: product.categorySlug,
-    subcategory: product.subcategory,
+    subcategory: product.subcategory.replace(/ (?:&|e) /g, " | "),
     capacityMl: product.capacityMl,
     capacityLabel: product.capacityLabel,
     packQuantity: product.packQuantity,
@@ -39,14 +48,15 @@ export function createCatalogProductSummaryView(
     country: product.country,
     producer: product.producer,
     stockQuantity: product.stockQuantity,
-    isNew: product.isNew,
+    isNew: product.isNew && !isOnOffer,
     isLimited: product.isLimited,
-    badges: product.badges,
+    badges,
     media: product.media,
     brandName: brand.name,
     categoryName: category.name,
     grossPriceMinor: Number(grossPrice.amountMinor),
     grossPrice: formatEuroMinor(grossPrice.amountMinor),
+    offer: getCatalogOfferView(product.code),
   };
 }
 
@@ -60,7 +70,13 @@ export function createCatalogProductView(
     service: product.service,
     origin: product.origin,
     pairings: product.pairings,
-    characteristics: product.characteristics,
+    characteristics: product.characteristics.map((characteristic) => ({
+      ...characteristic,
+      value:
+        characteristic.label === "Tipologia"
+          ? characteristic.value.replace(/ (?:&|e) /g, " | ")
+          : characteristic.value,
+    })),
   };
 }
 

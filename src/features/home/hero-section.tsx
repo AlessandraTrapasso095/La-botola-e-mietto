@@ -42,7 +42,7 @@ export function HeroSection() {
           <div className="mt-8 flex flex-col gap-3 min-[27rem]:flex-row">
             <Link
               href="/#categorie"
-              className="bg-accent text-accent-contrast hover:bg-accent-soft inline-flex min-h-12 items-center justify-center gap-2 rounded-xs border border-[var(--color-accent)] px-7 py-4 text-xs font-semibold tracking-[var(--letter-spacing-label)] uppercase transition-[background-color,transform] duration-[var(--motion-fast)] active:scale-[0.98]"
+              className="hero-primary-cta bg-accent hover:bg-accent-soft inline-flex min-h-12 items-center justify-center gap-2 rounded-xs border border-[var(--color-accent)] px-7 py-4 text-xs font-semibold tracking-[var(--letter-spacing-label)] uppercase transition-[background-color,transform] duration-[var(--motion-fast)] active:scale-[0.98]"
             >
               Esplora la selezione
               <ArrowRightIcon className="size-5" />

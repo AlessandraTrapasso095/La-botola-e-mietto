@@ -7,6 +7,7 @@ export type CatalogFilters = {
   capacities: string[];
   alcoholRanges: string[];
   countries: string[];
+  onlyOnOffer: boolean;
   onlyNew: boolean;
   onlyLimited: boolean;
   onlyAvailable: boolean;
@@ -26,6 +27,7 @@ export const emptyCatalogFilters: CatalogFilters = {
   capacities: [],
   alcoholRanges: [],
   countries: [],
+  onlyOnOffer: false,
   onlyNew: false,
   onlyLimited: false,
   onlyAvailable: false,
@@ -98,6 +100,7 @@ export function filterCatalogProducts(
       matchesPrice(product, filters.priceRanges) &&
       matchesCapacity(product, filters.capacities) &&
       matchesAlcohol(product, filters.alcoholRanges) &&
+      (!filters.onlyOnOffer || product.offer !== null) &&
       (!filters.onlyNew || product.isNew) &&
       (!filters.onlyLimited || product.isLimited) &&
       (!filters.onlyAvailable || product.stockQuantity > 0),
