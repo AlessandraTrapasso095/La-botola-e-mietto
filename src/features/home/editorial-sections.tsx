@@ -52,14 +52,23 @@ export function BrandSection() {
           </p>
           <Heading className="mt-4">Nomi che hanno definito uno stile.</Heading>
         </Reveal>
-        <Reveal className="border-border-subtle mt-12 grid grid-cols-2 border-t border-l sm:grid-cols-4">
+        <Reveal
+          data-featured-brand-grid
+          className="border-border-subtle mt-12 grid grid-cols-2 border-t border-l md:grid-cols-3 lg:grid-cols-4"
+        >
           {featuredBrands.map((brand) => (
             <Link
               key={brand.slug}
               href={`/marchio/${brand.slug}`}
-              className="border-border-subtle text-text-muted hover:text-accent-soft flex min-h-28 items-center justify-center border-r border-b px-4 text-center font-serif text-lg transition-colors sm:min-h-36 sm:text-xl"
+              data-featured-brand-cell
+              className="border-border-subtle text-text-muted hover:text-accent-soft flex min-h-24 min-w-0 items-center justify-center overflow-hidden border-r border-b px-3 py-5 text-center transition-colors sm:min-h-28 sm:px-4 md:min-h-32 md:px-5 lg:min-h-36"
             >
-              {brand.name}
+              <span
+                data-featured-brand-name
+                className="line-clamp-2 max-w-full min-w-0 font-serif text-[1.5rem] leading-[1.08] whitespace-normal sm:text-[1.625rem] md:text-[2rem] lg:text-[1.375rem]"
+              >
+                {brand.name}
+              </span>
             </Link>
           ))}
         </Reveal>
