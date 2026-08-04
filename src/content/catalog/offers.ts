@@ -1,15 +1,5 @@
 import type { CatalogOfferView } from "@/content/catalog/types";
 
-export const catalogOfferSource = {
-  file: "reference-private/catalog/listino_completo_la_botola.xlsx",
-  statusColumn: "NUOVI PRODOTTI",
-  statusValue: "PRODOTTI IN OFFERTA",
-  priceColumn: "PREZZO SENZA IVA",
-  previousPriceColumn: null,
-  discountPercentageColumn: null,
-  promotionPeriodColumn: null,
-} as const;
-
 export const catalogOfferProductCodes = [
   "AB3197",
   "AB4556",

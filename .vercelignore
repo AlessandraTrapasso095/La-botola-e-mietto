@@ -1,0 +1,16 @@
+reference-private/
+.env
+.env.*
+*.xlsx
+*.xls
+*.csv
+*.zip
+*.rar
+*.7z
+*.pages
+docs/
+tests/
+coverage/
+playwright-report/
+test-results/
+README.md

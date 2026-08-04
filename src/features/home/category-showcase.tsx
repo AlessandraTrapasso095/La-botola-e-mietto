@@ -69,7 +69,7 @@ export function CategoryShowcase() {
                     {category.eyebrow}
                   </p>
                   <div className="mt-2 flex items-end justify-between gap-4">
-                    <div>
+                    <div className="min-w-0 pr-16 sm:pr-0">
                       <Heading as="h3" size="md">
                         {category.title}
                       </Heading>
@@ -81,7 +81,7 @@ export function CategoryShowcase() {
                         {category.description}
                       </Text>
                     </div>
-                    <span className="border-border group-hover:border-accent group-hover:text-accent flex size-11 shrink-0 items-center justify-center border transition-colors">
+                    <span className="border-border group-hover:border-accent group-hover:text-accent absolute right-5 bottom-5 flex size-11 shrink-0 items-center justify-center border transition-colors sm:static">
                       <ArrowRightIcon className="size-5" />
                     </span>
                   </div>

@@ -3,22 +3,13 @@ import { describe, expect, it } from "vitest";
 import { primaryNavigation } from "@/config/catalog";
 import {
   catalogOfferProductCodes,
-  catalogOfferSource,
   getCatalogOfferView,
   isCatalogOfferProductCode,
 } from "@/content/catalog/offers";
 import { getOfferProducts } from "@/content/catalog/selectors";
 
 describe("prodotti in offerta", () => {
-  it("mappa esclusivamente le righe marcate nel campo Excel reale", () => {
-    expect(catalogOfferSource).toMatchObject({
-      statusColumn: "NUOVI PRODOTTI",
-      statusValue: "PRODOTTI IN OFFERTA",
-      priceColumn: "PREZZO SENZA IVA",
-      previousPriceColumn: null,
-      discountPercentageColumn: null,
-      promotionPeriodColumn: null,
-    });
+  it("mantiene un elenco univoco dei prodotti realmente in offerta", () => {
     expect(catalogOfferProductCodes).toHaveLength(50);
     expect(new Set(catalogOfferProductCodes).size).toBe(50);
   });
