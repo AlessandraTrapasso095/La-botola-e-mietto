@@ -4,7 +4,9 @@ import { catalogBrands } from "@/content/catalog/brands";
 import {
   approvedCatalogBrands,
   genericBrandManualReviewCodes,
+  isStandaloneGenericBrand,
   productBrandByCode,
+  standaloneGenericBrandTokens,
 } from "@/content/catalog/product-brands";
 import { catalogProducts } from "@/content/catalog/products";
 import { getProductsByBrand } from "@/content/catalog/selectors";
@@ -15,7 +17,7 @@ function getProductByCode(code: string) {
 
 describe("marchi catalogo approvati", () => {
   it("associa le correzioni esclusivamente tramite codice prodotto", () => {
-    expect(Object.keys(productBrandByCode)).toHaveLength(109);
+    expect(Object.keys(productBrandByCode)).toHaveLength(209);
     expect(productBrandByCode.AB1170).toBe("The Glen Grant");
     expect(getProductByCode("AB1170")?.brandSlug).toBe("the-glen-grant");
 
@@ -27,6 +29,59 @@ describe("marchi catalogo approvati", () => {
         approvedSlugByName.get(brandName),
       );
     });
+  });
+
+  it.each([
+    ["AB1964", "the-standard", "The Standard"],
+    ["AB1742", "the-botanicals", "The Botanical’s"],
+    ["AB3126", "the-botanicals", "The Botanical’s"],
+    ["AB1283", "the-botanist", "The Botanist"],
+    ["AB5194", "the-botanist", "The Botanist"],
+  ])(
+    "separa %s dal marchio generico The",
+    (code, expectedSlug, expectedName) => {
+      expect(getProductByCode(code)?.brandSlug).toBe(expectedSlug);
+      expect(
+        catalogBrands.find((brand) => brand.slug === expectedSlug)?.name,
+      ).toBe(expectedName);
+    },
+  );
+
+  it("impedisce marchi composti esclusivamente da articoli", () => {
+    standaloneGenericBrandTokens.forEach((token) => {
+      expect(isStandaloneGenericBrand(token)).toBe(true);
+    });
+
+    [
+      "The Macallan",
+      "The Glenlivet",
+      "The Botanist",
+      "The Botanical’s",
+      "The Standard",
+      "La Hechicera",
+      "Le Tribute",
+    ].forEach((brandName) => {
+      expect(isStandaloneGenericBrand(brandName)).toBe(false);
+    });
+
+    const productsStartingWithThe = catalogProducts.filter((product) =>
+      product.name.startsWith("The "),
+    );
+
+    expect(productsStartingWithThe).toHaveLength(88);
+    expect(
+      productsStartingWithThe.every(
+        (product) => product.brandSlug && product.brandSlug !== "the",
+      ),
+    ).toBe(true);
+    expect(
+      catalogBrands.some(
+        (brand) =>
+          isStandaloneGenericBrand(brand.slug) ||
+          isStandaloneGenericBrand(brand.name),
+      ),
+    ).toBe(false);
+    expect(getProductsByBrand("the")).toHaveLength(0);
   });
 
   it("non pubblica categorie e nazionalità come marchi", () => {

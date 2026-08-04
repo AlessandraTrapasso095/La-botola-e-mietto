@@ -62,6 +62,11 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       {
+        source: "/marchio/the",
+        destination: "/marchi",
+        permanent: true,
+      },
+      {
         source: "/marchio/ballantine-s",
         destination: "/marchio/ballantines",
         permanent: true,

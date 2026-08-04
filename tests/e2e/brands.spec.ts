@@ -28,7 +28,10 @@ test("marchio canonico e scheda prodotto funzionano anche su mobile", async ({
       name: "Scopri Glen Grant 12YO 0.70 +2 Bicchieri",
     })
     .click();
-  await expect(page).toHaveURL(/\/prodotto\/glen-grant-12yo-0-70-2-bicchieri$/);
+  await expect(page).toHaveURL(
+    /\/prodotto\/glen-grant-12yo-0-70-2-bicchieri$/,
+    { timeout: 120_000 },
+  );
   await expect(
     page
       .getByRole("navigation", { name: "Breadcrumb" })
@@ -46,4 +49,36 @@ test("gli URL pubblicati delle varianti ortografiche confluiscono nel canonico",
 
   expect(response?.status()).toBe(200);
   await expect(page).toHaveURL(/\/marchio\/ballantines$/);
+});
+
+test("il marchio generico The non è pubblico e le referenze restano separate", async ({
+  page,
+}) => {
+  test.setTimeout(120_000);
+  const invalidBrandResponse = await page.goto("/marchio/the", {
+    waitUntil: "domcontentloaded",
+    timeout: 120_000,
+  });
+  expect(invalidBrandResponse?.status()).toBe(200);
+  await expect(page).toHaveURL(/\/marchi$/);
+  await page.getByRole("button", { name: "Sì, ho almeno 18 anni" }).click();
+
+  const expectedBrands = [
+    ["the-standard", "The Standard", "The Standard 1894"],
+    ["the-botanicals", "The Botanical’s", "The Botanical's"],
+    ["the-botanist", "The Botanist", "The Botanist Islay"],
+  ] as const;
+
+  for (const [slug, brandName, productName] of expectedBrands) {
+    await page.goto(`/marchio/${slug}`, {
+      waitUntil: "domcontentloaded",
+      timeout: 120_000,
+    });
+    await expect(
+      page.getByRole("heading", { name: brandName, level: 1 }),
+    ).toBeVisible({ timeout: 120_000 });
+    await expect(
+      page.getByRole("link", { name: productName, exact: true }).first(),
+    ).toBeVisible({ timeout: 120_000 });
+  }
 });

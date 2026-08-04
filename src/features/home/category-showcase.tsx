@@ -29,7 +29,7 @@ export function CategoryShowcase() {
           </Text>
         </Reveal>
 
-        <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-12 lg:grid-rows-2">
+        <div className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-12 lg:grid-rows-2">
           {homeCategories.map((category, index) => (
             <Reveal
               key={category.title}
@@ -40,7 +40,7 @@ export function CategoryShowcase() {
                 index === 2 && "lg:col-span-3",
                 index === 3 && "lg:col-span-3",
                 index === 4 && "lg:col-span-4",
-                index === 5 && "sm:col-span-2 lg:col-span-12",
+                index === 5 && "md:col-span-2 lg:col-span-12",
               )}
             >
               <Link
@@ -68,8 +68,8 @@ export function CategoryShowcase() {
                   <p className="text-accent text-[0.65rem] font-semibold tracking-[var(--letter-spacing-label)] uppercase">
                     {category.eyebrow}
                   </p>
-                  <div className="mt-2 flex items-end justify-between gap-4">
-                    <div className="min-w-0 pr-16 sm:pr-0">
+                  <div className="mt-2 grid grid-cols-[minmax(0,1fr)_2.75rem] items-end gap-4 md:flex md:justify-between">
+                    <div data-category-card-text className="min-w-0">
                       <Heading as="h3" size="md">
                         {category.title}
                       </Heading>
@@ -81,7 +81,10 @@ export function CategoryShowcase() {
                         {category.description}
                       </Text>
                     </div>
-                    <span className="border-border group-hover:border-accent group-hover:text-accent absolute right-5 bottom-5 flex size-11 shrink-0 items-center justify-center border transition-colors sm:static">
+                    <span
+                      data-category-card-cta
+                      className="border-border group-hover:border-accent group-hover:text-accent relative z-10 flex size-11 shrink-0 items-center justify-center self-end border transition-colors"
+                    >
                       <ArrowRightIcon className="size-5" />
                     </span>
                   </div>
