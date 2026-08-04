@@ -91,7 +91,8 @@ export function filterCatalogProducts(
   return products.filter(
     (product) =>
       (filters.brands.length === 0 ||
-        filters.brands.includes(product.brandSlug)) &&
+        (product.brandSlug !== null &&
+          filters.brands.includes(product.brandSlug))) &&
       (filters.categories.length === 0 ||
         filters.categories.includes(product.categorySlug)) &&
       (filters.countries.length === 0 ||

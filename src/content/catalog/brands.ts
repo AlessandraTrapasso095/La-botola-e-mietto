@@ -1,6 +1,8 @@
+import { approvedCatalogBrands } from "@/content/catalog/product-brands";
+import { catalogProducts } from "@/content/catalog/products";
 import type { CatalogBrand } from "@/content/catalog/types";
 
-export const catalogBrands = [
+const rawCatalogBrands = [
   {
     slug: "z",
     name: '"z"',
@@ -11196,3 +11198,53 @@ export const catalogBrands = [
     },
   },
 ] as const satisfies readonly CatalogBrand[];
+
+const rawBrandBySlug = new Map<string, CatalogBrand>(
+  rawCatalogBrands.map((brand) => [brand.slug, brand]),
+);
+const approvedBrandBySlug = new Map<
+  string,
+  (typeof approvedCatalogBrands)[number]
+>(approvedCatalogBrands.map((brand) => [brand.slug, brand]));
+const productsByBrand = new Map<string, (typeof catalogProducts)[number][]>();
+
+for (const product of catalogProducts) {
+  if (!product.brandSlug) continue;
+
+  const products = productsByBrand.get(product.brandSlug) ?? [];
+  products.push(product);
+  productsByBrand.set(product.brandSlug, products);
+}
+
+export const catalogBrands: readonly CatalogBrand[] = Array.from(
+  productsByBrand,
+  ([slug, products]) => {
+    const firstProduct = products[0];
+    const rawBrand = rawBrandBySlug.get(slug);
+    const approvedBrand = approvedBrandBySlug.get(slug);
+    const name = approvedBrand?.name ?? rawBrand?.name;
+
+    if (!name || !firstProduct) {
+      throw new Error(`Definizione marchio mancante per lo slug ${slug}.`);
+    }
+
+    const productCount = products.length;
+
+    return {
+      slug,
+      name,
+      country: rawBrand?.country ?? null,
+      productCount,
+      needsReview: approvedBrand ? false : (rawBrand?.needsReview ?? true),
+      description:
+        !approvedBrand && rawBrand
+          ? rawBrand.description
+          : `${productCount} ${productCount === 1 ? "etichetta" : "etichette"} ${name} ${productCount === 1 ? "presente" : "presenti"} nella selezione.`,
+      story:
+        !approvedBrand && rawBrand
+          ? rawBrand.story
+          : `La selezione ${name} riunisce le referenze disponibili nel catalogo La Botola e Mietto.`,
+      media: rawBrand?.media ?? firstProduct.media[0],
+    } satisfies CatalogBrand;
+  },
+).sort((left, right) => left.name.localeCompare(right.name, "it"));

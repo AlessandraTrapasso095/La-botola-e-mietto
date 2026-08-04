@@ -68,4 +68,22 @@ describe("filtri catalogo", () => {
       offerProduct.slug,
     ]);
   });
+
+  it("filtra usando lo slug canonico del marchio", () => {
+    const glenGrant = {
+      ...catalogProductFixtures[0],
+      code: "AB1170",
+      brandSlug: "the-glen-grant",
+      brandName: "The Glen Grant",
+    };
+    const filtered = filterCatalogProducts(
+      [glenGrant, ...catalogProductFixtures],
+      {
+        ...emptyCatalogFilters,
+        brands: ["the-glen-grant"],
+      },
+    );
+
+    expect(filtered.map((product) => product.code)).toEqual(["AB1170"]);
+  });
 });

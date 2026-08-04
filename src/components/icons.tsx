@@ -108,6 +108,14 @@ export function InstagramIcon(props: IconProps) {
   );
 }
 
+export function FacebookIcon(props: IconProps) {
+  return (
+    <svg {...iconDefaults} {...props}>
+      <path d="M14.5 8H17V4h-3c-3.3 0-5 2-5 5v3H6v4h3v5h4v-5h3.5l.5-4h-4V9c0-.7.3-1 1.5-1Z" />
+    </svg>
+  );
+}
+
 export function PackageIcon(props: IconProps) {
   return (
     <svg {...iconDefaults} {...props}>

@@ -6,6 +6,7 @@ import type { RefObject } from "react";
 import {
   ArrowRightIcon,
   CloseIcon,
+  FacebookIcon,
   HeartIcon,
   InstagramIcon,
   SearchIcon,
@@ -21,6 +22,7 @@ import {
 import { IconButton } from "@/components/ui/icon-button";
 import { Logo } from "@/components/ui/logo";
 import { primaryNavigation, type CatalogMenuGroup } from "@/config/catalog";
+import { confirmedSocialLinks } from "@/config/social";
 
 type MobileNavigationProps = {
   open: boolean;
@@ -157,15 +159,24 @@ export function MobileNavigation({
           </nav>
 
           <div className="mt-9 grid gap-3">
-            <a
-              href="https://www.instagram.com/labotolaemietto/"
-              target="_blank"
-              rel="noreferrer"
-              className="border-border-subtle hover:border-accent flex min-h-12 items-center justify-between border px-4 text-sm transition-colors"
-            >
-              Seguici su Instagram
-              <InstagramIcon className="size-5" />
-            </a>
+            {confirmedSocialLinks.map((socialLink) => {
+              const SocialIcon =
+                socialLink.id === "instagram" ? InstagramIcon : FacebookIcon;
+
+              return (
+                <a
+                  key={socialLink.id}
+                  href={socialLink.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={socialLink.ariaLabel}
+                  className="border-border-subtle hover:border-accent flex min-h-12 items-center justify-between border px-4 text-sm transition-colors"
+                >
+                  Seguici su {socialLink.label}
+                  <SocialIcon className="size-5" />
+                </a>
+              );
+            })}
             <button
               type="button"
               className="border-border-subtle hover:border-accent min-h-12 border px-4 text-left text-sm transition-colors"

@@ -45,9 +45,11 @@ export function CartLine({
         />
       </Link>
       <div className="cart-line-content min-w-0">
-        <p className="text-accent text-[0.62rem] font-semibold tracking-[var(--letter-spacing-label)] uppercase">
-          {line.product.brandName}
-        </p>
+        {line.product.brandName ? (
+          <p className="text-accent text-[0.62rem] font-semibold tracking-[var(--letter-spacing-label)] uppercase">
+            {line.product.brandName}
+          </p>
+        ) : null}
         <Link
           href={`/prodotto/${line.product.slug}`}
           className="cart-line-name text-text-strong mt-1 block font-serif text-lg leading-tight"

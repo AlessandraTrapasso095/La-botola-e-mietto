@@ -6,6 +6,7 @@ import { Heading } from "@/components/ui/heading";
 import { Section } from "@/components/ui/section";
 import { Text } from "@/components/ui/text";
 import { businessAddressLine, businessInfo } from "@/config/business";
+import { socialLinks } from "@/config/social";
 import { ContactForm } from "@/features/contact/contact-form";
 
 export const metadata: Metadata = {
@@ -61,13 +62,14 @@ export default function ContactsPage() {
                   </a>
                 </div>
                 <a
-                  href="https://www.instagram.com/labotolaemietto/"
+                  href={socialLinks.instagram.href}
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noopener noreferrer"
+                  aria-label={socialLinks.instagram.ariaLabel}
                   className="animated-underline text-accent-soft inline-flex min-h-11 w-fit items-center gap-2 text-sm"
                 >
                   <InstagramIcon className="size-5" />
-                  @labotolaemietto
+                  {socialLinks.instagram.handle}
                 </a>
               </address>
             </div>

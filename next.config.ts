@@ -59,6 +59,40 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  async redirects() {
+    return [
+      {
+        source: "/marchio/ballantine-s",
+        destination: "/marchio/ballantines",
+        permanent: true,
+      },
+      {
+        source: "/marchio/crafter-s",
+        destination: "/marchio/crafters",
+        permanent: true,
+      },
+      {
+        source: "/marchio/gosling-s",
+        destination: "/marchio/goslings",
+        permanent: true,
+      },
+      {
+        source: "/marchio/glen",
+        destination: "/marchio/the-glen-grant",
+        permanent: true,
+      },
+      {
+        source: "/marchio/glenlivet",
+        destination: "/marchio/the-glenlivet",
+        permanent: true,
+      },
+      {
+        source: "/marchio/j-e-b-40",
+        destination: "/marchio/j-b",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

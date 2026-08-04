@@ -18,7 +18,9 @@ import { calculateGrossPrice } from "@/server/pricing";
 export function createCatalogProductSummaryView(
   product: CatalogProduct,
 ): CatalogProductSummaryView {
-  const brand = getBrandBySlug(product.brandSlug);
+  const brand = product.brandSlug
+    ? getBrandBySlug(product.brandSlug)
+    : undefined;
   const category = getCategoryBySlug(product.categorySlug);
   const grossPrice = calculateGrossPrice(
     createEuro(product.netPriceMinor),
@@ -30,7 +32,7 @@ export function createCatalogProductSummaryView(
     ...product.badges.filter((badge) => !(isOnOffer && badge === "Nuovo")),
   ];
 
-  if (!brand || !category) {
+  if (!category || (product.brandSlug && !brand)) {
     throw new Error(`Relazione catalogo non valida per ${product.code}.`);
   }
 
@@ -52,7 +54,7 @@ export function createCatalogProductSummaryView(
     isLimited: product.isLimited,
     badges,
     media: product.media,
-    brandName: brand.name,
+    brandName: brand?.name ?? null,
     categoryName: category.name,
     grossPriceMinor: Number(grossPrice.amountMinor),
     grossPrice: formatEuroMinor(grossPrice.amountMinor),

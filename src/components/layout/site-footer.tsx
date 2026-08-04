@@ -1,10 +1,15 @@
 import Link from "next/link";
 
-import { ArrowUpRightIcon, InstagramIcon } from "@/components/icons";
+import {
+  ArrowUpRightIcon,
+  FacebookIcon,
+  InstagramIcon,
+} from "@/components/icons";
 import { Container } from "@/components/ui/container";
 import { Divider } from "@/components/ui/divider";
 import { Logo } from "@/components/ui/logo";
 import { businessAddressLine, businessInfo } from "@/config/business";
+import { confirmedSocialLinks } from "@/config/social";
 import { CookiePreferencesButton } from "@/features/cookie-consent/cookie-preferences-button";
 
 const catalogLinks = [
@@ -34,16 +39,27 @@ export function SiteFooter() {
             Distillati, etichette di pregio e bottiglie da collezione
             selezionati con esperienza e passione.
           </p>
-          <a
-            className="animated-underline text-accent-soft mt-6 inline-flex min-h-11 items-center gap-2 text-xs font-semibold tracking-[var(--letter-spacing-label)] uppercase"
-            href="https://www.instagram.com/labotolaemietto/"
-            rel="noreferrer"
-            target="_blank"
-          >
-            <InstagramIcon className="size-5" />
-            Instagram
-            <ArrowUpRightIcon className="size-4" />
-          </a>
+          <div className="mt-6 flex flex-wrap gap-x-5 gap-y-2">
+            {confirmedSocialLinks.map((socialLink) => {
+              const SocialIcon =
+                socialLink.id === "instagram" ? InstagramIcon : FacebookIcon;
+
+              return (
+                <a
+                  key={socialLink.id}
+                  className="animated-underline text-accent-soft inline-flex min-h-11 items-center gap-2 text-xs font-semibold tracking-[var(--letter-spacing-label)] uppercase"
+                  href={socialLink.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={socialLink.ariaLabel}
+                >
+                  <SocialIcon className="size-5" />
+                  {socialLink.label}
+                  <ArrowUpRightIcon className="size-4" />
+                </a>
+              );
+            })}
+          </div>
         </div>
 
         <nav aria-label="Catalogo">

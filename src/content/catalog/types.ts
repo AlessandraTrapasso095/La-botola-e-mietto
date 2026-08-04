@@ -39,7 +39,7 @@ export type CatalogProduct = {
   code: string;
   slug: string;
   name: string;
-  brandSlug: string;
+  brandSlug: string | null;
   categorySlug: string;
   subcategory: string;
   capacityMl: number | null;
@@ -75,7 +75,7 @@ export type CatalogProductSummaryView = Omit<
   | "pairings"
   | "characteristics"
 > & {
-  brandName: string;
+  brandName: string | null;
   categoryName: string;
   grossPriceMinor: number;
   grossPrice: string;

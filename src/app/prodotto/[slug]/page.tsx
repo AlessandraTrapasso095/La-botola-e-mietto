@@ -65,6 +65,14 @@ export default async function ProductPage({ params }: ProductPageProps) {
             label: productView.categoryName,
             href: `/categoria/${productView.categorySlug}`,
           },
+          ...(productView.brandSlug && productView.brandName
+            ? [
+                {
+                  label: productView.brandName,
+                  href: `/marchio/${productView.brandSlug}`,
+                },
+              ]
+            : []),
           { label: productView.name },
         ]}
       />

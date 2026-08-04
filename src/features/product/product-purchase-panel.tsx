@@ -51,14 +51,16 @@ export function ProductPurchasePanel({
           <Badge key={badge}>{badge}</Badge>
         ))}
       </div>
-      <p className="text-accent mt-6 text-xs font-semibold tracking-[var(--letter-spacing-label)] uppercase">
-        <Link
-          href={`/marchio/${product.brandSlug}`}
-          className="animated-underline"
-        >
-          {product.brandName}
-        </Link>
-      </p>
+      {product.brandSlug && product.brandName ? (
+        <p className="text-accent mt-6 text-xs font-semibold tracking-[var(--letter-spacing-label)] uppercase">
+          <Link
+            href={`/marchio/${product.brandSlug}`}
+            className="animated-underline"
+          >
+            {product.brandName}
+          </Link>
+        </p>
+      ) : null}
       <h1 className="text-text-strong mt-3 font-serif text-[clamp(2.5rem,5vw,4.5rem)] leading-[1.02] font-semibold">
         {product.name}
       </h1>

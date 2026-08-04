@@ -53,8 +53,12 @@ export function CatalogExplorer({
   const filterTriggerRef = useRef<HTMLButtonElement>(null);
 
   const options = useMemo<CatalogFilterOptions>(() => {
-    const brandMap = new Map(
-      products.map((product) => [product.brandSlug, product.brandName]),
+    const brandMap = new Map<string, string>(
+      products.flatMap((product) =>
+        product.brandSlug && product.brandName
+          ? [[product.brandSlug, product.brandName] as const]
+          : [],
+      ),
     );
     return {
       brands: [...brandMap.entries()]

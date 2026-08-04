@@ -78,9 +78,11 @@ export function ProductCard({
       </div>
 
       <div className="flex flex-1 flex-col pt-5">
-        <p className="text-accent text-[0.65rem] font-semibold tracking-[var(--letter-spacing-label)] uppercase">
-          {product.brandName}
-        </p>
+        {product.brandName ? (
+          <p className="text-accent text-[0.65rem] font-semibold tracking-[var(--letter-spacing-label)] uppercase">
+            {product.brandName}
+          </p>
+        ) : null}
         <h3 className="text-text-strong mt-2 font-serif text-xl leading-tight sm:text-2xl">
           <Link
             href={`/prodotto/${product.slug}`}

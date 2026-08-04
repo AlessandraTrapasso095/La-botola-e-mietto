@@ -16,6 +16,7 @@ import { Section } from "@/components/ui/section";
 import { Text } from "@/components/ui/text";
 import { businessInfo } from "@/config/business";
 import { shippingConfig } from "@/config/commerce";
+import { socialLinks } from "@/config/social";
 import { catalogBrands } from "@/content/catalog/brands";
 import {
   instagramStories,
@@ -207,13 +208,14 @@ export function InstagramSection() {
             <Heading className="mt-4">La cantina, ogni giorno.</Heading>
           </div>
           <a
-            href="https://www.instagram.com/labotolaemietto/"
+            href={socialLinks.instagram.href}
             target="_blank"
-            rel="noreferrer"
+            rel="noopener noreferrer"
+            aria-label={socialLinks.instagram.ariaLabel}
             className="animated-underline text-accent-soft inline-flex min-h-11 items-center gap-2 self-start text-xs font-semibold tracking-[var(--letter-spacing-label)] uppercase sm:self-auto"
           >
             <InstagramIcon className="size-5" />
-            @labotolaemietto
+            {socialLinks.instagram.handle}
           </a>
         </Reveal>
 
@@ -221,9 +223,9 @@ export function InstagramSection() {
           {instagramStories.map((story, index) => (
             <Reveal key={story.title} delayStep={index}>
               <a
-                href="https://www.instagram.com/labotolaemietto/"
+                href={socialLinks.instagram.href}
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
                 aria-label={`${story.title} su Instagram`}
                 className="image-hover group relative block aspect-square overflow-hidden"
               >

@@ -241,9 +241,11 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
                                 />
                               </div>
                               <div className="min-w-0 flex-1 self-center">
-                                <p className="text-accent text-[0.65rem] tracking-[var(--letter-spacing-label)] uppercase">
-                                  {product.brandName}
-                                </p>
+                                {product.brandName ? (
+                                  <p className="text-accent text-[0.65rem] tracking-[var(--letter-spacing-label)] uppercase">
+                                    {product.brandName}
+                                  </p>
+                                ) : null}
                                 <p className="text-text-strong mt-1 truncate font-serif text-lg">
                                   {product.name}
                                 </p>

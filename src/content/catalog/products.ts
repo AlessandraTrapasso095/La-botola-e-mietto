@@ -1,6 +1,7 @@
+import { resolveCatalogProductBrand } from "@/content/catalog/product-brands";
 import type { CatalogProduct } from "@/content/catalog/types";
 
-export const catalogProducts: readonly CatalogProduct[] = [
+const rawCatalogProducts: readonly CatalogProduct[] = [
   {
     code: "AB6724",
     slug: "aalborg-jubilaemus-acquavite",
@@ -114696,3 +114697,6 @@ export const catalogProducts: readonly CatalogProduct[] = [
     ],
   },
 ] as const;
+
+export const catalogProducts: readonly CatalogProduct[] =
+  rawCatalogProducts.map(resolveCatalogProductBrand);

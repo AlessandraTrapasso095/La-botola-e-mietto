@@ -32,6 +32,13 @@ const products = [
     categoryName: "Tequila | Mezcal",
     subcategory: "Tequila Añejo",
   }),
+  createCatalogProductFixture({
+    code: "AB1170",
+    slug: "glen-grant-12yo-0-70-2-bicchieri",
+    name: "Glen Grant 12YO 0.70 +2 Bicchieri",
+    brandSlug: "the-glen-grant",
+    brandName: "The Glen Grant",
+  }),
 ] as const;
 
 function runSearch(query: string) {
@@ -63,6 +70,15 @@ describe("ricerca globale del catalogo", () => {
       "Suntory",
     );
     expect(results.brands.map((brand) => brand.name)).toContain("Suntory");
+  });
+
+  it("trova il marchio canonico applicato per codice", () => {
+    const results = runSearch("The Glen Grant");
+
+    expect(results.products.map((product) => product.code)).toContain("AB1170");
+    expect(results.brands.map((brand) => brand.name)).toContain(
+      "The Glen Grant",
+    );
   });
 
   it("trova un prodotto per codice reale", () => {
