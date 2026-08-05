@@ -488,12 +488,11 @@ const rawCatalogBrands = [
     story:
       "La raccolta Ak47 comprende vodka disponibili nel catalogo La Botola e Mietto.",
     media: {
-      src: "/images/products/catalog-2026-07/full/0700-vodka-ak47-absolute-standard-38-gb-ct-6-new-48f1a9080e.webp",
-      thumbnailSrc:
-        "/images/products/catalog-2026-07/thumb/0700-vodka-ak47-absolute-standard-38-gb-ct-6-new-48f1a9080e.webp",
-      width: 744,
-      height: 1500,
-      alt: "Confezione di Ak47 Absolute Standard",
+      src: "/images/placeholder-bottle.svg",
+      thumbnailSrc: "/images/placeholder-bottle.svg",
+      width: 800,
+      height: 1000,
+      alt: "Immagine di Ak47 Absolute Standard non disponibile",
       position: "center",
     },
   },

@@ -24,4 +24,25 @@ describe("contenuti editoriali Milestone 1A", () => {
       ),
     ).toBe(true);
   });
+
+  it("non pubblica l'immagine contestata per il prodotto AB6837", () => {
+    const ak47Product = catalogProducts.find(
+      (product) => product.code === "AB6837",
+    );
+    const redArmyProduct = catalogProducts.find(
+      (product) => product.code === "AB0093",
+    );
+
+    expect(ak47Product?.media[0].src).toBe("/images/placeholder-bottle.svg");
+    expect(redArmyProduct?.media[0].src).toContain(
+      "1200-vodka-red-army-kalashnikov-40",
+    );
+    expect(
+      catalogProducts.filter((product) =>
+        product.media.some((media) =>
+          media.src.includes("0700-vodka-ak47-absolute-standard"),
+        ),
+      ),
+    ).toHaveLength(0);
+  });
 });
