@@ -1315,9 +1315,23 @@ export type Database = {
       }
     }
     Functions: {
+      account_cart_lines: {
+        Args: never
+        Returns: {
+          quantity: number
+          slug: string
+        }[]
+      }
       account_wishlist_slugs: {
         Args: never
         Returns: {
+          slug: string
+        }[]
+      }
+      add_account_cart_item: {
+        Args: { product_slug: string; requested_quantity?: number }
+        Returns: {
+          quantity: number
           slug: string
         }[]
       }
@@ -1339,6 +1353,14 @@ export type Database = {
         Args: { address_id_value: string }
         Returns: boolean
       }
+      ensure_account_cart: { Args: never; Returns: string }
+      merge_account_cart_items: {
+        Args: { local_items: Json }
+        Returns: {
+          quantity: number
+          slug: string
+        }[]
+      }
       merge_account_wishlist: {
         Args: { product_slugs: string[] }
         Returns: {
@@ -1346,9 +1368,23 @@ export type Database = {
         }[]
       }
       normalize_catalog_search: { Args: { value: string }; Returns: string }
+      remove_account_cart_item: {
+        Args: { product_slug: string }
+        Returns: {
+          quantity: number
+          slug: string
+        }[]
+      }
       remove_account_wishlist_item: {
         Args: { product_slug: string }
         Returns: {
+          slug: string
+        }[]
+      }
+      set_account_cart_item_quantity: {
+        Args: { product_slug: string; requested_quantity: number }
+        Returns: {
+          quantity: number
           slug: string
         }[]
       }
