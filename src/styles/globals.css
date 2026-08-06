@@ -78,6 +78,20 @@ a {
   text-decoration: none;
 }
 
+a.bg-accent,
+a.bg-accent:hover,
+a.bg-accent:focus,
+a.bg-accent:focus-visible,
+a.bg-accent:active,
+a.bg-accent:visited,
+button.bg-accent,
+button.bg-accent:hover,
+button.bg-accent:focus,
+button.bg-accent:focus-visible,
+button.bg-accent:active {
+  color: #000000;
+}
+
 .hero-primary-cta,
 .hero-primary-cta:hover,
 .hero-primary-cta:focus,

@@ -166,7 +166,7 @@ export function SiteHeaderClient({
             >
               <HeartIcon />
               {wishlist.length > 0 ? (
-                <span className="bg-accent text-accent-contrast absolute top-1.5 right-1.5 flex size-4 items-center justify-center rounded-full text-[0.6rem] font-bold">
+                <span className="bg-accent absolute top-1.5 right-1.5 flex size-4 items-center justify-center rounded-full text-[0.6rem] font-bold text-black">
                   {wishlist.length}
                 </span>
               ) : null}
@@ -191,7 +191,7 @@ export function SiteHeaderClient({
               <BagIcon />
               <span
                 aria-hidden="true"
-                className="bg-accent text-accent-contrast absolute top-1.5 right-1.5 flex size-4 items-center justify-center rounded-full text-[0.6rem] font-bold"
+                className="bg-accent absolute top-1.5 right-1.5 flex size-4 items-center justify-center rounded-full text-[0.6rem] font-bold text-black"
               >
                 {cart.itemCount}
               </span>

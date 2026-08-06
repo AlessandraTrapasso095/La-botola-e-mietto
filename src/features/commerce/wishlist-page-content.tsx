@@ -51,7 +51,7 @@ export function WishlistPageContent() {
         </p>
         <Link
           href="/catalogo"
-          className="border-accent bg-accent text-accent-contrast hover:bg-accent-soft mt-7 inline-flex min-h-12 items-center border px-8 text-sm font-semibold tracking-[var(--letter-spacing-label)] uppercase transition-colors"
+          className="border-accent bg-accent hover:bg-accent-soft mt-7 inline-flex min-h-12 items-center border px-8 text-sm font-semibold tracking-[var(--letter-spacing-label)] text-black uppercase transition-colors"
         >
           Scopri la selezione
         </Link>

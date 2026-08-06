@@ -17,6 +17,7 @@ export type BusinessInfo = {
   email: string;
   phone: string;
   freeShippingThresholdMinor: bigint;
+  standardShippingGrossAmountMinor: bigint;
   currency: "EUR";
   locale: "it-IT";
 };

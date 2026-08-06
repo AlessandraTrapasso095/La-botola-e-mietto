@@ -163,7 +163,7 @@ export function ServiceSection() {
 
 export function ShippingBanner() {
   return (
-    <section className="bg-accent text-accent-contrast">
+    <section className="bg-accent text-black">
       <Container className="grid gap-6 py-9 md:grid-cols-3 md:items-center">
         <div className="flex items-center gap-4">
           <PackageIcon className="size-7 shrink-0" />

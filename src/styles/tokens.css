@@ -27,7 +27,7 @@
   --color-text-muted: var(--color-ivory-400);
   --color-accent: var(--color-champagne-400);
   --color-accent-soft: var(--color-champagne-300);
-  --color-accent-contrast: #2f2506;
+  --color-accent-contrast: #000000;
   --color-border: #4d4635;
   --color-border-subtle: rgb(77 70 53 / 45%);
   --color-focus: var(--color-champagne-300);

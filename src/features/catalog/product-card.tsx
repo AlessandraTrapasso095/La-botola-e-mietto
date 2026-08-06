@@ -109,7 +109,7 @@ export function ProductCard({
           <IconButton
             aria-label={`Aggiungi ${product.name} al carrello`}
             disabled={!isAvailable}
-            className="hover:bg-accent hover:text-accent-contrast"
+            className="hover:bg-accent hover:text-black"
             onClick={() => addToCart(product)}
           >
             <BagIcon className="size-5" />

@@ -17,6 +17,7 @@ export const businessInfo = {
   email: "info@labotolaemietto.com",
   phone: "+39 348 260 7738",
   freeShippingThresholdMinor: 6_000n,
+  standardShippingGrossAmountMinor: 750n,
   currency: "EUR",
   locale: "it-IT",
 } as const satisfies BusinessInfo;

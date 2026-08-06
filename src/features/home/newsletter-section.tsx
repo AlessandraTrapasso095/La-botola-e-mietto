@@ -112,7 +112,7 @@ export function NewsletterSection() {
             <button
               type="submit"
               disabled={submissionState === "loading"}
-              className="bg-accent text-accent-contrast hover:bg-accent-soft flex min-h-14 items-center justify-center gap-2 px-6 text-xs font-semibold tracking-[var(--letter-spacing-label)] uppercase transition-colors"
+              className="bg-accent hover:bg-accent-soft flex min-h-14 items-center justify-center gap-2 px-6 text-xs font-semibold tracking-[var(--letter-spacing-label)] text-black uppercase transition-colors"
             >
               {submissionState === "loading" ? "Iscrizione…" : "Iscriviti"}
               <ArrowRightIcon className="size-5" />

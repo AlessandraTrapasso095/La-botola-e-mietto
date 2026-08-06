@@ -53,7 +53,7 @@ export function CommerceOverlays() {
               </p>
               <Link
                 href="/catalogo"
-                className="border-accent bg-accent text-accent-contrast hover:border-accent-soft hover:bg-accent-soft mt-6 inline-flex min-h-12 items-center justify-center border px-8 py-4 text-sm font-semibold tracking-[var(--letter-spacing-label)] uppercase transition-colors"
+                className="border-accent bg-accent hover:border-accent-soft hover:bg-accent-soft mt-6 inline-flex min-h-12 items-center justify-center border px-8 py-4 text-sm font-semibold tracking-[var(--letter-spacing-label)] text-black uppercase transition-colors"
                 onClick={() => setCartOpen(false)}
               >
                 Esplora il catalogo

@@ -592,11 +592,13 @@ export type Database = {
           currency: string
           id: string
           order_number: string
+          payment_method: Database["public"]["Enums"]["payment_method"]
           payment_provider_reference: string | null
           payment_status: Database["public"]["Enums"]["payment_status"]
           profile_id: string
           shipping_address: Json
           shipping_gross_amount_minor: number
+          shipping_method: Database["public"]["Enums"]["shipping_method"]
           status: Database["public"]["Enums"]["order_status"]
           subtotal_net_amount_minor: number
           total_gross_amount_minor: number
@@ -610,11 +612,13 @@ export type Database = {
           currency?: string
           id?: string
           order_number: string
+          payment_method?: Database["public"]["Enums"]["payment_method"]
           payment_provider_reference?: string | null
           payment_status?: Database["public"]["Enums"]["payment_status"]
           profile_id: string
           shipping_address: Json
           shipping_gross_amount_minor: number
+          shipping_method?: Database["public"]["Enums"]["shipping_method"]
           status?: Database["public"]["Enums"]["order_status"]
           subtotal_net_amount_minor: number
           total_gross_amount_minor: number
@@ -628,11 +632,13 @@ export type Database = {
           currency?: string
           id?: string
           order_number?: string
+          payment_method?: Database["public"]["Enums"]["payment_method"]
           payment_provider_reference?: string | null
           payment_status?: Database["public"]["Enums"]["payment_status"]
           profile_id?: string
           shipping_address?: Json
           shipping_gross_amount_minor?: number
+          shipping_method?: Database["public"]["Enums"]["shipping_method"]
           status?: Database["public"]["Enums"]["order_status"]
           subtotal_net_amount_minor?: number
           total_gross_amount_minor?: number
@@ -1349,6 +1355,27 @@ export type Database = {
           value: string
         }[]
       }
+      checkout_account_cart: {
+        Args: {
+          p_billing_address_id: string
+          p_payment_method: Database["public"]["Enums"]["payment_method"]
+          p_shipping_address_id: string
+          p_shipping_method: Database["public"]["Enums"]["shipping_method"]
+        }
+        Returns: {
+          created_at: string
+          order_id: string
+          order_number: string
+          order_status: Database["public"]["Enums"]["order_status"]
+          payment_method: Database["public"]["Enums"]["payment_method"]
+          payment_status: Database["public"]["Enums"]["payment_status"]
+          shipping_gross_amount_minor: number
+          shipping_method: Database["public"]["Enums"]["shipping_method"]
+          subtotal_net_amount_minor: number
+          total_gross_amount_minor: number
+          vat_amount_minor: number
+        }[]
+      }
       delete_account_address: {
         Args: { address_id_value: string }
         Returns: boolean
@@ -1478,8 +1505,10 @@ export type Database = {
         | "shipped"
         | "delivered"
         | "cancelled"
+      payment_method: "stripe" | "bank_transfer" | "satispay"
       payment_status: "pending" | "authorized" | "paid" | "failed" | "refunded"
       product_status: "draft" | "active" | "archived"
+      shipping_method: "store_pickup" | "tnt"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1626,8 +1655,10 @@ export const Constants = {
         "delivered",
         "cancelled",
       ],
+      payment_method: ["stripe", "bank_transfer", "satispay"],
       payment_status: ["pending", "authorized", "paid", "failed", "refunded"],
       product_status: ["draft", "active", "archived"],
+      shipping_method: ["store_pickup", "tnt"],
     },
   },
 } as const

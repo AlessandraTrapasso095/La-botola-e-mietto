@@ -12,11 +12,11 @@ import {
 } from "react";
 
 import { businessInfo } from "@/config/business";
-import type { CatalogProductSummaryView } from "@/content/catalog/types";
 import {
   demoCartLines,
   demoWishlistSlugs,
 } from "@/content/catalog/demo-commerce";
+import type { CatalogProductSummaryView } from "@/content/catalog/types";
 import { useOptionalAccount } from "@/features/account/account-provider";
 import {
   readCommerceState,
@@ -51,6 +51,7 @@ type CommerceContextValue = {
   addToCart: (product: CatalogProductSummaryView, quantity?: number) => void;
   setCartQuantity: (slug: string, quantity: number) => void;
   removeFromCart: (slug: string) => void;
+  clearCartAfterCheckout: () => void;
   toggleWishlist: (product: CatalogProductSummaryView) => void;
   isWishlisted: (slug: string) => boolean;
   isWishlistPending: (slug: string) => boolean;
@@ -89,7 +90,10 @@ function addProductsToIndex(
 }
 
 function cartItemsToRecord(
-  items: readonly { slug: string; quantity: number }[],
+  items: readonly {
+    slug: string;
+    quantity: number;
+  }[],
 ) {
   return Object.fromEntries(items.map((item) => [item.slug, item.quantity]));
 }
@@ -136,6 +140,7 @@ export function CommerceProvider({
   });
 
   const [state, setState] = useState<CommerceState>(initialState);
+
   const stateRef = useRef(state);
 
   const [productIndex, setProductIndex] = useState<
@@ -147,15 +152,19 @@ export function CommerceProvider({
   const [hydrated, setHydrated] = useState(false);
 
   const [remoteCartReady, setRemoteCartReady] = useState(false);
+
   const [cartLoading, setCartLoading] = useState(
     authMode === "supabase" && Boolean(accountUserId),
   );
+
   const [cartError, setCartError] = useState<string | null>(null);
 
   const [remoteWishlistReady, setRemoteWishlistReady] = useState(false);
+
   const [wishlistLoading, setWishlistLoading] = useState(
     authMode === "supabase" && Boolean(accountUserId),
   );
+
   const [wishlistError, setWishlistError] = useState<string | null>(null);
 
   const [pendingWishlistSlugs, setPendingWishlistSlugs] = useState<string[]>(
@@ -163,16 +172,23 @@ export function CommerceProvider({
   );
 
   const [cartOpen, setCartOpen] = useState(false);
+
   const [toast, setToast] = useState<ToastMessage | null>(null);
 
   const syncedCartUserRef = useRef<string | null>(null);
+
   const syncingCartUserRef = useRef<string | null>(null);
+
   const cartMutationPendingRef = useRef(false);
+
   const cartMutationQueueRef = useRef<Promise<void>>(Promise.resolve());
 
   const syncedWishlistUserRef = useRef<string | null>(null);
+
   const syncingWishlistUserRef = useRef<string | null>(null);
+
   const pendingWishlistRef = useRef(new Set<string>());
+
   const wishlistMutationQueueRef = useRef<Promise<void>>(Promise.resolve());
 
   useEffect(() => {
@@ -184,6 +200,7 @@ export function CommerceProvider({
 
     const hydrationFrame = window.requestAnimationFrame(() => {
       const storedState = readCommerceState(window.localStorage);
+
       const initialContext = initialContextRef.current;
 
       const cart = storedState?.cart ?? initialStateRef.current.cart;
@@ -311,6 +328,7 @@ export function CommerceProvider({
     const controller = new AbortController();
 
     syncingCartUserRef.current = accountUserId;
+
     setRemoteCartReady(false);
     setCartLoading(true);
     setCartError(null);
@@ -363,6 +381,7 @@ export function CommerceProvider({
         });
 
         syncedCartUserRef.current = accountUserId;
+
         setRemoteCartReady(true);
       } catch (error: unknown) {
         if (error instanceof DOMException && error.name === "AbortError") {
@@ -439,6 +458,7 @@ export function CommerceProvider({
     const controller = new AbortController();
 
     syncingWishlistUserRef.current = accountUserId;
+
     setRemoteWishlistReady(false);
     setWishlistLoading(true);
     setWishlistError(null);
@@ -481,6 +501,7 @@ export function CommerceProvider({
         });
 
         syncedWishlistUserRef.current = accountUserId;
+
         setRemoteWishlistReady(true);
       } catch (error: unknown) {
         if (error instanceof DOMException && error.name === "AbortError") {
@@ -498,6 +519,7 @@ export function CommerceProvider({
         if (!active) return;
 
         syncingWishlistUserRef.current = null;
+
         setWishlistLoading(false);
       }
     };
@@ -615,6 +637,7 @@ export function CommerceProvider({
         }
 
         cartMutationPendingRef.current = true;
+
         setCartLoading(true);
 
         const operation = cartMutationQueueRef.current.then(async () => {
@@ -645,6 +668,7 @@ export function CommerceProvider({
             announce(message);
           } finally {
             cartMutationPendingRef.current = false;
+
             setCartLoading(false);
           }
         });
@@ -700,6 +724,7 @@ export function CommerceProvider({
         }
 
         cartMutationPendingRef.current = true;
+
         setCartLoading(true);
 
         const operation = cartMutationQueueRef.current.then(async () => {
@@ -728,6 +753,7 @@ export function CommerceProvider({
             announce(message);
           } finally {
             cartMutationPendingRef.current = false;
+
             setCartLoading(false);
           }
         });
@@ -775,6 +801,7 @@ export function CommerceProvider({
         }
 
         cartMutationPendingRef.current = true;
+
         setCartLoading(true);
 
         const operation = cartMutationQueueRef.current.then(async () => {
@@ -802,11 +829,41 @@ export function CommerceProvider({
             announce(message);
           } finally {
             cartMutationPendingRef.current = false;
+
             setCartLoading(false);
           }
         });
 
         cartMutationQueueRef.current = operation.catch(() => undefined);
+      },
+
+      clearCartAfterCheckout: () => {
+        setState((current) => ({
+          ...current,
+          cart: {},
+        }));
+
+        stateRef.current = {
+          ...stateRef.current,
+          cart: {},
+        };
+
+        setCartOpen(false);
+        setCartError(null);
+        setCartLoading(false);
+        cartMutationPendingRef.current = false;
+
+        if (authMode !== "supabase" || !accountUserId) {
+          const storedCommerce = readCommerceState(window.localStorage) ?? {
+            cart: {},
+            wishlist: stateRef.current.wishlist,
+          };
+
+          writeCommerceState(window.localStorage, {
+            cart: {},
+            wishlist: storedCommerce.wishlist,
+          });
+        }
       },
 
       toggleWishlist: (product) => {

@@ -10,7 +10,7 @@ export type ButtonProps = ComponentPropsWithoutRef<"button"> & {
 
 const variantClasses = {
   primary:
-    "border-accent bg-accent text-accent-contrast hover:border-accent-soft hover:bg-accent-soft",
+    "border-accent bg-accent text-black hover:border-accent-soft hover:bg-accent-soft",
   secondary:
     "border-border bg-transparent text-text-strong hover:border-accent hover:text-accent-soft",
   ghost:
