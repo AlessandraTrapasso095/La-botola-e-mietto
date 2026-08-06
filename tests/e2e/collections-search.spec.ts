@@ -21,9 +21,19 @@ async function enterSite(page: Page) {
 }
 
 async function openSearch(page: Page) {
-  await page.getByRole("button", { name: "Cerca nel catalogo" }).click();
+  const trigger = page.getByRole("button", { name: "Cerca nel catalogo" });
   const dialog = page.getByRole("dialog", { name: "Cerca nella selezione" });
-  await expect(dialog).toBeVisible({ timeout: 30_000 });
+  await expect(trigger).toBeVisible({ timeout: 30_000 });
+  await expect
+    .poll(
+      async () => {
+        if (await dialog.isVisible()) return true;
+        await trigger.click();
+        return dialog.isVisible();
+      },
+      { timeout: 30_000 },
+    )
+    .toBe(true);
   return dialog;
 }
 

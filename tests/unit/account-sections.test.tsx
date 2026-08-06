@@ -3,7 +3,10 @@ import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
 
 import { accountNavigation } from "@/config/account";
-import { accountOrders } from "@/content/account/account-data";
+import {
+  accountOrders,
+  initialAccountAddresses,
+} from "@/content/account/account-data";
 import { AddressesPanel } from "@/features/account/addresses-panel";
 import { OrdersList } from "@/features/account/orders-list";
 
@@ -39,7 +42,7 @@ describe("account sections", () => {
   });
 
   it("aggiunge e modifica indirizzi dal frontend", async () => {
-    render(<AddressesPanel />);
+    render(<AddressesPanel initialAddresses={initialAccountAddresses} />);
     await userEvent.click(
       screen.getByRole("button", { name: "Aggiungi indirizzo" }),
     );
@@ -48,8 +51,11 @@ describe("account sections", () => {
     ).toBeVisible();
 
     await userEvent.type(screen.getByLabelText("Etichetta"), "Cantina");
-    await userEvent.type(screen.getByLabelText("Destinatario"), "Giulia Ferri");
-    await userEvent.type(screen.getByLabelText("Indirizzo"), "Via Roma 1");
+    await userEvent.type(screen.getByLabelText("Nome"), "Giulia");
+    await userEvent.type(screen.getByLabelText("Cognome"), "Ferri");
+    await userEvent.type(screen.getByLabelText("Telefono"), "+39 333 000 0000");
+    await userEvent.type(screen.getByLabelText("Indirizzo"), "Via Roma");
+    await userEvent.type(screen.getByLabelText("Numero civico"), "1");
     await userEvent.type(screen.getByLabelText("CAP"), "35100");
     await userEvent.type(screen.getByLabelText("Città"), "Padova");
     await userEvent.type(screen.getByLabelText("Provincia"), "PD");
@@ -59,5 +65,23 @@ describe("account sections", () => {
 
     expect(screen.getByText("Cantina")).toBeVisible();
     expect(screen.getByText("Indirizzo salvato.")).toBeVisible();
+  });
+
+  it("mostra lo stato vuoto e conferma l’eliminazione", async () => {
+    const { unmount } = render(<AddressesPanel initialAddresses={[]} />);
+    expect(screen.getByText("Nessun indirizzo salvato")).toBeVisible();
+    unmount();
+
+    render(<AddressesPanel initialAddresses={initialAccountAddresses} />);
+    await userEvent.click(
+      screen.getAllByRole("button", { name: "Elimina" })[0]!,
+    );
+    expect(
+      screen.getByRole("heading", { name: "Eliminare l’indirizzo?" }),
+    ).toBeVisible();
+    await userEvent.click(
+      screen.getByRole("button", { name: "Elimina indirizzo" }),
+    );
+    expect(screen.getByText("Indirizzo eliminato.")).toBeVisible();
   });
 });

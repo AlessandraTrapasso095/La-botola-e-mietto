@@ -48,7 +48,12 @@ const registrationSchema = z
   });
 
 type RegistrationValues = z.infer<typeof registrationSchema>;
-type RegistrationState = "idle" | "loading" | "error" | "success";
+type RegistrationState =
+  | "idle"
+  | "loading"
+  | "error"
+  | "success"
+  | "confirmation";
 
 const requirementLabels = [
   ["length", "Almeno 8 caratteri"],
@@ -88,15 +93,24 @@ export function RegisterForm() {
     setSubmissionState("loading");
     setSubmissionError("");
     try {
-      await registerAccount({
+      const result = await registerAccount({
         firstName: values.firstName,
         lastName: values.lastName,
         email: values.email,
         password: values.password,
+        privacyConsent: values.privacyConsent,
         marketingConsent: values.marketingConsent,
+        adultConfirmation: values.adultConfirmation,
       });
+      if (result.status === "confirmation-required") {
+        setSubmissionState("confirmation");
+        return;
+      }
       setSubmissionState("success");
-      window.setTimeout(() => router.push(accountRoutes.dashboard), 350);
+      window.setTimeout(() => {
+        router.refresh();
+        router.replace(accountRoutes.dashboard);
+      }, 350);
     } catch {
       setSubmissionState("error");
       setSubmissionError(
@@ -225,6 +239,11 @@ export function RegisterForm() {
         {submissionState === "success" ? (
           <p className="text-accent-soft">
             Account creato. Apertura dell’area personale…
+          </p>
+        ) : null}
+        {submissionState === "confirmation" ? (
+          <p className="text-accent-soft" role="status">
+            Controlla la tua email e conferma l’indirizzo per accedere.
           </p>
         ) : null}
       </div>

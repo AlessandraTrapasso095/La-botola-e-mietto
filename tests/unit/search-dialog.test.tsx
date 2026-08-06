@@ -1,18 +1,59 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
+import { catalogBrands } from "@/content/catalog/brands";
+import { catalogCategories } from "@/content/catalog/categories";
 import { CommerceProvider } from "@/features/commerce/commerce-provider";
 import { SearchDialog } from "@/features/search/search-dialog";
+import { searchCatalog } from "@/features/search/catalog-search";
 import { catalogProductFixtures } from "../fixtures/catalog";
 
 describe("ricerca catalogo", () => {
+  beforeEach(() => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (request: string | URL | Request) => {
+        const url = new URL(
+          typeof request === "string"
+            ? request
+            : request instanceof Request
+              ? request.url
+              : request.toString(),
+          "http://localhost",
+        );
+        const results = searchCatalog({
+          query: url.searchParams.get("q") ?? "",
+          products: catalogProductFixtures,
+          brands: catalogBrands,
+          categories: catalogCategories,
+        });
+        return new Response(JSON.stringify(results), {
+          status: 200,
+          headers: { "Content-Type": "application/json" },
+        });
+      }),
+    );
+  });
+
+  afterEach(() => vi.unstubAllGlobals());
+
+  const searchDialogProps = {
+    featuredProducts: catalogProductFixtures,
+    featuredBrands: catalogBrands.slice(0, 3),
+    featuredCategories: catalogCategories.slice(0, 3),
+  };
+
   it("mostra prodotti, marchi e stato senza risultati", async () => {
     const user = userEvent.setup();
 
     render(
       <CommerceProvider products={catalogProductFixtures}>
-        <SearchDialog open onOpenChange={() => undefined} />
+        <SearchDialog
+          open
+          onOpenChange={() => undefined}
+          {...searchDialogProps}
+        />
       </CommerceProvider>,
     );
 
@@ -41,7 +82,11 @@ describe("ricerca catalogo", () => {
 
     render(
       <CommerceProvider products={catalogProductFixtures}>
-        <SearchDialog open onOpenChange={() => undefined} />
+        <SearchDialog
+          open
+          onOpenChange={() => undefined}
+          {...searchDialogProps}
+        />
       </CommerceProvider>,
     );
 
@@ -60,7 +105,11 @@ describe("ricerca catalogo", () => {
 
     render(
       <CommerceProvider products={catalogProductFixtures}>
-        <SearchDialog open onOpenChange={() => undefined} />
+        <SearchDialog
+          open
+          onOpenChange={() => undefined}
+          {...searchDialogProps}
+        />
       </CommerceProvider>,
     );
 
@@ -80,7 +129,11 @@ describe("ricerca catalogo", () => {
 
     render(
       <CommerceProvider products={catalogProductFixtures}>
-        <SearchDialog open onOpenChange={() => undefined} />
+        <SearchDialog
+          open
+          onOpenChange={() => undefined}
+          {...searchDialogProps}
+        />
       </CommerceProvider>,
     );
 
@@ -99,7 +152,7 @@ describe("ricerca catalogo", () => {
 
     render(
       <CommerceProvider products={catalogProductFixtures}>
-        <SearchDialog open onOpenChange={onOpenChange} />
+        <SearchDialog open onOpenChange={onOpenChange} {...searchDialogProps} />
       </CommerceProvider>,
     );
 
@@ -125,7 +178,7 @@ describe("ricerca catalogo", () => {
 
     render(
       <CommerceProvider products={catalogProductFixtures}>
-        <SearchDialog open onOpenChange={onOpenChange} />
+        <SearchDialog open onOpenChange={onOpenChange} {...searchDialogProps} />
       </CommerceProvider>,
     );
 

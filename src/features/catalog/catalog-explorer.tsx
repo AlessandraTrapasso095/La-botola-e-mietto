@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { useRef, useState, useTransition } from "react";
 
 import { CloseIcon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
@@ -12,94 +13,53 @@ import {
 } from "@/components/ui/dialog";
 import { IconButton } from "@/components/ui/icon-button";
 import type {
-  CatalogCategory,
-  CatalogProductSummaryView,
+  CatalogFilterOptions,
+  CatalogFilters,
+  CatalogSort,
+  PaginatedProducts,
 } from "@/content/catalog/types";
-import {
-  emptyCatalogFilters,
-  filterCatalogProducts,
-  sortCatalogProducts,
-  type CatalogFilters,
-  type CatalogSort,
-} from "@/features/catalog/catalog-filter";
+import { emptyCatalogFilters } from "@/features/catalog/catalog-filter";
 import {
   CatalogFiltersPanel,
   catalogSortOptions,
-  type CatalogFilterOptions,
 } from "@/features/catalog/catalog-filters";
+import { serializeCatalogQuery } from "@/features/catalog/catalog-query-params";
 import {
   ProductCard,
   ProductCardSkeleton,
 } from "@/features/catalog/product-card";
 
-const productsPerPage = 12;
-
 export function CatalogExplorer({
-  products,
-  categories,
+  result,
+  filterOptions,
+  initialFilters,
+  initialSort,
   fixedCategory,
 }: {
-  products: readonly CatalogProductSummaryView[];
-  categories: readonly CatalogCategory[];
+  result: PaginatedProducts;
+  filterOptions: CatalogFilterOptions;
+  initialFilters: CatalogFilters;
+  initialSort: CatalogSort;
   fixedCategory?: string;
 }) {
-  const [filters, setFilters] = useState<CatalogFilters>(() => ({
-    ...emptyCatalogFilters,
-    categories: fixedCategory ? [fixedCategory] : [],
-  }));
-  const [sort, setSort] = useState<CatalogSort>("featured");
-  const [page, setPage] = useState(1);
+  const router = useRouter();
+  const pathname = usePathname();
+  const [filters, setFilters] = useState(initialFilters);
+  const [sort, setSort] = useState(initialSort);
   const [filterDrawerOpen, setFilterDrawerOpen] = useState(false);
+  const [isPending, startTransition] = useTransition();
   const filterTriggerRef = useRef<HTMLButtonElement>(null);
 
-  const options = useMemo<CatalogFilterOptions>(() => {
-    const brandMap = new Map<string, string>(
-      products.flatMap((product) =>
-        product.brandSlug && product.brandName
-          ? [[product.brandSlug, product.brandName] as const]
-          : [],
-      ),
-    );
-    return {
-      brands: [...brandMap.entries()]
-        .map(([value, label]) => ({ value, label }))
-        .sort((left, right) => left.label.localeCompare(right.label, "it")),
-      categories: categories.map((category) => ({
-        value: category.slug,
-        label: category.name,
-      })),
-      countries: [
-        ...new Set(
-          products
-            .map((product) => product.country)
-            .filter((country): country is string => Boolean(country)),
-        ),
-      ]
-        .sort((left, right) => left.localeCompare(right, "it"))
-        .map((country) => ({ value: country, label: country })),
-    };
-  }, [categories, products]);
+  const navigate = (
+    nextFilters: CatalogFilters,
+    nextSort: CatalogSort,
+    nextPage: number,
+  ) => {
+    const params = serializeCatalogQuery(nextFilters, nextSort, nextPage);
+    const href = params.size > 0 ? `${pathname}?${params}` : pathname;
+    startTransition(() => router.replace(href, { scroll: false }));
+  };
 
-  const filteredProducts = useMemo(
-    () => sortCatalogProducts(filterCatalogProducts(products, filters), sort),
-    [filters, products, sort],
-  );
-  const totalPages = Math.max(
-    1,
-    Math.ceil(filteredProducts.length / productsPerPage),
-  );
-  const visibleProducts = filteredProducts.slice(
-    (page - 1) * productsPerPage,
-    page * productsPerPage,
-  );
-  const visiblePageNumbers = [1, page - 1, page, page + 1, totalPages]
-    .filter(
-      (pageNumber, index, pageNumbers) =>
-        pageNumber >= 1 &&
-        pageNumber <= totalPages &&
-        pageNumbers.indexOf(pageNumber) === index,
-    )
-    .sort((left, right) => left - right);
   const activeFilterCount =
     filters.brands.length +
     filters.priceRanges.length +
@@ -124,43 +84,60 @@ export function CatalogExplorer({
     >,
     value: string,
   ) => {
-    setFilters((current) => ({
-      ...current,
-      [name]: current[name].includes(value)
-        ? current[name].filter((candidate) => candidate !== value)
-        : [...current[name], value],
-    }));
-    setPage(1);
+    const nextFilters = {
+      ...filters,
+      [name]: filters[name].includes(value)
+        ? filters[name].filter((candidate) => candidate !== value)
+        : [...filters[name], value],
+    };
+    setFilters(nextFilters);
+    navigate(nextFilters, sort, 1);
   };
 
   const updateBooleanFilter = (
     name: "onlyOnOffer" | "onlyNew" | "onlyLimited" | "onlyAvailable",
     value: boolean,
   ) => {
-    setFilters((current) => ({ ...current, [name]: value }));
-    setPage(1);
+    const nextFilters = { ...filters, [name]: value };
+    setFilters(nextFilters);
+    navigate(nextFilters, sort, 1);
   };
 
   const resetFilters = () => {
-    setFilters({
+    const nextFilters = {
       ...emptyCatalogFilters,
       categories: fixedCategory ? [fixedCategory] : [],
-    });
-    setPage(1);
+    };
+    setFilters(nextFilters);
+    navigate(nextFilters, sort, 1);
   };
 
   const filterPanel = (
     <CatalogFiltersPanel
       filters={filters}
       options={{
-        ...options,
-        categories: fixedCategory ? [] : options.categories,
+        ...filterOptions,
+        categories: fixedCategory ? [] : filterOptions.categories,
       }}
       onListFilterChange={updateListFilter}
       onBooleanFilterChange={updateBooleanFilter}
       onReset={resetFilters}
     />
   );
+  const visiblePageNumbers = [
+    1,
+    result.page - 1,
+    result.page,
+    result.page + 1,
+    result.totalPages,
+  ]
+    .filter(
+      (pageNumber, index, pageNumbers) =>
+        pageNumber >= 1 &&
+        pageNumber <= result.totalPages &&
+        pageNumbers.indexOf(pageNumber) === index,
+    )
+    .sort((left, right) => left - right);
 
   return (
     <div className="grid gap-10 lg:grid-cols-[15rem_minmax(0,1fr)] xl:gap-14">
@@ -168,14 +145,12 @@ export function CatalogExplorer({
         <div className="sticky top-28">{filterPanel}</div>
       </aside>
 
-      <div className="min-w-0">
+      <div className="min-w-0" aria-busy={isPending}>
         <div className="border-border-subtle flex flex-col gap-4 border-y py-4 sm:flex-row sm:items-end sm:justify-between">
           <div className="flex items-center justify-between gap-4 sm:block">
             <p className="text-text-muted text-sm" aria-live="polite">
-              <strong className="text-text-strong">
-                {filteredProducts.length}
-              </strong>{" "}
-              {filteredProducts.length === 1 ? "bottiglia" : "bottiglie"}
+              <strong className="text-text-strong">{result.totalCount}</strong>{" "}
+              {result.totalCount === 1 ? "bottiglia" : "bottiglie"}
             </p>
             <Button
               ref={filterTriggerRef}
@@ -194,8 +169,9 @@ export function CatalogExplorer({
             <select
               value={sort}
               onChange={(event) => {
-                setSort(event.target.value as CatalogSort);
-                setPage(1);
+                const nextSort = event.target.value as CatalogSort;
+                setSort(nextSort);
+                navigate(filters, nextSort, 1);
               }}
               className="border-border-subtle bg-surface min-h-11 border px-4 text-sm"
             >
@@ -208,9 +184,9 @@ export function CatalogExplorer({
           </label>
         </div>
 
-        {visibleProducts.length > 0 ? (
+        {result.items.length > 0 ? (
           <div className="mt-8 grid grid-cols-2 gap-x-4 gap-y-12 md:grid-cols-3 xl:gap-x-6">
-            {visibleProducts.map((product) => (
+            {result.items.map((product) => (
               <ProductCard key={product.slug} product={product} />
             ))}
           </div>
@@ -232,16 +208,16 @@ export function CatalogExplorer({
           </div>
         )}
 
-        {filteredProducts.length > productsPerPage ? (
+        {result.totalPages > 1 ? (
           <nav
             aria-label="Paginazione catalogo"
             className="border-border-subtle mt-14 flex flex-wrap items-center justify-center gap-2 border-t pt-8"
           >
             <button
               type="button"
-              disabled={page === 1}
+              disabled={result.page === 1 || isPending}
               className="border-border-subtle min-h-11 border px-4 text-sm disabled:opacity-[var(--opacity-disabled)]"
-              onClick={() => setPage((current) => Math.max(1, current - 1))}
+              onClick={() => navigate(filters, sort, result.page - 1)}
             >
               Precedente
             </button>
@@ -256,13 +232,11 @@ export function CatalogExplorer({
                 ) : null}
                 <button
                   type="button"
-                  aria-current={pageNumber === page ? "page" : undefined}
+                  aria-current={pageNumber === result.page ? "page" : undefined}
                   aria-label={`Pagina ${pageNumber}`}
+                  disabled={isPending}
                   className="border-border-subtle aria-[current=page]:border-accent aria-[current=page]:text-accent min-h-11 min-w-11 border px-3 text-sm transition-colors"
-                  onClick={() => {
-                    setPage(pageNumber);
-                    window.scrollTo({ top: 420, behavior: "smooth" });
-                  }}
+                  onClick={() => navigate(filters, sort, pageNumber)}
                 >
                   {pageNumber}
                 </button>
@@ -270,11 +244,9 @@ export function CatalogExplorer({
             ))}
             <button
               type="button"
-              disabled={page === totalPages}
+              disabled={result.page === result.totalPages || isPending}
               className="border-border-subtle min-h-11 border px-4 text-sm disabled:opacity-[var(--opacity-disabled)]"
-              onClick={() =>
-                setPage((current) => Math.min(totalPages, current + 1))
-              }
+              onClick={() => navigate(filters, sort, result.page + 1)}
             >
               Successiva
             </button>

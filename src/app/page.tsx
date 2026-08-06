@@ -1,6 +1,3 @@
-import { catalogProducts } from "@/content/catalog/products";
-import { isCatalogOfferProductCode } from "@/content/catalog/offers";
-import { getOfferProducts } from "@/content/catalog/selectors";
 import { CategoryShowcase } from "@/features/home/category-showcase";
 import {
   BrandSection,
@@ -12,31 +9,35 @@ import {
 import { HeroSection } from "@/features/home/hero-section";
 import { NewsletterSection } from "@/features/home/newsletter-section";
 import { ProductShelf } from "@/features/home/product-shelf";
-import { createCatalogProductViews } from "@/server/catalog-view";
+import { emptyCatalogFilters } from "@/features/catalog/catalog-filter";
+import { getCatalogRepository } from "@/server/catalog/get-catalog-repository";
 
-export default function HomePage() {
-  const newArrivals = createCatalogProductViews(
-    catalogProducts
-      .filter(
-        (product) => product.isNew && !isCatalogOfferProductCode(product.code),
-      )
-      .slice(0, 4),
-  );
-  const offerSelection = createCatalogProductViews(
-    getOfferProducts().slice(0, 4),
-  );
-  const rareSelection = createCatalogProductViews(
-    catalogProducts
-      .filter((product) => product.isLimited)
-      .sort((left, right) =>
-        left.netPriceMinor === right.netPriceMinor
-          ? 0
-          : left.netPriceMinor > right.netPriceMinor
-            ? -1
-            : 1,
-      )
-      .slice(0, 4),
-  );
+export default async function HomePage() {
+  const repository = getCatalogRepository();
+  const [newArrivalsResult, offersResult, rareResult] = await Promise.all([
+    repository.queryProducts({
+      page: 1,
+      pageSize: 4,
+      sort: "newest",
+      filters: { ...emptyCatalogFilters, onlyNew: true },
+    }),
+    repository.queryProducts({
+      page: 1,
+      pageSize: 4,
+      sort: "featured",
+      filters: emptyCatalogFilters,
+      scope: { onlyOffers: true },
+    }),
+    repository.queryProducts({
+      page: 1,
+      pageSize: 4,
+      sort: "price-desc",
+      filters: { ...emptyCatalogFilters, onlyLimited: true },
+    }),
+  ]);
+  const newArrivals = newArrivalsResult.items;
+  const offerSelection = offersResult.items;
+  const rareSelection = rareResult.items;
 
   return (
     <main id="main-content">

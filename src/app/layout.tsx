@@ -6,14 +6,15 @@ import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { ageGateConfig, cookieConsentConfig } from "@/config/consent";
 import { baseMetadata } from "@/config/metadata";
-import { catalogProducts } from "@/content/catalog/products";
 import { AgeGate } from "@/features/age-gate/age-gate";
 import { AccountProvider } from "@/features/account/account-provider";
 import { CommerceOverlays } from "@/features/commerce/commerce-overlays";
 import { CommerceProvider } from "@/features/commerce/commerce-provider";
 import { isAgeConfirmationValueValid } from "@/features/age-gate/age-gate-storage";
 import { CookiePreferencesBanner } from "@/features/cookie-consent/cookie-preferences-banner";
-import { createCatalogProductViews } from "@/server/catalog-view";
+import { getServerAccountUser } from "@/server/auth/account-user";
+import { getServerEnvironment } from "@/server/env";
+import { loadCurrentAccountWishlist } from "@/server/wishlist/account-wishlist";
 
 import "@/styles/globals.css";
 
@@ -54,7 +55,13 @@ export default async function RootLayout({
   const cookiePreferencesConfigured = cookieStore.has(
     cookieConsentConfig.cookieName,
   );
-  const commerceProducts = createCatalogProductViews(catalogProducts);
+  const authMode = getServerEnvironment().AUTH_SERVICE;
+  const initialAccountUser =
+    authMode === "supabase" ? await getServerAccountUser() : null;
+  const initialWishlist =
+    authMode === "supabase" && initialAccountUser
+      ? (await loadCurrentAccountWishlist()).slugs
+      : [];
 
   return (
     <html
@@ -69,8 +76,12 @@ export default async function RootLayout({
         <a className="skip-link" href="#main-content">
           Vai al contenuto
         </a>
-        <AccountProvider>
-          <CommerceProvider products={commerceProducts}>
+        <AccountProvider
+          key={`${authMode}:${initialAccountUser?.id ?? "anonymous"}`}
+          authMode={authMode}
+          initialUser={initialAccountUser}
+        >
+          <CommerceProvider initialWishlist={initialWishlist}>
             <div id="site-shell">
               <SiteHeader />
               {children}

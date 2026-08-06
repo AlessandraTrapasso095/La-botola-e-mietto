@@ -16,7 +16,13 @@
     "format:check": "prettier --check .",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "test:db": "vitest run --config vitest.database.config.ts",
+    "supabase:start": "supabase start",
+    "supabase:status": "supabase status",
+    "supabase:reset": "supabase db reset",
+    "supabase:types": "supabase gen types typescript --local > src/types/database.generated.ts",
+    "catalog:import": "tsx scripts/import-catalog.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "5.2.2",
@@ -44,9 +50,13 @@
     "eslint": "9.39.1",
     "eslint-config-next": "16.2.12",
     "jsdom": "27.2.0",
+    "postgres": "^3.4.9",
     "prettier": "3.6.2",
     "prettier-plugin-tailwindcss": "0.7.1",
+    "read-excel-file": "^9.3.5",
+    "supabase": "^2.111.0",
     "tailwindcss": "4.3.3",
+    "tsx": "^4.23.7",
     "typescript": "5.9.3",
     "vitest": "4.1.10"
   },

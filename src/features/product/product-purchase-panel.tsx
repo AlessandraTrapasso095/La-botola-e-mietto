@@ -22,9 +22,12 @@ export function ProductPurchasePanel({
 }) {
   const [quantity, setQuantity] = useState(1);
   const [shareMessage, setShareMessage] = useState("");
-  const { addToCart, isWishlisted, toggleWishlist } = useCommerce();
+  const { addToCart, isWishlisted, isWishlistPending, toggleWishlist } =
+    useCommerce();
   const wished = isWishlisted(product.slug);
-  const isAvailable = product.stockQuantity > 0;
+  const wishlistPending = isWishlistPending(product.slug);
+  const inventoryUnknown = product.stockQuantity === null;
+  const isAvailable = (product.stockQuantity ?? 0) > 0;
 
   const shareProduct = async () => {
     const shareData = {
@@ -86,9 +89,11 @@ export function ProductPurchasePanel({
               isAvailable ? "bg-emerald-400" : "bg-text-muted",
             )}
           />
-          {isAvailable
-            ? "Disponibile · pronta per la spedizione"
-            : "Temporaneamente non disponibile"}
+          {inventoryUnknown
+            ? "Disponibilità da verificare"
+            : isAvailable
+              ? "Disponibile · pronta per la spedizione"
+              : "Temporaneamente non disponibile"}
         </p>
       </div>
 
@@ -117,7 +122,7 @@ export function ProductPurchasePanel({
             fullWidth
             size="lg"
             disabled={!isAvailable}
-            onClick={() => addToCart(product.slug, quantity)}
+            onClick={() => addToCart(product, quantity)}
           >
             <BagIcon className="size-5" />
             Aggiungi al carrello
@@ -129,7 +134,9 @@ export function ProductPurchasePanel({
           variant="secondary"
           fullWidth
           aria-pressed={wished}
-          onClick={() => toggleWishlist(product.slug)}
+          aria-busy={wishlistPending}
+          disabled={wishlistPending}
+          onClick={() => toggleWishlist(product)}
         >
           <HeartIcon className={cn("size-5", wished && "fill-current")} />
           {wished ? "Nei preferiti" : "Aggiungi ai preferiti"}

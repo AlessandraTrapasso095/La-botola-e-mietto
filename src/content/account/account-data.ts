@@ -18,17 +18,7 @@ export type AccountOrder = {
   }[];
 };
 
-export type AccountAddress = {
-  id: string;
-  label: string;
-  recipient: string;
-  street: string;
-  postalCode: string;
-  city: string;
-  province: string;
-  type: "Spedizione" | "Fatturazione";
-  isDefault: boolean;
-};
+export type AccountAddress = Address;
 
 export const accountOrders: readonly AccountOrder[] = [
   {
@@ -70,23 +60,40 @@ export const initialAccountAddresses: readonly AccountAddress[] = [
   {
     id: "address-primary",
     label: "Casa",
-    recipient: "Giulia Ferri",
-    street: "Via delle Vigne 18",
+    firstName: "Giulia",
+    lastName: "Ferri",
+    company: "",
+    street: "Via delle Vigne",
+    streetNumber: "18",
+    line2: "",
     postalCode: "35100",
     city: "Padova",
     province: "PD",
-    type: "Spedizione",
-    isDefault: true,
+    countryCode: "IT",
+    phone: "+39 333 000 0000",
+    type: "shipping",
+    isDefaultShipping: true,
+    isDefaultBilling: false,
+    updatedAt: "2026-07-18T10:00:00.000Z",
   },
   {
     id: "address-billing",
     label: "Fatturazione",
-    recipient: "Giulia Ferri",
-    street: "Via delle Vigne 18",
+    firstName: "Giulia",
+    lastName: "Ferri",
+    company: "",
+    street: "Via delle Vigne",
+    streetNumber: "18",
+    line2: "",
     postalCode: "35100",
     city: "Padova",
     province: "PD",
-    type: "Fatturazione",
-    isDefault: false,
+    countryCode: "IT",
+    phone: "+39 333 000 0000",
+    type: "billing",
+    isDefaultShipping: false,
+    isDefaultBilling: true,
+    updatedAt: "2026-07-18T10:00:00.000Z",
   },
 ] as const;
+import type { Address } from "@/types/customer";

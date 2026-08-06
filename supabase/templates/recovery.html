@@ -1,0 +1,9 @@
+<h2>Imposta una nuova password</h2>
+<p>Usa il collegamento seguente per scegliere una nuova password.</p>
+<p>
+  <a
+    href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=recovery&next=/nuova-password"
+  >
+    Reimposta password
+  </a>
+</p>

@@ -4,14 +4,12 @@ import { notFound } from "next/navigation";
 import { Container } from "@/components/ui/container";
 import { Heading } from "@/components/ui/heading";
 import { Section } from "@/components/ui/section";
-import {
-  getBrandBySlug,
-  getProductsByBrand,
-} from "@/content/catalog/selectors";
+import { getBrandBySlug } from "@/content/catalog/selectors";
 import { Breadcrumbs } from "@/features/catalog/breadcrumbs";
 import { CatalogHero } from "@/features/catalog/catalog-hero";
 import { ProductCard } from "@/features/catalog/product-card";
-import { createCatalogProductViews } from "@/server/catalog-view";
+import { emptyCatalogFilters } from "@/features/catalog/catalog-filter";
+import { getCatalogRepository } from "@/server/catalog/get-catalog-repository";
 
 type BrandPageProps = {
   params: Promise<{ slug: string }>;
@@ -36,7 +34,15 @@ export default async function BrandPage({ params }: BrandPageProps) {
   const brand = getBrandBySlug(slug);
   if (!brand) notFound();
 
-  const products = createCatalogProductViews(getProductsByBrand(slug));
+  const products = (
+    await getCatalogRepository().queryProducts({
+      page: 1,
+      pageSize: 500,
+      sort: "name",
+      filters: emptyCatalogFilters,
+      scope: { brandSlug: slug },
+    })
+  ).items;
 
   return (
     <main id="main-content">

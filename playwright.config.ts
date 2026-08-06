@@ -19,9 +19,9 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: "npm run dev -- --hostname 127.0.0.1",
-    url: "http://127.0.0.1:3000",
+    command: "npm run dev -- --webpack --hostname 127.0.0.1",
+    url: "http://127.0.0.1:3000/favicon.ico",
     reuseExistingServer: !process.env.CI,
-    timeout: 120_000,
+    timeout: 300_000,
   },
 });

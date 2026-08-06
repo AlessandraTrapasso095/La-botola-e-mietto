@@ -22,7 +22,11 @@ const loginSchema = z.object({
 type LoginValues = z.infer<typeof loginSchema>;
 type LoginState = "idle" | "loading" | "error" | "success";
 
-export function LoginForm() {
+export function LoginForm({
+  returnTo = accountRoutes.dashboard,
+}: {
+  returnTo?: string;
+}) {
   const router = useRouter();
   const { signIn } = useAccount();
   const [submissionState, setSubmissionState] = useState<LoginState>("idle");
@@ -42,7 +46,10 @@ export function LoginForm() {
     try {
       await signIn(email, password);
       setSubmissionState("success");
-      window.setTimeout(() => router.push(accountRoutes.dashboard), 250);
+      window.setTimeout(() => {
+        router.refresh();
+        router.replace(returnTo);
+      }, 250);
     } catch (error) {
       setSubmissionState("error");
       setSubmissionError(

@@ -1,24 +1,10 @@
-import type { CatalogProductSummaryView } from "@/content/catalog/types";
+import type {
+  CatalogFilters,
+  CatalogProductSummaryView,
+  CatalogSort,
+} from "@/content/catalog/types";
 
-export type CatalogFilters = {
-  brands: string[];
-  categories: string[];
-  priceRanges: string[];
-  capacities: string[];
-  alcoholRanges: string[];
-  countries: string[];
-  onlyOnOffer: boolean;
-  onlyNew: boolean;
-  onlyLimited: boolean;
-  onlyAvailable: boolean;
-};
-
-export type CatalogSort =
-  | "featured"
-  | "price-asc"
-  | "price-desc"
-  | "name"
-  | "newest";
+export type { CatalogFilters, CatalogSort } from "@/content/catalog/types";
 
 export const emptyCatalogFilters: CatalogFilters = {
   brands: [],
@@ -104,7 +90,7 @@ export function filterCatalogProducts(
       (!filters.onlyOnOffer || product.offer !== null) &&
       (!filters.onlyNew || product.isNew) &&
       (!filters.onlyLimited || product.isLimited) &&
-      (!filters.onlyAvailable || product.stockQuantity > 0),
+      (!filters.onlyAvailable || (product.stockQuantity ?? 0) > 0),
   );
 }
 

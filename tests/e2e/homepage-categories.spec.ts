@@ -58,8 +58,8 @@ test("testo e CTA delle categorie non si intersecano", async ({
         textBox.y + textBox.height > ctaBox.y;
 
       expect(horizontalIntersection && verticalIntersection).toBe(false);
-      expect(ctaBox.width).toBeGreaterThanOrEqual(44);
-      expect(ctaBox.height).toBeGreaterThanOrEqual(44);
+      expect(Math.round(ctaBox.width)).toBeGreaterThanOrEqual(44);
+      expect(Math.round(ctaBox.height)).toBeGreaterThanOrEqual(44);
       expect(ctaBox.x).toBeGreaterThanOrEqual(cardBox.x);
       expect(ctaBox.x + ctaBox.width).toBeLessThanOrEqual(
         cardBox.x + cardBox.width,

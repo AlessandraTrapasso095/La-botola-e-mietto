@@ -5,13 +5,9 @@ import { Container } from "@/components/ui/container";
 import { Heading } from "@/components/ui/heading";
 import { Section } from "@/components/ui/section";
 import { Text } from "@/components/ui/text";
-import { catalogBrands } from "@/content/catalog/brands";
-import { catalogCategories } from "@/content/catalog/categories";
-import { catalogProducts } from "@/content/catalog/products";
 import { Breadcrumbs } from "@/features/catalog/breadcrumbs";
 import { ProductCard } from "@/features/catalog/product-card";
-import { searchCatalog } from "@/features/search/catalog-search";
-import { createCatalogProductViews } from "@/server/catalog-view";
+import { getCatalogRepository } from "@/server/catalog/get-catalog-repository";
 
 type SearchPageProps = {
   searchParams: Promise<{ q?: string | string[] }>;
@@ -28,12 +24,8 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
   const query = Array.isArray(params.q)
     ? (params.q[0] ?? "")
     : (params.q ?? "");
-  const results = searchCatalog({
-    query,
-    products: createCatalogProductViews(catalogProducts),
-    brands: catalogBrands,
-    categories: catalogCategories,
-    limits: { products: 48 },
+  const results = await getCatalogRepository().search(query, {
+    productLimit: 48,
   });
 
   return (

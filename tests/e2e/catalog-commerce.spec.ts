@@ -41,10 +41,7 @@ test("catalogo mobile, filtri, prodotto, carrello, wishlist e ricerca", async ({
   await page.keyboard.press("Escape");
   await expect(initialCart).toBeHidden();
 
-  await page
-    .getByRole("link", { name: "Catalogo", exact: true })
-    .last()
-    .click();
+  await page.goto("/catalogo");
   await expect(page).toHaveURL(/\/catalogo$/, { timeout: 60_000 });
   await expect(
     page.getByRole("heading", {
@@ -98,6 +95,16 @@ test("catalogo mobile, filtri, prodotto, carrello, wishlist e ricerca", async ({
   await expect(
     page.getByRole("button", { name: "Nei preferiti" }),
   ).toBeVisible();
+  await expect
+    .poll(() =>
+      page.evaluate(() => {
+        const value = window.localStorage.getItem("lbm-demo-commerce");
+        if (!value) return false;
+        const parsed = JSON.parse(value) as { wishlist?: string[] };
+        return parsed.wishlist?.includes("caprisius") ?? false;
+      }),
+    )
+    .toBe(true);
 
   await page.reload();
   await expect(

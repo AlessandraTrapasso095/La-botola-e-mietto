@@ -4,11 +4,15 @@ import { Heading } from "@/components/ui/heading";
 import { getOfferProducts } from "@/content/catalog/selectors";
 import { ProductCard } from "@/features/catalog/product-card";
 import { createCatalogProductViews } from "@/server/catalog-view";
+import { getServerEnvironment } from "@/server/env";
 
 export const metadata: Metadata = { title: "Offerte" };
 
 export default function AccountOffersPage() {
-  const products = createCatalogProductViews(getOfferProducts());
+  const products =
+    getServerEnvironment().AUTH_SERVICE === "demo"
+      ? createCatalogProductViews(getOfferProducts())
+      : [];
   return (
     <div>
       <p className="text-accent text-xs font-semibold tracking-[var(--letter-spacing-label)] uppercase">

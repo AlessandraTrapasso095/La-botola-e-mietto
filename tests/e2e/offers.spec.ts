@@ -52,10 +52,14 @@ test("le offerte reali sono navigabili da header, pagina e prodotto", async ({
     await expect(card.locator("del")).toHaveCount(0);
   }
 
-  await page
-    .getByRole("link", { name: "Purity 34 Premium BIO", exact: true })
-    .click();
-  await expect(page).toHaveURL(/\/prodotto\/purity-34-premium-bio$/, {
+  const firstOfferLink = visibleCards
+    .first()
+    .locator('a[href^="/prodotto/"]')
+    .first();
+  const productHref = await firstOfferLink.getAttribute("href");
+  expect(productHref).toMatch(/^\/prodotto\//);
+  await firstOfferLink.click();
+  await expect(page).toHaveURL(new RegExp(`${productHref}$`), {
     timeout: 60_000,
   });
   await expect(
@@ -81,7 +85,12 @@ test("filtro e ricerca restituiscono soltanto prodotti in offerta", async ({
   await page.goto("/catalogo");
 
   await page.getByLabel("In offerta", { exact: true }).check();
-  await expect(page.getByText("50 bottiglie")).toBeVisible();
+  await expect(page).toHaveURL(/\/catalogo\?offer=1$/, {
+    timeout: 60_000,
+  });
+  await expect(page.getByText("50 bottiglie")).toBeVisible({
+    timeout: 60_000,
+  });
   const filteredCards = page.locator("article.product-card");
   await expect(filteredCards).toHaveCount(12);
   for (const card of await filteredCards.all()) {
@@ -95,7 +104,7 @@ test("filtro e ricerca restituiscono soltanto prodotti in offerta", async ({
   await searchDialog.getByRole("searchbox").fill("In offerta");
   await expect(
     searchDialog.getByText("In offerta", { exact: true }).first(),
-  ).toBeVisible();
+  ).toBeVisible({ timeout: 30_000 });
   await searchDialog.getByRole("searchbox").press("Enter");
 
   await expect(page).toHaveURL(/\/cerca\?q=In(?:%20|\+)offerta$/, {

@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 
 import { ArrowRightIcon, SearchIcon } from "@/components/icons";
 import { Badge } from "@/components/ui/badge";
@@ -12,32 +12,49 @@ import {
   DialogDescription,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { catalogBrands } from "@/content/catalog/brands";
-import { catalogCategories } from "@/content/catalog/categories";
-import { useCommerce } from "@/features/commerce/commerce-provider";
 import { ProductPrice } from "@/features/catalog/product-price";
 import {
   isCatalogSearchQuery,
-  searchCatalog,
+  normalizeCatalogSearchValue,
 } from "@/features/search/catalog-search";
+import { fetchCatalogSearch } from "@/lib/browser/catalog-client";
+import type {
+  Brand,
+  CatalogSearchResults,
+  Category,
+  ProductCardView,
+} from "@/types/catalog";
 
 type SearchDialogProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  featuredProducts?: readonly ProductCardView[];
+  featuredBrands?: readonly Brand[];
+  featuredCategories?: readonly Category[];
 };
 
-const suggestedCategorySlugs = [
-  "whisky-whiskey",
-  "rum-rhum",
-  "gin",
-  "tequila-mezcal",
-  "bottiglie-rare",
-] as const;
+const emptySearchResults: CatalogSearchResults = {
+  query: "",
+  normalizedQuery: "",
+  isSearchable: false,
+  products: [],
+  brands: [],
+  categories: [],
+  totalCount: 0,
+};
 
-export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
-  const { products } = useCommerce();
+export function SearchDialog({
+  open,
+  onOpenChange,
+  featuredProducts = [],
+  featuredBrands = [],
+  featuredCategories = [],
+}: SearchDialogProps) {
   const [query, setQuery] = useState("");
   const [settledQuery, setSettledQuery] = useState("");
+  const [searchResults, setSearchResults] =
+    useState<CatalogSearchResults>(emptySearchResults);
+  const [loadingQuery, setLoadingQuery] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const resultsRef = useRef<HTMLDivElement>(null);
 
@@ -48,39 +65,62 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
   }, [open]);
 
   useEffect(() => {
-    const timer = window.setTimeout(() => setSettledQuery(query), 220);
+    const timer = window.setTimeout(() => {
+      setSettledQuery(query);
+      if (normalizeCatalogSearchValue(query).length >= 2) {
+        setLoadingQuery(query);
+      }
+    }, 220);
     return () => window.clearTimeout(timer);
   }, [query]);
 
-  const isLoading = query !== settledQuery;
-  const searchResults = useMemo(
-    () =>
-      searchCatalog({
-        query: settledQuery,
-        products,
-        brands: catalogBrands,
-        categories: catalogCategories,
-        limits: { products: 7, brands: 4, categories: 4 },
-      }),
-    [products, settledQuery],
-  );
-  const hasQuery = searchResults.normalizedQuery.length > 0;
-  const isShortQuery = hasQuery && !searchResults.isSearchable;
+  useEffect(() => {
+    const normalizedQuery = normalizeCatalogSearchValue(settledQuery);
+    if (normalizedQuery.length < 2) return;
+
+    const controller = new AbortController();
+    fetchCatalogSearch(settledQuery, controller.signal)
+      .then(setSearchResults)
+      .catch((error: unknown) => {
+        if (error instanceof DOMException && error.name === "AbortError")
+          return;
+        setSearchResults({
+          ...emptySearchResults,
+          query: settledQuery.trim(),
+          normalizedQuery,
+          isSearchable: true,
+        });
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setLoadingQuery(null);
+      });
+
+    return () => controller.abort();
+  }, [settledQuery]);
+
+  const isLoading = query !== settledQuery || loadingQuery === settledQuery;
+  const normalizedSettledQuery = normalizeCatalogSearchValue(settledQuery);
+  const displayedSearchResults =
+    normalizedSettledQuery.length >= 2
+      ? searchResults
+      : {
+          ...emptySearchResults,
+          query: settledQuery.trim(),
+          normalizedQuery: normalizedSettledQuery,
+        };
+  const hasQuery = displayedSearchResults.normalizedQuery.length > 0;
+  const isShortQuery = hasQuery && !displayedSearchResults.isSearchable;
   const productResults = hasQuery
-    ? searchResults.products
-    : products.slice(0, 5);
+    ? displayedSearchResults.products
+    : featuredProducts;
   const brandResults = hasQuery
-    ? searchResults.brands
-    : catalogBrands.slice(0, 3);
+    ? displayedSearchResults.brands
+    : featuredBrands;
   const categoryResults = hasQuery
-    ? searchResults.categories
-    : catalogCategories.filter((category) =>
-        suggestedCategorySlugs.includes(
-          category.slug as (typeof suggestedCategorySlugs)[number],
-        ),
-      );
+    ? displayedSearchResults.categories
+    : featuredCategories;
   const totalResults = hasQuery
-    ? searchResults.totalCount
+    ? displayedSearchResults.totalCount
     : productResults.length + brandResults.length + categoryResults.length;
 
   const closeSearch = () => onOpenChange(false);
@@ -115,7 +155,13 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
               type="search"
               name="q"
               value={query}
-              onChange={(event) => setQuery(event.target.value)}
+              onChange={(event) => {
+                const nextQuery = event.target.value;
+                setQuery(nextQuery);
+                if (normalizeCatalogSearchValue(nextQuery).length < 2) {
+                  setLoadingQuery(null);
+                }
+              }}
               onKeyDown={(event) => {
                 if (event.key !== "ArrowDown") return;
                 event.preventDefault();
@@ -153,24 +199,18 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
               Percorsi suggeriti
             </p>
             <ul className="mt-3">
-              {catalogCategories
-                .filter((category) =>
-                  suggestedCategorySlugs.includes(
-                    category.slug as (typeof suggestedCategorySlugs)[number],
-                  ),
-                )
-                .map((category) => (
-                  <li key={category.slug}>
-                    <Link
-                      href={`/categoria/${category.slug}`}
-                      className="hover:text-accent-soft flex min-h-10 items-center justify-between text-sm transition-colors"
-                      onClick={closeSearch}
-                    >
-                      {category.shortName}
-                      <ArrowRightIcon className="size-4" />
-                    </Link>
-                  </li>
-                ))}
+              {featuredCategories.map((category) => (
+                <li key={category.slug}>
+                  <Link
+                    href={`/categoria/${category.slug}`}
+                    className="hover:text-accent-soft flex min-h-10 items-center justify-between text-sm transition-colors"
+                    onClick={closeSearch}
+                  >
+                    {category.shortName}
+                    <ArrowRightIcon className="size-4" />
+                  </Link>
+                </li>
+              ))}
             </ul>
           </aside>
 

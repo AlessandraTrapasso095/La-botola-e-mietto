@@ -2,14 +2,17 @@ import type { Metadata } from "next";
 
 import { Container } from "@/components/ui/container";
 import { Section } from "@/components/ui/section";
-import { catalogCategories } from "@/content/catalog/categories";
-import { getOfferProducts } from "@/content/catalog/selectors";
 import { demoMedia } from "@/content/demo-assets/media";
 import { Breadcrumbs } from "@/features/catalog/breadcrumbs";
 import { CatalogExplorer } from "@/features/catalog/catalog-explorer";
 import { CatalogHero } from "@/features/catalog/catalog-hero";
 import { ShippingPromise } from "@/features/catalog/shipping-promise";
-import { createCatalogProductViews } from "@/server/catalog-view";
+import type { CatalogSearchParams } from "@/server/catalog/catalog-query";
+import { loadCatalogPage } from "@/server/catalog/load-catalog-page";
+
+type OffersPageProps = {
+  searchParams: Promise<CatalogSearchParams>;
+};
 
 export const metadata: Metadata = {
   title: "In offerta",
@@ -23,8 +26,11 @@ export const metadata: Metadata = {
   },
 };
 
-export default function OffersPage() {
-  const offerProducts = createCatalogProductViews(getOfferProducts());
+export default async function OffersPage({ searchParams }: OffersPageProps) {
+  const { query, result, filterOptions } = await loadCatalogPage(
+    await searchParams,
+    { onlyOffers: true },
+  );
 
   return (
     <main id="main-content">
@@ -35,15 +41,17 @@ export default function OffersPage() {
         eyebrow="Occasioni selezionate"
         title="In offerta"
         description="Una selezione di bottiglie proposta a condizioni speciali, scelta con la stessa cura riservata a ogni etichetta del nostro catalogo."
-        introduction={`${offerProducts.length} ${offerProducts.length === 1 ? "referenza disponibile" : "referenze disponibili"}, tra distillati, vini e specialità da scoprire.`}
+        introduction={`${result.totalCount} ${result.totalCount === 1 ? "referenza disponibile" : "referenze disponibili"}, tra distillati, vini e specialità da scoprire.`}
         media={demoMedia.ginTea}
       />
       <ShippingPromise />
       <Section spacing="standard">
         <Container>
           <CatalogExplorer
-            products={offerProducts}
-            categories={catalogCategories}
+            result={result}
+            filterOptions={filterOptions}
+            initialFilters={query.filters}
+            initialSort={query.sort}
           />
         </Container>
       </Section>

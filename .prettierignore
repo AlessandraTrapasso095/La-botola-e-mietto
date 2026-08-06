@@ -4,5 +4,7 @@ docs/design-reference
 node_modules
 playwright-report
 reference-private
+src/types/database.generated.ts
+supabase/.temp
 test-results
 package-lock.json

@@ -15,14 +15,30 @@ function isCatalogProduct(
 }
 
 export function WishlistPageContent() {
-  const { products, wishlist } = useCommerce();
+  const { products, wishlist, wishlistError, wishlistLoading } = useCommerce();
   const wishlistedProducts = wishlist
     .map((slug) => products.find((product) => product.slug === slug))
     .filter(isCatalogProduct);
 
+  if (wishlistLoading && wishlistedProducts.length === 0) {
+    return (
+      <div
+        className="border-border-subtle flex min-h-[30rem] items-center justify-center border px-6 text-center"
+        aria-busy="true"
+      >
+        <p className="text-text-muted">Caricamento dei preferiti…</p>
+      </div>
+    );
+  }
+
   if (wishlistedProducts.length === 0) {
     return (
       <div className="border-border-subtle flex min-h-[30rem] flex-col items-center justify-center border px-6 text-center">
+        {wishlistError ? (
+          <p className="text-danger mb-5 text-sm" role="alert">
+            {wishlistError}
+          </p>
+        ) : null}
         <span className="border-border text-accent flex size-20 items-center justify-center rounded-full border">
           <HeartIcon className="size-8" />
         </span>
@@ -45,6 +61,11 @@ export function WishlistPageContent() {
 
   return (
     <>
+      {wishlistError ? (
+        <p className="text-danger mb-6 text-sm" role="alert">
+          {wishlistError}
+        </p>
+      ) : null}
       <div className="flex items-end justify-between gap-6">
         <div>
           <p className="text-accent text-xs font-semibold tracking-[var(--letter-spacing-label)] uppercase">

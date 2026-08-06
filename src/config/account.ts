@@ -12,5 +12,6 @@ export const accountRoutes = {
   signIn: "/accedi",
   register: "/registrati",
   forgotPassword: "/password-dimenticata",
+  newPassword: "/nuova-password",
   dashboard: "/account",
 } as const;

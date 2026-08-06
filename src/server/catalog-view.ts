@@ -11,20 +11,25 @@ import type {
   CatalogProduct,
   CatalogProductSummaryView,
   CatalogProductView,
+  Product,
 } from "@/content/catalog/types";
 import { createEuro, formatEuroMinor } from "@/lib/money";
 import { calculateGrossPrice } from "@/server/pricing";
 
 export function createCatalogProductSummaryView(
-  product: CatalogProduct,
+  product: CatalogProduct | Product,
 ): CatalogProductSummaryView {
   const brand = product.brandSlug
     ? getBrandBySlug(product.brandSlug)
     : undefined;
   const category = getCategoryBySlug(product.categorySlug);
   const grossPrice = calculateGrossPrice(
-    createEuro(product.netPriceMinor),
-    commerceConfig.defaultVatRateBasisPoints,
+    createEuro(
+      "price" in product ? product.price.netAmountMinor : product.netPriceMinor,
+    ),
+    "price" in product
+      ? product.price.vatRateBasisPoints
+      : commerceConfig.defaultVatRateBasisPoints,
   );
   const isOnOffer = isCatalogOfferProductCode(product.code);
   const badges = [
@@ -49,7 +54,10 @@ export function createCatalogProductSummaryView(
     alcoholPercentage: product.alcoholPercentage,
     country: product.country,
     producer: product.producer,
-    stockQuantity: product.stockQuantity,
+    stockQuantity:
+      "inventory" in product
+        ? product.inventory.availableQuantity
+        : product.stockQuantity,
     isNew: product.isNew && !isOnOffer,
     isLimited: product.isLimited,
     badges,
@@ -63,7 +71,7 @@ export function createCatalogProductSummaryView(
 }
 
 export function createCatalogProductView(
-  product: CatalogProduct,
+  product: CatalogProduct | Product,
 ): CatalogProductView {
   return {
     ...createCatalogProductSummaryView(product),
@@ -83,7 +91,7 @@ export function createCatalogProductView(
 }
 
 export function createCatalogProductViews(
-  products: readonly CatalogProduct[],
+  products: readonly (CatalogProduct | Product)[],
 ): CatalogProductSummaryView[] {
   return products.map(createCatalogProductSummaryView);
 }

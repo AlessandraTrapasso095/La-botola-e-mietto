@@ -18,9 +18,12 @@ export function ProductCard({
   product: CatalogProductSummaryView;
   featured?: boolean;
 }) {
-  const { addToCart, isWishlisted, toggleWishlist } = useCommerce();
+  const { addToCart, isWishlisted, isWishlistPending, toggleWishlist } =
+    useCommerce();
   const media = product.media[0];
   const wished = isWishlisted(product.slug);
+  const wishlistPending = isWishlistPending(product.slug);
+  const isAvailable = (product.stockQuantity ?? 0) > 0;
 
   return (
     <article className="product-card group flex h-full flex-col">
@@ -67,11 +70,13 @@ export function ProductCard({
               : `Aggiungi ${product.name} ai preferiti`
           }
           aria-pressed={wished}
+          aria-busy={wishlistPending}
+          disabled={wishlistPending}
           className={cn(
             "bg-background/80 absolute top-3 right-3 z-20 backdrop-blur-md sm:top-4 sm:right-4",
             wished && "border-accent text-accent",
           )}
-          onClick={() => toggleWishlist(product.slug)}
+          onClick={() => toggleWishlist(product)}
         >
           <HeartIcon className={cn("size-5", wished && "fill-current")} />
         </IconButton>
@@ -103,8 +108,9 @@ export function ProductCard({
           </div>
           <IconButton
             aria-label={`Aggiungi ${product.name} al carrello`}
+            disabled={!isAvailable}
             className="hover:bg-accent hover:text-accent-contrast"
-            onClick={() => addToCart(product.slug)}
+            onClick={() => addToCart(product)}
           >
             <BagIcon className="size-5" />
           </IconButton>

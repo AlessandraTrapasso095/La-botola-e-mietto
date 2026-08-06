@@ -47,17 +47,19 @@ describe("account auth adapter", () => {
 
   it("registra un profilo senza dipendenze da servizi remoti", async () => {
     vi.useFakeTimers();
-    const user = await resolveDelayed(
+    const result = await resolveDelayed(
       browserAccountAuthAdapter.register({
         firstName: "Livia",
         lastName: "Conti",
         email: "LIVIA@EXAMPLE.COM",
         password: "Cantina18!",
+        privacyConsent: true,
         marketingConsent: false,
+        adultConfirmation: true,
       }),
     );
 
-    expect(user).toMatchObject({
+    expect(result.user).toMatchObject({
       firstName: "Livia",
       lastName: "Conti",
       email: "livia@example.com",

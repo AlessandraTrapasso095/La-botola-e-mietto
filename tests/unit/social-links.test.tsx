@@ -29,6 +29,7 @@ describe("social links", () => {
   it("shows the same confirmed social links in the mobile menu", () => {
     render(
       <MobileNavigation
+        accountReady
         open
         onOpenChange={vi.fn()}
         onSearch={vi.fn()}

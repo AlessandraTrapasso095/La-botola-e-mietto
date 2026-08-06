@@ -3,20 +3,18 @@ import { notFound } from "next/navigation";
 
 import { Container } from "@/components/ui/container";
 import { Section } from "@/components/ui/section";
-import { catalogCategories } from "@/content/catalog/categories";
 import { catalogCollections } from "@/content/catalog/collections";
-import {
-  getCollectionBySlug,
-  getProductsByCollection,
-} from "@/content/catalog/selectors";
+import { getCollectionBySlug } from "@/content/catalog/selectors";
 import { Breadcrumbs } from "@/features/catalog/breadcrumbs";
 import { CatalogExplorer } from "@/features/catalog/catalog-explorer";
 import { CatalogHero } from "@/features/catalog/catalog-hero";
 import { ShippingPromise } from "@/features/catalog/shipping-promise";
-import { createCatalogProductViews } from "@/server/catalog-view";
+import type { CatalogSearchParams } from "@/server/catalog/catalog-query";
+import { loadCatalogPage } from "@/server/catalog/load-catalog-page";
 
 type CollectionPageProps = {
   params: Promise<{ slug: string }>;
+  searchParams: Promise<CatalogSearchParams>;
 };
 
 export function generateStaticParams() {
@@ -43,12 +41,18 @@ export async function generateMetadata({
   };
 }
 
-export default async function CollectionPage({ params }: CollectionPageProps) {
+export default async function CollectionPage({
+  params,
+  searchParams,
+}: CollectionPageProps) {
   const { slug } = await params;
   const collection = getCollectionBySlug(slug);
   if (!collection || collection.productSlugs.length === 0) notFound();
 
-  const products = createCatalogProductViews(getProductsByCollection(slug));
+  const { query, result, filterOptions } = await loadCatalogPage(
+    await searchParams,
+    { productSlugs: collection.productSlugs },
+  );
 
   return (
     <main id="main-content">
@@ -69,7 +73,12 @@ export default async function CollectionPage({ params }: CollectionPageProps) {
       <ShippingPromise />
       <Section spacing="standard">
         <Container>
-          <CatalogExplorer products={products} categories={catalogCategories} />
+          <CatalogExplorer
+            result={result}
+            filterOptions={filterOptions}
+            initialFilters={query.filters}
+            initialSort={query.sort}
+          />
         </Container>
       </Section>
     </main>

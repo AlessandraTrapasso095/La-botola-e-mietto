@@ -10,68 +10,89 @@ import {
 } from "react";
 
 import {
-  browserAccountAuthAdapter,
+  type AccountPreferencesUpdate,
   type AccountProfileUpdate,
   type AccountRegistration,
+  type AccountRegistrationResult,
   type AccountUser,
 } from "@/features/account/auth-adapter";
+import { getBrowserAuthService } from "@/services/auth/get-browser-auth-service";
+import type { AuthMode } from "@/services/auth/auth-mode";
 
 type AccountContextValue = {
   user: AccountUser | null;
   hydrated: boolean;
+  authMode: AuthMode;
   signIn: (email: string, password: string) => Promise<void>;
-  registerAccount: (registration: AccountRegistration) => Promise<void>;
+  registerAccount: (
+    registration: AccountRegistration,
+  ) => Promise<AccountRegistrationResult>;
   requestPasswordReset: (email: string) => Promise<void>;
-  updateProfile: (profile: AccountProfileUpdate) => void;
-  updateMarketingConsent: (accepted: boolean) => void;
-  signOut: () => void;
+  updateProfile: (profile: AccountProfileUpdate) => Promise<void>;
+  updatePreferences: (preferences: AccountPreferencesUpdate) => Promise<void>;
+  updatePassword: (password: string) => Promise<void>;
+  signOut: () => Promise<void>;
 };
 
 const AccountContext = createContext<AccountContextValue | null>(null);
 
-export function AccountProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<AccountUser | null>(null);
-  const [hydrated, setHydrated] = useState(false);
+export function AccountProvider({
+  authMode = "demo",
+  children,
+  initialUser = null,
+}: {
+  authMode?: AuthMode;
+  children: ReactNode;
+  initialUser?: AccountUser | null;
+}) {
+  const authService = useMemo(
+    () => getBrowserAuthService(authMode),
+    [authMode],
+  );
+  const [user, setUser] = useState<AccountUser | null>(initialUser);
+  const [hydrated, setHydrated] = useState(authMode === "supabase");
 
   useEffect(() => {
+    if (authMode === "supabase") return;
     const hydrationFrame = window.requestAnimationFrame(() => {
-      setUser(browserAccountAuthAdapter.readSession(window.localStorage));
+      const session = authService.getSession();
+      if (session instanceof Promise) {
+        session.then(setUser).finally(() => setHydrated(true));
+        return;
+      }
+      setUser(session);
       setHydrated(true);
     });
     return () => window.cancelAnimationFrame(hydrationFrame);
-  }, []);
-
-  const persistUser = (nextUser: AccountUser) => {
-    browserAccountAuthAdapter.writeSession(window.localStorage, nextUser);
-    setUser(nextUser);
-  };
+  }, [authMode, authService]);
 
   const value = useMemo<AccountContextValue>(
     () => ({
       user,
       hydrated,
+      authMode,
       signIn: async (email, password) => {
-        persistUser(await browserAccountAuthAdapter.signIn(email, password));
+        setUser(await authService.signIn(email, password));
       },
       registerAccount: async (registration) => {
-        persistUser(await browserAccountAuthAdapter.register(registration));
+        const result = await authService.register(registration);
+        setUser(result.user);
+        return result;
       },
-      requestPasswordReset: (email) =>
-        browserAccountAuthAdapter.requestPasswordReset(email),
-      updateProfile: (profile) => {
-        if (!user) return;
-        persistUser({ ...user, ...profile });
+      requestPasswordReset: (email) => authService.requestPasswordReset(email),
+      updateProfile: async (profile) => {
+        setUser(await authService.updateProfile(profile));
       },
-      updateMarketingConsent: (marketingConsent) => {
-        if (!user) return;
-        persistUser({ ...user, marketingConsent });
+      updatePreferences: async (preferences) => {
+        setUser(await authService.updatePreferences(preferences));
       },
-      signOut: () => {
-        browserAccountAuthAdapter.clearSession(window.localStorage);
+      updatePassword: (password) => authService.updatePassword(password),
+      signOut: async () => {
+        await authService.signOut();
         setUser(null);
       },
     }),
-    [hydrated, user],
+    [authMode, authService, hydrated, user],
   );
 
   return (
@@ -85,4 +106,8 @@ export function useAccount() {
     throw new Error("useAccount deve essere usato dentro AccountProvider.");
   }
   return context;
+}
+
+export function useOptionalAccount() {
+  return useContext(AccountContext);
 }

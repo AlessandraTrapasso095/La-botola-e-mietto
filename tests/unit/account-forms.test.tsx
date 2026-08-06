@@ -8,9 +8,11 @@ import { PasswordResetForm } from "@/features/account/password-reset-form";
 import { RegisterForm } from "@/features/account/register-form";
 
 const push = vi.fn();
+const replace = vi.fn();
+const refresh = vi.fn();
 
 vi.mock("next/navigation", () => ({
-  useRouter: () => ({ push }),
+  useRouter: () => ({ push, refresh, replace }),
 }));
 
 function renderAccountForm(form: React.ReactNode) {
@@ -18,7 +20,11 @@ function renderAccountForm(form: React.ReactNode) {
 }
 
 describe("account forms", () => {
-  beforeEach(() => push.mockReset());
+  beforeEach(() => {
+    push.mockReset();
+    refresh.mockReset();
+    replace.mockReset();
+  });
 
   it("valida i campi di accesso", async () => {
     renderAccountForm(<LoginForm />);

@@ -8,8 +8,9 @@ import { Input } from "@/components/ui/input";
 import { useAccount } from "@/features/account/account-provider";
 
 export function ProfileForm() {
-  const { updateProfile, user } = useAccount();
+  const { authMode, updateProfile, user } = useAccount();
   const [feedback, setFeedback] = useState("");
+  const [submitting, setSubmitting] = useState(false);
   const [profile, setProfile] = useState(() => ({
     firstName: user?.firstName ?? "",
     lastName: user?.lastName ?? "",
@@ -23,10 +24,18 @@ export function ProfileForm() {
   return (
     <form
       className="grid gap-5"
-      onSubmit={(event) => {
+      onSubmit={async (event) => {
         event.preventDefault();
-        updateProfile(profile);
-        setFeedback("Profilo aggiornato.");
+        setSubmitting(true);
+        setFeedback("");
+        try {
+          await updateProfile(profile);
+          setFeedback("Profilo aggiornato.");
+        } catch {
+          setFeedback("Controlla i dati inseriti e riprova.");
+        } finally {
+          setSubmitting(false);
+        }
       }}
     >
       <div>
@@ -68,6 +77,12 @@ export function ProfileForm() {
           type="email"
           autoComplete="email"
           value={profile.email}
+          readOnly={authMode === "supabase"}
+          hint={
+            authMode === "supabase"
+              ? "Per modificare l’email sarà richiesta una verifica dedicata."
+              : undefined
+          }
           onChange={(event) =>
             setProfile((current) => ({ ...current, email: event.target.value }))
           }
@@ -95,8 +110,8 @@ export function ProfileForm() {
           }
         />
         <div className="flex items-end">
-          <Button type="submit" fullWidth>
-            Salva modifiche
+          <Button type="submit" fullWidth disabled={submitting}>
+            {submitting ? "Salvataggio…" : "Salva modifiche"}
           </Button>
         </div>
       </div>

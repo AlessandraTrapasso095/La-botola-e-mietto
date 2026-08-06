@@ -6,29 +6,36 @@ import { Heading } from "@/components/ui/heading";
 import type { CatalogProductSummaryView } from "@/content/catalog/types";
 import { ProductCard } from "@/features/catalog/product-card";
 import { registerRecentlyViewed } from "@/features/product/recently-viewed-storage";
+import { fetchProductCards } from "@/lib/browser/catalog-client";
 
-export function RecentlyViewed({
-  currentSlug,
-  products,
-}: {
-  currentSlug: string;
-  products: readonly CatalogProductSummaryView[];
-}) {
-  const [recentSlugs, setRecentSlugs] = useState<string[]>([]);
+export function RecentlyViewed({ currentSlug }: { currentSlug: string }) {
+  const [recentProducts, setRecentProducts] = useState<
+    CatalogProductSummaryView[]
+  >([]);
 
   useEffect(() => {
+    const controller = new AbortController();
     const registrationFrame = window.requestAnimationFrame(() => {
-      setRecentSlugs(registerRecentlyViewed(window.localStorage, currentSlug));
+      const recentSlugs = registerRecentlyViewed(
+        window.localStorage,
+        currentSlug,
+      )
+        .filter((slug) => slug !== currentSlug)
+        .slice(0, 4);
+      fetchProductCards(recentSlugs, controller.signal)
+        .then(setRecentProducts)
+        .catch((error: unknown) => {
+          if (error instanceof DOMException && error.name === "AbortError")
+            return;
+          setRecentProducts([]);
+        });
     });
 
-    return () => window.cancelAnimationFrame(registrationFrame);
+    return () => {
+      controller.abort();
+      window.cancelAnimationFrame(registrationFrame);
+    };
   }, [currentSlug]);
-
-  const recentProducts = recentSlugs
-    .filter((slug) => slug !== currentSlug)
-    .map((slug) => products.find((product) => product.slug === slug))
-    .filter((product): product is CatalogProductSummaryView => Boolean(product))
-    .slice(0, 4);
 
   if (recentProducts.length === 0) return null;
 

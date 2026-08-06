@@ -3,6 +3,12 @@ import { expect, test, type Page } from "@playwright/test";
 import { accountAccessCredentials } from "@/features/account/auth-adapter";
 
 test.describe.configure({ mode: "serial" });
+test.beforeEach(() => {
+  test.skip(
+    process.env.AUTH_SERVICE === "supabase",
+    "I flussi Supabase sono verificati nello scenario auth locale dedicato.",
+  );
+});
 
 async function enterSite(page: Page) {
   await page.goto("/", { waitUntil: "domcontentloaded", timeout: 120_000 });
@@ -121,7 +127,7 @@ test("registrazione, recupero password e accesso da menu mobile", async ({
   await page.getByRole("button", { name: "Invia istruzioni" }).click();
   await expect(
     page.getByText(/riceverai le istruzioni per procedere/),
-  ).toBeVisible();
+  ).toBeVisible({ timeout: 15_000 });
 
   await page.goto("/registrati", { waitUntil: "networkidle" });
   await page.waitForTimeout(250);

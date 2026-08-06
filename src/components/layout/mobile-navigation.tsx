@@ -25,6 +25,7 @@ import { primaryNavigation, type CatalogMenuGroup } from "@/config/catalog";
 import { confirmedSocialLinks } from "@/config/social";
 
 type MobileNavigationProps = {
+  accountReady: boolean;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSearch: () => void;
@@ -34,6 +35,7 @@ type MobileNavigationProps = {
 };
 
 export function MobileNavigation({
+  accountReady,
   open,
   onOpenChange,
   onSearch,
@@ -209,7 +211,8 @@ export function MobileNavigation({
           </button>
           <button
             type="button"
-            className="flex min-h-16 items-center justify-center gap-2 text-xs font-semibold tracking-wide uppercase"
+            className="flex min-h-16 items-center justify-center gap-2 text-xs font-semibold tracking-wide uppercase disabled:cursor-wait disabled:opacity-60"
+            disabled={!accountReady}
             onClick={() => onUtility("account")}
           >
             <UserIcon className="size-5" />

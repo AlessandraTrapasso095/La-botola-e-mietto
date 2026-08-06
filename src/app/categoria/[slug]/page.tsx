@@ -4,18 +4,17 @@ import { notFound } from "next/navigation";
 import { Container } from "@/components/ui/container";
 import { Section } from "@/components/ui/section";
 import { catalogCategories } from "@/content/catalog/categories";
-import {
-  getCategoryBySlug,
-  getProductsByCategory,
-} from "@/content/catalog/selectors";
+import { getCategoryBySlug } from "@/content/catalog/selectors";
 import { Breadcrumbs } from "@/features/catalog/breadcrumbs";
 import { CatalogExplorer } from "@/features/catalog/catalog-explorer";
 import { CatalogHero } from "@/features/catalog/catalog-hero";
 import { ShippingPromise } from "@/features/catalog/shipping-promise";
-import { createCatalogProductViews } from "@/server/catalog-view";
+import type { CatalogSearchParams } from "@/server/catalog/catalog-query";
+import { loadCatalogPage } from "@/server/catalog/load-catalog-page";
 
 type CategoryPageProps = {
   params: Promise<{ slug: string }>;
+  searchParams: Promise<CatalogSearchParams>;
 };
 
 export function generateStaticParams() {
@@ -40,12 +39,17 @@ export async function generateMetadata({
   };
 }
 
-export default async function CategoryPage({ params }: CategoryPageProps) {
+export default async function CategoryPage({
+  params,
+  searchParams,
+}: CategoryPageProps) {
   const { slug } = await params;
   const category = getCategoryBySlug(slug);
   if (!category) notFound();
-
-  const products = createCatalogProductViews(getProductsByCategory(slug));
+  const { query, result, filterOptions } = await loadCatalogPage(
+    await searchParams,
+    { categorySlug: slug },
+  );
 
   return (
     <main id="main-content">
@@ -67,8 +71,10 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
       <Section spacing="standard">
         <Container>
           <CatalogExplorer
-            products={products}
-            categories={catalogCategories}
+            result={result}
+            filterOptions={filterOptions}
+            initialFilters={query.filters}
+            initialSort={query.sort}
             fixedCategory={category.slug}
           />
         </Container>

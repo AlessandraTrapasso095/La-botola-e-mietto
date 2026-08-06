@@ -4,14 +4,18 @@ import { Container } from "@/components/ui/container";
 import { Section } from "@/components/ui/section";
 import { catalogBanners } from "@/content/catalog/demo-commerce";
 import { catalogCategories } from "@/content/catalog/categories";
-import { catalogProducts } from "@/content/catalog/products";
 import { demoMedia } from "@/content/demo-assets/media";
 import { Breadcrumbs } from "@/features/catalog/breadcrumbs";
 import { CatalogExplorer } from "@/features/catalog/catalog-explorer";
 import { CatalogHero } from "@/features/catalog/catalog-hero";
 import { CategoryNavigation } from "@/features/catalog/category-navigation";
 import { ShippingPromise } from "@/features/catalog/shipping-promise";
-import { createCatalogProductViews } from "@/server/catalog-view";
+import { loadCatalogPage } from "@/server/catalog/load-catalog-page";
+import type { CatalogSearchParams } from "@/server/catalog/catalog-query";
+
+type CatalogPageProps = {
+  searchParams: Promise<CatalogSearchParams>;
+};
 
 export const metadata: Metadata = {
   title: "Catalogo",
@@ -20,8 +24,10 @@ export const metadata: Metadata = {
   alternates: { canonical: "/catalogo" },
 };
 
-export default function CatalogPage() {
-  const productViews = createCatalogProductViews(catalogProducts);
+export default async function CatalogPage({ searchParams }: CatalogPageProps) {
+  const { query, result, filterOptions } = await loadCatalogPage(
+    await searchParams,
+  );
 
   return (
     <main id="main-content">
@@ -44,8 +50,10 @@ export default function CatalogPage() {
       <Section spacing="standard">
         <Container>
           <CatalogExplorer
-            products={productViews}
-            categories={catalogCategories}
+            result={result}
+            filterOptions={filterOptions}
+            initialFilters={query.filters}
+            initialSort={query.sort}
           />
         </Container>
       </Section>

@@ -1,36 +1,32 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { cache } from "react";
 
 import { Container } from "@/components/ui/container";
 import { Heading } from "@/components/ui/heading";
 import { Section } from "@/components/ui/section";
-import { catalogProducts } from "@/content/catalog/products";
-import {
-  getProductBySlug,
-  getRelatedProducts,
-} from "@/content/catalog/selectors";
 import { Breadcrumbs } from "@/features/catalog/breadcrumbs";
 import { ProductCard } from "@/features/catalog/product-card";
 import { ProductEditorial } from "@/features/product/product-editorial";
 import { ProductGallery } from "@/features/product/product-gallery";
 import { ProductPurchasePanel } from "@/features/product/product-purchase-panel";
 import { RecentlyViewed } from "@/features/product/recently-viewed";
-import {
-  createCatalogProductView,
-  createCatalogProductViews,
-} from "@/server/catalog-view";
+import { getCatalogRepository } from "@/server/catalog/get-catalog-repository";
 
 type ProductPageProps = {
   params: Promise<{ slug: string }>;
 };
 
+const loadProduct = cache((slug: string) =>
+  getCatalogRepository().getProductBySlug(slug),
+);
+
 export async function generateMetadata({
   params,
 }: ProductPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const product = getProductBySlug(slug);
+  const product = await loadProduct(slug);
   if (!product) return {};
-  const view = createCatalogProductView(product);
 
   return {
     title: product.name,
@@ -39,21 +35,19 @@ export async function generateMetadata({
     openGraph: {
       title: `${product.name} | La Botola e Mietto`,
       description: product.overview,
-      images: [{ url: view.media[0].src }],
+      images: [{ url: product.media[0].src }],
     },
   };
 }
 
 export default async function ProductPage({ params }: ProductPageProps) {
   const { slug } = await params;
-  const product = getProductBySlug(slug);
-  if (!product) notFound();
-
-  const productView = createCatalogProductView(product);
-  const relatedProducts = createCatalogProductViews(
-    getRelatedProducts(slug, 4),
-  );
-  const allProducts = createCatalogProductViews(catalogProducts);
+  const repository = getCatalogRepository();
+  const [productView, relatedProducts] = await Promise.all([
+    loadProduct(slug),
+    repository.getRelatedProducts(slug, 4),
+  ]);
+  if (!productView) notFound();
 
   return (
     <main id="main-content">
@@ -108,10 +102,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
               <ProductCard key={relatedProduct.slug} product={relatedProduct} />
             ))}
           </div>
-          <RecentlyViewed
-            currentSlug={productView.slug}
-            products={allProducts}
-          />
+          <RecentlyViewed currentSlug={productView.slug} />
         </Container>
       </Section>
     </main>

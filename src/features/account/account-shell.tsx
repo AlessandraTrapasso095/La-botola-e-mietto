@@ -14,11 +14,13 @@ import { cn } from "@/lib/cn";
 export function AccountShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const { hydrated, signOut, user } = useAccount();
+  const { authMode, hydrated, signOut, user } = useAccount();
 
   useEffect(() => {
-    if (hydrated && !user) router.replace(accountRoutes.signIn);
-  }, [hydrated, router, user]);
+    if (authMode === "demo" && hydrated && !user) {
+      router.replace(accountRoutes.signIn);
+    }
+  }, [authMode, hydrated, router, user]);
 
   if (!hydrated || !user) {
     return (
@@ -32,9 +34,10 @@ export function AccountShell({ children }: { children: ReactNode }) {
     );
   }
 
-  const logout = () => {
-    signOut();
-    router.push(accountRoutes.signIn);
+  const logout = async () => {
+    await signOut();
+    router.refresh();
+    router.replace(accountRoutes.signIn);
   };
 
   return (

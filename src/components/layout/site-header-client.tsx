@@ -22,18 +22,25 @@ import { useAccount } from "@/features/account/account-provider";
 import { useCommerce } from "@/features/commerce/commerce-provider";
 import { SearchDialog } from "@/features/search/search-dialog";
 import { cn } from "@/lib/cn";
+import type { Brand, Category, ProductCardView } from "@/types/catalog";
 
 type SiteHeaderClientProps = {
   freeShippingThreshold: string;
   menuGroups: readonly CatalogMenuGroup[];
+  featuredSearchProducts: readonly ProductCardView[];
+  featuredSearchBrands: readonly Brand[];
+  featuredSearchCategories: readonly Category[];
 };
 
 export function SiteHeaderClient({
   freeShippingThreshold,
   menuGroups,
+  featuredSearchProducts,
+  featuredSearchBrands,
+  featuredSearchCategories,
 }: SiteHeaderClientProps) {
   const router = useRouter();
-  const { user } = useAccount();
+  const { hydrated: accountHydrated, user } = useAccount();
   const { cart, setCartOpen, wishlist } = useCommerce();
   const [isScrolled, setIsScrolled] = useState(false);
   const [megaMenuOpen, setMegaMenuOpen] = useState(false);
@@ -167,6 +174,7 @@ export function SiteHeaderClient({
             <IconButton
               aria-label="Apri area personale"
               className="hidden md:inline-flex"
+              disabled={!accountHydrated}
               onClick={() =>
                 router.push(
                   user ? accountRoutes.dashboard : accountRoutes.signIn,
@@ -263,8 +271,15 @@ export function SiteHeaderClient({
         ) : null}
       </header>
 
-      <SearchDialog open={searchOpen} onOpenChange={setSearchOpen} />
+      <SearchDialog
+        open={searchOpen}
+        onOpenChange={setSearchOpen}
+        featuredProducts={featuredSearchProducts}
+        featuredBrands={featuredSearchBrands}
+        featuredCategories={featuredSearchCategories}
+      />
       <MobileNavigation
+        accountReady={accountHydrated}
         menuGroups={menuGroups}
         open={mobileMenuOpen}
         onOpenChange={setMobileMenuOpen}
