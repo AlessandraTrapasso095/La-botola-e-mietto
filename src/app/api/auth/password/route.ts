@@ -26,6 +26,13 @@ export async function POST(request: NextRequest) {
     }
     const { error } = await client.auth.updateUser({ password });
     if (error) {
+      if (error.code === "same_password") {
+        throw new AuthHttpError(
+          400,
+          "La nuova password deve essere diversa da quella precedente.",
+        );
+      }
+
       throw new AuthHttpError(
         400,
         "Aggiornamento della password non riuscito.",

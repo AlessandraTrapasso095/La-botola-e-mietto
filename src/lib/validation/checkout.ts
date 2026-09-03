@@ -51,7 +51,24 @@ export const checkoutResultSchema = z.object({
   createdAt: z.iso.datetime({ offset: true }),
 });
 
+export const stripeCheckoutSessionInputSchema = z.object({
+  orderId: z.uuid(),
+});
+
+export const stripeCheckoutSessionResultSchema = z.object({
+  sessionId: z.string().min(1),
+  redirectUrl: z.url(),
+});
+
 export type CheckoutInput = z.infer<typeof checkoutInputSchema>;
 export type CheckoutResult = z.infer<typeof checkoutResultSchema>;
 export type ShippingMethod = z.infer<typeof shippingMethodSchema>;
 export type PaymentMethod = z.infer<typeof paymentMethodSchema>;
+
+export const cancelAccountOrderInputSchema = z.object({
+  orderId: z.uuid(),
+});
+
+export const hideAccountOrderInputSchema = z.object({
+  orderId: z.uuid(),
+});

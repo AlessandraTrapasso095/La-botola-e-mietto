@@ -14,6 +14,7 @@ import {
 } from "@/lib/validation/checkout";
 import { formatEuroMinor } from "@/lib/money";
 import { checkoutService } from "@/services/checkout/checkout-service";
+import { stripeCheckoutService } from "@/services/checkout/stripe-checkout-service";
 import type { Address } from "@/types/customer";
 
 type CheckoutContentProps = {
@@ -77,12 +78,16 @@ export function CheckoutContent({
     defaultBilling?.id ?? "",
   );
 
+  const [billingSameAsShipping, setBillingSameAsShipping] = useState(true);
+
   const [submitting, setSubmitting] = useState(false);
+  const [redirectingToPayment, setRedirectingToPayment] = useState(false);
   const [error, setError] = useState("");
   const [completedOrder, setCompletedOrder] = useState<{
     number: string;
     totalMinor: number;
     paymentMethod: PaymentMethod;
+    stripeRedirectFailed?: boolean;
   } | null>(null);
 
   const shippingAddresses = addresses.filter(
@@ -103,6 +108,11 @@ export function CheckoutContent({
 
   const estimatedTotalMinor = cart.subtotalMinor + shippingMinor;
 
+  const effectiveBillingAddressId =
+    shippingMethod === "tnt" && billingSameAsShipping
+      ? shippingAddressId
+      : billingAddressId;
+
   async function submitCheckout(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
@@ -113,13 +123,13 @@ export function CheckoutContent({
       return;
     }
 
-    if (!billingAddressId) {
-      setError("Seleziona un indirizzo di fatturazione.");
+    if (shippingMethod === "tnt" && !shippingAddressId) {
+      setError("Seleziona un indirizzo di spedizione.");
       return;
     }
 
-    if (shippingMethod === "tnt" && !shippingAddressId) {
-      setError("Seleziona un indirizzo di spedizione.");
+    if (!effectiveBillingAddressId) {
+      setError("Seleziona un indirizzo di fatturazione.");
       return;
     }
 
@@ -129,12 +139,38 @@ export function CheckoutContent({
     try {
       const result = await checkoutService.create({
         shippingAddressId: shippingMethod === "tnt" ? shippingAddressId : null,
-        billingAddressId,
+        billingAddressId: effectiveBillingAddressId,
         shippingMethod,
         paymentMethod,
       });
 
-      clearCartAfterCheckout();
+      if (result.paymentMethod === "stripe") {
+        setRedirectingToPayment(true);
+
+        try {
+          const stripeSession = await stripeCheckoutService.createSession(
+            result.orderId,
+          );
+
+          window.location.assign(stripeSession.redirectUrl);
+          return;
+        } catch {
+          setRedirectingToPayment(false);
+
+          setCompletedOrder({
+            number: result.orderNumber,
+            totalMinor: result.totalGrossAmountMinor,
+            paymentMethod: result.paymentMethod,
+            stripeRedirectFailed: true,
+          });
+
+          return;
+        }
+      }
+
+      if (result.paymentMethod === "bank_transfer") {
+        clearCartAfterCheckout();
+      }
 
       setCompletedOrder({
         number: result.orderNumber,
@@ -150,6 +186,34 @@ export function CheckoutContent({
     } finally {
       setSubmitting(false);
     }
+  }
+
+  if (redirectingToPayment) {
+    return (
+      <div className="border-border-subtle bg-surface flex min-h-[32rem] flex-col items-center justify-center border px-6 text-center">
+        <div
+          className="border-border border-t-accent size-12 animate-spin rounded-full border-2"
+          aria-hidden="true"
+        />
+
+        <p className="text-accent mt-7 text-xs font-semibold tracking-[var(--letter-spacing-label)] uppercase">
+          Pagamento sicuro
+        </p>
+
+        <Heading as="h1" className="mt-4">
+          Ti stiamo reindirizzando…
+        </Heading>
+
+        <p className="text-text-muted mt-4 max-w-md">
+          Attendi qualche secondo. Stiamo preparando la pagina di pagamento
+          sicuro Stripe.
+        </p>
+
+        <p className="text-text-muted mt-2 max-w-md text-sm">
+          Non chiudere o aggiornare questa pagina.
+        </p>
+      </div>
+    );
   }
 
   if (completedOrder) {
@@ -176,11 +240,18 @@ export function CheckoutContent({
           </strong>
         </p>
 
-        {completedOrder.paymentMethod === "stripe" ? (
-          <p className="text-text-muted mx-auto mt-6 max-w-xl">
-            L’ordine è stato registrato. Il collegamento al pagamento Stripe
-            sarà completato nel prossimo passaggio tecnico.
-          </p>
+        {completedOrder.paymentMethod === "stripe" &&
+        completedOrder.stripeRedirectFailed ? (
+          <div className="border-border-subtle mx-auto mt-6 max-w-xl border p-5">
+            <p className="text-text-strong font-semibold">
+              L’ordine è stato registrato, ma non è stato possibile aprire
+              Stripe.
+            </p>
+            <p className="text-text-muted mt-2 text-sm">
+              Il pagamento non è stato addebitato. Potrai riprovare dalla pagina
+              dell’ordine.
+            </p>
+          </div>
         ) : null}
 
         {completedOrder.paymentMethod === "bank_transfer" ? (
@@ -389,7 +460,38 @@ export function CheckoutContent({
             </Link>
           </div>
 
-          {billingAddresses.length === 0 ? (
+          {shippingMethod === "tnt" ? (
+            <label className="border-border-subtle mt-6 flex cursor-pointer items-start gap-3 border p-4">
+              <input
+                type="checkbox"
+                checked={billingSameAsShipping}
+                onChange={(event) =>
+                  setBillingSameAsShipping(event.target.checked)
+                }
+                className="mt-1"
+              />
+
+              <span>
+                <span className="text-text-strong block font-semibold">
+                  L’indirizzo di fatturazione coincide con quello di spedizione
+                </span>
+
+                <span className="text-text-muted mt-1 block text-sm">
+                  Lascia selezionata questa opzione se vuoi usare gli stessi
+                  dati.
+                </span>
+              </span>
+            </label>
+          ) : null}
+
+          {shippingMethod === "tnt" && billingSameAsShipping ? (
+            <div className="border-border-subtle bg-surface-elevated mt-4 border p-4">
+              <p className="text-text-muted text-sm">
+                Verrà utilizzato automaticamente l’indirizzo di spedizione
+                selezionato.
+              </p>
+            </div>
+          ) : billingAddresses.length === 0 ? (
             <p className="text-text-muted mt-5 text-sm">
               Non hai ancora inserito un indirizzo di fatturazione.{" "}
               <Link
@@ -420,6 +522,7 @@ export function CheckoutContent({
                     <span className="text-text-strong block font-semibold">
                       {address.label}
                     </span>
+
                     <span className="text-text-muted mt-1 block text-sm">
                       {formatAddress(address)}
                     </span>
@@ -570,7 +673,7 @@ export function CheckoutContent({
             className="mt-6"
             disabled={
               submitting ||
-              !billingAddressId ||
+              !effectiveBillingAddressId ||
               (shippingMethod === "tnt" && !shippingAddressId)
             }
           >

@@ -587,19 +587,29 @@ export type Database = {
       orders: {
         Row: {
           billing_address: Json
+          cancellation_request_resolved_at: string | null
+          cancellation_request_status:
+            | Database["public"]["Enums"]["order_cancellation_request_status"]
+            | null
+          cancellation_requested_at: string | null
           cancelled_at: string | null
           created_at: string
           currency: string
+          hidden_from_customer_at: string | null
           id: string
           order_number: string
           payment_method: Database["public"]["Enums"]["payment_method"]
           payment_provider_reference: string | null
           payment_status: Database["public"]["Enums"]["payment_status"]
           profile_id: string
+          reservation_released_at: string | null
           shipping_address: Json
           shipping_gross_amount_minor: number
           shipping_method: Database["public"]["Enums"]["shipping_method"]
+          source_cart_id: string | null
           status: Database["public"]["Enums"]["order_status"]
+          stripe_checkout_session_id: string | null
+          stripe_payment_intent_id: string | null
           subtotal_net_amount_minor: number
           total_gross_amount_minor: number
           updated_at: string
@@ -607,19 +617,29 @@ export type Database = {
         }
         Insert: {
           billing_address: Json
+          cancellation_request_resolved_at?: string | null
+          cancellation_request_status?:
+            | Database["public"]["Enums"]["order_cancellation_request_status"]
+            | null
+          cancellation_requested_at?: string | null
           cancelled_at?: string | null
           created_at?: string
           currency?: string
+          hidden_from_customer_at?: string | null
           id?: string
           order_number: string
           payment_method?: Database["public"]["Enums"]["payment_method"]
           payment_provider_reference?: string | null
           payment_status?: Database["public"]["Enums"]["payment_status"]
           profile_id: string
+          reservation_released_at?: string | null
           shipping_address: Json
           shipping_gross_amount_minor: number
           shipping_method?: Database["public"]["Enums"]["shipping_method"]
+          source_cart_id?: string | null
           status?: Database["public"]["Enums"]["order_status"]
+          stripe_checkout_session_id?: string | null
+          stripe_payment_intent_id?: string | null
           subtotal_net_amount_minor: number
           total_gross_amount_minor: number
           updated_at?: string
@@ -627,19 +647,29 @@ export type Database = {
         }
         Update: {
           billing_address?: Json
+          cancellation_request_resolved_at?: string | null
+          cancellation_request_status?:
+            | Database["public"]["Enums"]["order_cancellation_request_status"]
+            | null
+          cancellation_requested_at?: string | null
           cancelled_at?: string | null
           created_at?: string
           currency?: string
+          hidden_from_customer_at?: string | null
           id?: string
           order_number?: string
           payment_method?: Database["public"]["Enums"]["payment_method"]
           payment_provider_reference?: string | null
           payment_status?: Database["public"]["Enums"]["payment_status"]
           profile_id?: string
+          reservation_released_at?: string | null
           shipping_address?: Json
           shipping_gross_amount_minor?: number
           shipping_method?: Database["public"]["Enums"]["shipping_method"]
+          source_cart_id?: string | null
           status?: Database["public"]["Enums"]["order_status"]
+          stripe_checkout_session_id?: string | null
+          stripe_payment_intent_id?: string | null
           subtotal_net_amount_minor?: number
           total_gross_amount_minor?: number
           updated_at?: string
@@ -651,6 +681,13 @@ export type Database = {
             columns: ["profile_id"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "orders_source_cart_id_fkey"
+            columns: ["source_cart_id"]
+            isOneToOne: false
+            referencedRelation: "carts"
             referencedColumns: ["id"]
           },
         ]
@@ -1029,6 +1066,7 @@ export type Database = {
           last_name: string
           marketing_consent: boolean
           phone: string | null
+          role: Database["public"]["Enums"]["account_role"]
           updated_at: string
         }
         Insert: {
@@ -1042,6 +1080,7 @@ export type Database = {
           last_name?: string
           marketing_consent?: boolean
           phone?: string | null
+          role?: Database["public"]["Enums"]["account_role"]
           updated_at?: string
         }
         Update: {
@@ -1055,6 +1094,7 @@ export type Database = {
           last_name?: string
           marketing_consent?: boolean
           phone?: string | null
+          role?: Database["public"]["Enums"]["account_role"]
           updated_at?: string
         }
         Relationships: []
@@ -1341,6 +1381,7 @@ export type Database = {
           slug: string
         }[]
       }
+      cancel_account_order: { Args: { p_order_id: string }; Returns: string }
       catalog_filter_options: {
         Args: {
           brand_slug?: string
@@ -1376,11 +1417,28 @@ export type Database = {
           vat_amount_minor: number
         }[]
       }
+      complete_stripe_order_payment: {
+        Args: {
+          p_checkout_session_id: string
+          p_order_id: string
+          p_payment_intent_id: string
+        }
+        Returns: boolean
+      }
+      current_user_is_admin: { Args: never; Returns: boolean }
       delete_account_address: {
         Args: { address_id_value: string }
         Returns: boolean
       }
       ensure_account_cart: { Args: never; Returns: string }
+      fail_stripe_order_payment: {
+        Args: { p_checkout_session_id: string; p_order_id: string }
+        Returns: boolean
+      }
+      hide_cancelled_account_order: {
+        Args: { p_order_id: string }
+        Returns: boolean
+      }
       merge_account_cart_items: {
         Args: { local_items: Json }
         Returns: {
@@ -1432,6 +1490,7 @@ export type Database = {
           last_name: string
           marketing_consent: boolean
           phone: string | null
+          role: Database["public"]["Enums"]["account_role"]
           updated_at: string
         }
         SetofOptions: {
@@ -1491,6 +1550,7 @@ export type Database = {
       }
     }
     Enums: {
+      account_role: "customer" | "admin"
       address_type: "shipping" | "billing"
       cart_status: "active" | "converted" | "abandoned"
       consent_type:
@@ -1499,6 +1559,7 @@ export type Database = {
         | "marketing"
         | "cookie_preferences"
         | "terms_of_sale"
+      order_cancellation_request_status: "pending" | "approved" | "rejected"
       order_status:
         | "received"
         | "preparing"
@@ -1639,6 +1700,7 @@ export const Constants = {
   },
   public: {
     Enums: {
+      account_role: ["customer", "admin"],
       address_type: ["shipping", "billing"],
       cart_status: ["active", "converted", "abandoned"],
       consent_type: [
@@ -1648,6 +1710,7 @@ export const Constants = {
         "cookie_preferences",
         "terms_of_sale",
       ],
+      order_cancellation_request_status: ["pending", "approved", "rejected"],
       order_status: [
         "received",
         "preparing",

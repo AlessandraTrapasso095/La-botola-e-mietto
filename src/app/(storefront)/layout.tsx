@@ -19,7 +19,7 @@ import { loadCurrentAccountWishlist } from "@/server/wishlist/account-wishlist";
 import "@/styles/globals.css";
 
 const manrope = localFont({
-  src: "../assets/fonts/manrope-latin-variable.woff2",
+  src: "../../assets/fonts/manrope-latin-variable.woff2",
   display: "swap",
   variable: "--font-manrope",
   weight: "200 800",
@@ -28,12 +28,12 @@ const manrope = localFont({
 const playfair = localFont({
   src: [
     {
-      path: "../assets/fonts/playfair-display-latin-variable.woff2",
+      path: "../../assets/fonts/playfair-display-latin-variable.woff2",
       style: "normal",
       weight: "400 900",
     },
     {
-      path: "../assets/fonts/playfair-display-latin-variable-italic.woff2",
+      path: "../../assets/fonts/playfair-display-latin-variable-italic.woff2",
       style: "italic",
       weight: "400 900",
     },
