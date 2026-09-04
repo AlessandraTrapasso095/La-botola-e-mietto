@@ -11,7 +11,7 @@ export async function createSupabaseServerClient() {
 
   if (
     !environment.NEXT_PUBLIC_SUPABASE_URL ||
-    !environment.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    !environment.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
   ) {
     throw new Error("La configurazione pubblica Supabase non è disponibile.");
   }
@@ -20,7 +20,7 @@ export async function createSupabaseServerClient() {
 
   return createServerClient<Database>(
     environment.NEXT_PUBLIC_SUPABASE_URL,
-    environment.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+    environment.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
     {
       cookies: {
         getAll: () => cookieStore.getAll(),

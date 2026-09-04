@@ -9,13 +9,13 @@ export function createSupabaseBrowserClient() {
 
   if (
     !environment.NEXT_PUBLIC_SUPABASE_URL ||
-    !environment.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    !environment.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
   ) {
     throw new Error("La configurazione pubblica Supabase non è disponibile.");
   }
 
   return createBrowserClient(
     environment.NEXT_PUBLIC_SUPABASE_URL,
-    environment.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+    environment.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
   );
 }

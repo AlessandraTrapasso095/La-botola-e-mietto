@@ -34,7 +34,7 @@ export async function GET(request: NextRequest) {
 
   if (
     !environment.NEXT_PUBLIC_SUPABASE_URL ||
-    !environment.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
+    !environment.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
     !requestOrigin
   ) {
     destination.pathname = "/accedi";
@@ -60,7 +60,7 @@ export async function GET(request: NextRequest) {
 
   const client = createServerClient<Database>(
     environment.NEXT_PUBLIC_SUPABASE_URL,
-    environment.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+    environment.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
     {
       cookies: {
         getAll: () => request.cookies.getAll(),
