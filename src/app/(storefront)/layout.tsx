@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
+import { WhatsAppContact } from "@/components/layout/whatsapp-contact";
 import { ageGateConfig, cookieConsentConfig } from "@/config/consent";
 import { baseMetadata } from "@/config/metadata";
 import { AgeGate } from "@/features/age-gate/age-gate";
@@ -89,6 +90,7 @@ export default async function RootLayout({
               <CookiePreferencesBanner
                 initiallyConfigured={cookiePreferencesConfigured}
               />
+              <WhatsAppContact />
             </div>
             <CommerceOverlays />
           </CommerceProvider>

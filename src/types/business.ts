@@ -16,6 +16,7 @@ export type BusinessInfo = {
   address: BusinessAddress;
   email: string;
   phone: string;
+  whatsappMessage: string;
   freeShippingThresholdMinor: bigint;
   standardShippingGrossAmountMinor: bigint;
   currency: "EUR";
