@@ -42,12 +42,17 @@ describe("ProductCard", () => {
     );
     expect(screen.getByText(/preferiti 1/)).toBeVisible();
 
-    await user.click(
-      screen.getByRole("button", {
-        name: `Aggiungi ${product.name} al carrello`,
-      }),
-    );
+    const cartButton = screen.getByRole("button", {
+      name: `Aggiungi ${product.name} al carrello`,
+    });
+
+    expect(cartButton).toHaveAttribute("aria-pressed", "false");
+
+    await user.click(cartButton);
+
     expect(screen.getByText(/Carrello 1/)).toBeVisible();
+    expect(cartButton).toHaveAttribute("aria-pressed", "true");
+    expect(cartButton).toHaveClass("bg-accent");
   });
 
   it("mostra il badge solo sui prodotti realmente in offerta", () => {

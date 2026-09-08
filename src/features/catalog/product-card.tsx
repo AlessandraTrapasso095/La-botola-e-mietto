@@ -18,11 +18,19 @@ export function ProductCard({
   product: CatalogProductSummaryView;
   featured?: boolean;
 }) {
-  const { addToCart, isWishlisted, isWishlistPending, toggleWishlist } =
-    useCommerce();
+  const {
+    addToCart,
+    cart,
+    isWishlisted,
+    isWishlistPending,
+    toggleWishlist,
+  } = useCommerce();
   const media = product.media[0];
   const wished = isWishlisted(product.slug);
   const wishlistPending = isWishlistPending(product.slug);
+  const isInCart = cart.lines.some(
+    (line) => line.product.slug === product.slug,
+  );
   const isAvailable = (product.stockQuantity ?? 0) > 0;
 
   return (
@@ -108,8 +116,12 @@ export function ProductCard({
           </div>
           <IconButton
             aria-label={`Aggiungi ${product.name} al carrello`}
+            aria-pressed={isInCart}
             disabled={!isAvailable}
-            className="hover:bg-accent hover:text-black"
+            className={cn(
+              "hover:bg-accent hover:text-black",
+              isInCart && "border-accent bg-accent text-black",
+            )}
             onClick={() => addToCart(product)}
           >
             <BagIcon className="size-5" />

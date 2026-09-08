@@ -296,7 +296,7 @@ export default async function AdminOrderDetailPage({
       </div>
 
       <div className="mt-7 grid gap-5 xl:grid-cols-[minmax(0,1.7fr)_minmax(320px,0.8fr)]">
-        <div className="grid gap-5">
+        <div className="grid content-start gap-5">
           <section className="overflow-hidden rounded-lg border border-white/10 bg-[#171717]">
             <div className="border-b border-white/10 px-5 py-4">
               <h2 className="font-semibold">Prodotti</h2>
@@ -351,17 +351,7 @@ export default async function AdminOrderDetailPage({
             </div>
           </section>
 
-          <div className="grid gap-5 md:grid-cols-2">
-            <AddressCard
-              title="Indirizzo di spedizione"
-              value={order.shippingAddress}
-            />
-
-            <AddressCard
-              title="Indirizzo di fatturazione"
-              value={order.billingAddress}
-            />
-          </div>
+          
         </div>
 
         <div className="grid content-start gap-5">
@@ -430,103 +420,116 @@ export default async function AdminOrderDetailPage({
               />
             </div>
           </section>
+          <AddressCard
+            title="Indirizzo di spedizione"
+            value={order.shippingAddress}
+          />
 
+          <AddressCard
+            title="Indirizzo di fatturazione"
+            value={order.billingAddress}
+          />
+
+
+        </div>
+      </div>
+
+      <div className="mt-5 grid items-start gap-5 xl:grid-cols-2">
+        <section className="rounded-lg border border-white/10 bg-[#171717] p-5">
+          <h2 className="font-semibold">Stato amministrativo</h2>
+
+          <dl className="mt-4 grid gap-4 text-sm">
+            <div>
+              <dt className="text-xs text-white/40">Ordine</dt>
+              <dd className="mt-1">{orderStatusLabel(order.status)}</dd>
+            </div>
+
+            <div>
+              <dt className="text-xs text-white/40">Pagamento</dt>
+              <dd className="mt-1">
+                {paymentStatusLabel(order.paymentStatus)}
+              </dd>
+            </div>
+
+            <div>
+              <dt className="text-xs text-white/40">
+                Richiesta annullamento
+              </dt>
+              <dd className="mt-1">
+                {cancellationLabel(order.cancellationRequestStatus)}
+              </dd>
+            </div>
+
+            {order.cancellationRequestedAt && (
+              <div>
+                <dt className="text-xs text-white/40">Richiesta il</dt>
+                <dd className="mt-1">
+                {formatDate(order.cancellationRequestedAt)}
+                </dd>
+              </div>
+            )}
+
+            {order.cancellationRequestResolvedAt && (
+              <div>
+                <dt className="text-xs text-white/40">Risolta il</dt>
+                <dd className="mt-1">
+                {formatDate(order.cancellationRequestResolvedAt)}
+                </dd>
+              </div>
+            )}
+
+            {order.cancelledAt && (
+              <div>
+                <dt className="text-xs text-white/40">Annullato il</dt>
+                <dd className="mt-1">{formatDate(order.cancelledAt)}</dd>
+              </div>
+            )}
+
+            <div>
+              <dt className="text-xs text-white/40">Ultimo aggiornamento</dt>
+              <dd className="mt-1">{formatDate(order.updatedAt)}</dd>
+            </div>
+          </dl>
+        </section>
+
+        {(order.paymentProviderReference ||
+          order.stripePaymentIntentId ||
+          order.stripeCheckoutSessionId) && (
           <section className="rounded-lg border border-white/10 bg-[#171717] p-5">
-            <h2 className="font-semibold">Stato amministrativo</h2>
+            <h2 className="font-semibold">Riferimenti pagamento</h2>
 
             <dl className="mt-4 grid gap-4 text-sm">
-              <div>
-                <dt className="text-xs text-white/40">Ordine</dt>
-                <dd className="mt-1">{orderStatusLabel(order.status)}</dd>
-              </div>
-
-              <div>
-                <dt className="text-xs text-white/40">Pagamento</dt>
-                <dd className="mt-1">
-                  {paymentStatusLabel(order.paymentStatus)}
-                </dd>
-              </div>
-
-              <div>
+              {order.paymentProviderReference && (
+                <div>
                 <dt className="text-xs text-white/40">
-                  Richiesta annullamento
+                  Provider reference
                 </dt>
-                <dd className="mt-1">
-                  {cancellationLabel(order.cancellationRequestStatus)}
+                <dd className="mt-1 font-mono text-xs break-all text-white/60">
+                  {order.paymentProviderReference}
                 </dd>
-              </div>
-
-              {order.cancellationRequestedAt && (
-                <div>
-                  <dt className="text-xs text-white/40">Richiesta il</dt>
-                  <dd className="mt-1">
-                    {formatDate(order.cancellationRequestedAt)}
-                  </dd>
                 </div>
               )}
 
-              {order.cancellationRequestResolvedAt && (
+              {order.stripeCheckoutSessionId && (
                 <div>
-                  <dt className="text-xs text-white/40">Risolta il</dt>
-                  <dd className="mt-1">
-                    {formatDate(order.cancellationRequestResolvedAt)}
-                  </dd>
+                <dt className="text-xs text-white/40">Stripe Session</dt>
+                <dd className="mt-1 font-mono text-xs break-all text-white/60">
+                  {order.stripeCheckoutSessionId}
+                </dd>
                 </div>
               )}
 
-              {order.cancelledAt && (
+              {order.stripePaymentIntentId && (
                 <div>
-                  <dt className="text-xs text-white/40">Annullato il</dt>
-                  <dd className="mt-1">{formatDate(order.cancelledAt)}</dd>
+                <dt className="text-xs text-white/40">Payment Intent</dt>
+                <dd className="mt-1 font-mono text-xs break-all text-white/60">
+                  {order.stripePaymentIntentId}
+                </dd>
                 </div>
               )}
-
-              <div>
-                <dt className="text-xs text-white/40">Ultimo aggiornamento</dt>
-                <dd className="mt-1">{formatDate(order.updatedAt)}</dd>
-              </div>
             </dl>
           </section>
-
-          {(order.paymentProviderReference ||
-            order.stripePaymentIntentId ||
-            order.stripeCheckoutSessionId) && (
-            <section className="rounded-lg border border-white/10 bg-[#171717] p-5">
-              <h2 className="font-semibold">Riferimenti pagamento</h2>
-
-              <dl className="mt-4 grid gap-4 text-sm">
-                {order.paymentProviderReference && (
-                  <div>
-                    <dt className="text-xs text-white/40">
-                      Provider reference
-                    </dt>
-                    <dd className="mt-1 font-mono text-xs break-all text-white/60">
-                      {order.paymentProviderReference}
-                    </dd>
-                  </div>
-                )}
-
-                {order.stripeCheckoutSessionId && (
-                  <div>
-                    <dt className="text-xs text-white/40">Stripe Session</dt>
-                    <dd className="mt-1 font-mono text-xs break-all text-white/60">
-                      {order.stripeCheckoutSessionId}
-                    </dd>
-                  </div>
-                )}
-
-                {order.stripePaymentIntentId && (
-                  <div>
-                    <dt className="text-xs text-white/40">Payment Intent</dt>
-                    <dd className="mt-1 font-mono text-xs break-all text-white/60">
-                      {order.stripePaymentIntentId}
-                    </dd>
-                  </div>
-                )}
-              </dl>
-            </section>
-          )}
-        </div>
+        )}
       </div>
     </div>
   );
