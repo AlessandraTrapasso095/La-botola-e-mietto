@@ -5,6 +5,7 @@ import { z } from "zod";
 import type { DemoMediaAsset } from "@/content/demo-assets/media";
 import { createEuro, formatEuroMinor } from "@/lib/money";
 import { calculateGrossPrice } from "@/server/pricing";
+import { createCatalogTenPercentOffer } from "@/lib/offer-pricing";
 import type {
   Brand,
   CatalogOfferView,
@@ -128,34 +129,9 @@ function createOffer(
 ): CatalogOfferView | null {
   if (!row.offer_id) return null;
 
-  const previousGrossAmountMinor =
-    row.promotional_net_amount_minor === null
-      ? null
-      : BigInt(row.previous_gross_amount_minor ?? 0);
-  const discountPercentage =
-    previousGrossAmountMinor && previousGrossAmountMinor > grossAmountMinor
-      ? Number(
-          ((previousGrossAmountMinor - grossAmountMinor) * 100n +
-            previousGrossAmountMinor / 2n) /
-            previousGrossAmountMinor,
-        )
-      : null;
-
-  return {
-    isActive: true,
-    previousGrossPriceMinor:
-      previousGrossAmountMinor === null
-        ? null
-        : toSafeMinorNumber(
-            previousGrossAmountMinor,
-            "Prezzo precedente lordo",
-          ),
-    previousGrossPrice:
-      previousGrossAmountMinor === null
-        ? null
-        : formatEuroMinor(previousGrossAmountMinor),
-    discountPercentage,
-  };
+  return createCatalogTenPercentOffer(
+    toSafeMinorNumber(grossAmountMinor, "Prezzo lordo corrente"),
+  );
 }
 
 function createBadges(row: CatalogProductDatabaseRow): ProductBadge[] {

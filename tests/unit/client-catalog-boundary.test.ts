@@ -5,7 +5,7 @@ import { describe, expect, it } from "vitest";
 
 describe("confine catalogo client", () => {
   it("non serializza il catalogo completo nel CommerceProvider", () => {
-    const layout = readFileSync(resolve("src/app/layout.tsx"), "utf8");
+    const layout = readFileSync(resolve("src/app/(storefront)/layout.tsx"), "utf8");
     const provider = readFileSync(
       resolve("src/features/commerce/commerce-provider.tsx"),
       "utf8",

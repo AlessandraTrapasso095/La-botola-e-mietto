@@ -66,7 +66,7 @@ export function createCatalogProductSummaryView(
     categoryName: category.name,
     grossPriceMinor: Number(grossPrice.amountMinor),
     grossPrice: formatEuroMinor(grossPrice.amountMinor),
-    offer: getCatalogOfferView(product.code),
+    offer: getCatalogOfferView(product.code, Number(grossPrice.amountMinor)),
   };
 }
 

@@ -29,14 +29,22 @@ describe("prodotti in offerta", () => {
     ).toBe(true);
   });
 
-  it("non genera prezzo precedente, percentuale o durata assenti", () => {
-    expect(getCatalogOfferView(catalogOfferProductCodes[0])).toEqual({
-      isActive: true,
-      previousGrossPriceMinor: null,
-      previousGrossPrice: null,
-      discountPercentage: null,
-    });
-    expect(getCatalogOfferView("CODICE-NON-IN-OFFERTA")).toBeNull();
+  it("espone prezzo precedente e sconto del 10% per i prodotti in offerta", () => {
+    const currentGrossPriceMinor = 1000;
+    const offer = getCatalogOfferView(
+      catalogOfferProductCodes[0],
+      currentGrossPriceMinor,
+    );
+
+    expect(offer).not.toBeNull();
+    expect(offer?.isActive).toBe(true);
+    expect(offer?.previousGrossPriceMinor).toBe(1111);
+    expect(offer?.previousGrossPrice).toBeTruthy();
+    expect(offer?.discountPercentage).toBe(10);
+
+    expect(
+      getCatalogOfferView("CODICE-NON-IN-OFFERTA", currentGrossPriceMinor),
+    ).toBeNull();
   });
 
   it("espone la stessa route alla navigazione condivisa", () => {
