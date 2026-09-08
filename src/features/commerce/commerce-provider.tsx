@@ -303,11 +303,19 @@ export function CommerceProvider({
         setCartError(null);
 
         if (hadRemoteSession) {
-          const localCart = readCommerceState(window.localStorage)?.cart ?? {};
+          const storedCommerce = readCommerceState(window.localStorage) ?? {
+            cart: {},
+            wishlist: [],
+          };
+
+          writeCommerceState(window.localStorage, {
+            cart: {},
+            wishlist: storedCommerce.wishlist,
+          });
 
           setState((current) => ({
             ...current,
-            cart: sanitizeStoredCart(localCart),
+            cart: {},
           }));
         }
       });
@@ -432,12 +440,19 @@ export function CommerceProvider({
         setWishlistError(null);
 
         if (hadRemoteSession) {
-          const localWishlist =
-            readCommerceState(window.localStorage)?.wishlist ?? [];
+          const storedCommerce = readCommerceState(window.localStorage) ?? {
+            cart: {},
+            wishlist: [],
+          };
+
+          writeCommerceState(window.localStorage, {
+            cart: storedCommerce.cart,
+            wishlist: [],
+          });
 
           setState((current) => ({
             ...current,
-            wishlist: [...new Set(localWishlist)],
+            wishlist: [],
           }));
         }
       });
