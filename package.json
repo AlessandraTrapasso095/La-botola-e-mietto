@@ -22,7 +22,8 @@
     "supabase:status": "supabase status",
     "supabase:reset": "supabase db reset",
     "supabase:types": "supabase gen types typescript --local > src/types/database.generated.ts",
-    "catalog:import": "tsx scripts/import-catalog.ts"
+    "catalog:import": "tsx scripts/import-catalog.ts",
+    "doctor": "node scripts/doctor.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "5.2.2",
