@@ -24,7 +24,9 @@ export default async function AdminLoginPage() {
               La Botola e Mietto
             </p>
 
-            <h1 className="mt-4 text-3xl font-semibold">Amministrazione</h1>
+            <h1 className="mt-4 !text-[2rem] leading-tight font-semibold tracking-[-0.02em] sm:!text-[2.25rem]">
+              Amministrazione
+            </h1>
 
             <p className="mt-3 text-sm text-white/50">
               Accedi con un account amministratore.
