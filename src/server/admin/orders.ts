@@ -70,6 +70,11 @@ export type AdminOrderDetailView = AdminOrderView & {
   reservationReleasedAt: string | null;
   cancellationRequestedAt: string | null;
   cancellationRequestResolvedAt: string | null;
+  cancellationResolutionNote: string | null;
+  refundProvider: string | null;
+  refundReference: string | null;
+  refundAmountMinor: number | null;
+  refundedAt: string | null;
   products: readonly {
     id: string;
     productId: string | null;
@@ -235,6 +240,11 @@ export async function getServerAdminOrderByNumber(
       cancellation_requested_at,
       cancellation_request_status,
       cancellation_request_resolved_at,
+      cancellation_resolution_note,
+      refund_provider,
+      refund_reference,
+      refund_amount_minor,
+      refunded_at,
       order_items (
         id,
         product_id,
@@ -296,6 +306,14 @@ export async function getServerAdminOrderByNumber(
     reservationReleasedAt: order.reservation_released_at,
     cancellationRequestedAt: order.cancellation_requested_at,
     cancellationRequestResolvedAt: order.cancellation_request_resolved_at,
+    cancellationResolutionNote: order.cancellation_resolution_note,
+    refundProvider: order.refund_provider,
+    refundReference: order.refund_reference,
+    refundAmountMinor:
+      order.refund_amount_minor === null
+        ? null
+        : Number(order.refund_amount_minor),
+    refundedAt: order.refunded_at,
     itemCount: order.order_items.reduce(
       (total, item) => total + item.quantity,
       0,

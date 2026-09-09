@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { AdminOrderCancellationActions } from "@/features/admin/order-cancellation-actions";
 import { AdminOrderShippingForm } from "@/features/admin/order-shipping-form";
 import { AdminOrderStatusActions } from "@/features/admin/order-status-actions";
 import { notFound } from "next/navigation";
@@ -253,16 +254,22 @@ export default async function AdminOrderDetailPage({
       </div>
 
       {order.cancellationRequestStatus === "pending" && (
-        <div className="mt-7 rounded-lg border border-orange-400/30 bg-orange-400/10 p-5">
+        <section className="mt-7 rounded-lg border border-orange-400/30 bg-orange-400/10 p-4 sm:p-5">
           <p className="font-semibold text-orange-300">
             Richiesta di annullamento da gestire
           </p>
 
-          <p className="mt-2 text-sm text-orange-100/60">
+          <p className="mt-2 text-sm leading-6 text-orange-100/60">
             Il cliente ha richiesto l’annullamento il{" "}
             {formatDate(order.cancellationRequestedAt)}.
           </p>
-        </div>
+
+          <AdminOrderCancellationActions
+            orderId={order.id}
+            paymentMethod={order.paymentMethod}
+            totalGrossAmountMinor={order.totalGrossAmountMinor}
+          />
+        </section>
       )}
 
       <div className="mt-7 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -546,6 +553,45 @@ export default async function AdminOrderDetailPage({
               <div>
                 <dt className="text-xs text-white/40">Annullato il</dt>
                 <dd className="mt-1">{formatDate(order.cancelledAt)}</dd>
+              </div>
+            )}
+
+            {order.refundedAt && (
+              <div>
+                <dt className="text-xs text-white/40">Rimborsato il</dt>
+                <dd className="mt-1">{formatDate(order.refundedAt)}</dd>
+              </div>
+            )}
+
+            {order.refundAmountMinor !== null && (
+              <div>
+                <dt className="text-xs text-white/40">Importo rimborsato</dt>
+                <dd className="mt-1">{formatMoney(order.refundAmountMinor)}</dd>
+              </div>
+            )}
+
+            {order.refundProvider && (
+              <div>
+                <dt className="text-xs text-white/40">Provider rimborso</dt>
+                <dd className="mt-1">{order.refundProvider}</dd>
+              </div>
+            )}
+
+            {order.refundReference && (
+              <div>
+                <dt className="text-xs text-white/40">Riferimento rimborso</dt>
+                <dd className="mt-1 font-mono text-xs break-all text-white/60">
+                  {order.refundReference}
+                </dd>
+              </div>
+            )}
+
+            {order.cancellationResolutionNote && (
+              <div>
+                <dt className="text-xs text-white/40">Nota amministrativa</dt>
+                <dd className="mt-1 whitespace-pre-wrap text-white/70">
+                  {order.cancellationResolutionNote}
+                </dd>
               </div>
             )}
 

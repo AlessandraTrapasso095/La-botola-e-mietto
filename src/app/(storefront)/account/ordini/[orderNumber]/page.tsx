@@ -292,6 +292,41 @@ export default async function AccountOrderDetailPage({
             Questo ordine è stato annullato e non può più essere elaborato.
           </p>
 
+          {order.paymentStatus === "refunded" && (
+            <div className="border-border-subtle bg-surface-soft mt-5 border p-4">
+              <p className="text-text-strong font-semibold">
+                Rimborso effettuato
+              </p>
+
+              <dl className="mt-4 grid gap-3 text-sm sm:grid-cols-2">
+                {order.refundAmountMinor !== null && (
+                  <div>
+                    <dt className="text-text-muted">Importo rimborsato</dt>
+
+                    <dd className="text-text-strong mt-1 font-semibold">
+                      {formatMoney(order.refundAmountMinor)}
+                    </dd>
+                  </div>
+                )}
+
+                {order.refundedAt && (
+                  <div>
+                    <dt className="text-text-muted">Rimborsato il</dt>
+
+                    <dd className="text-text-strong mt-1">
+                      {formatDate(order.refundedAt)}
+                    </dd>
+                  </div>
+                )}
+              </dl>
+
+              <p className="text-text-muted mt-4 text-sm leading-6">
+                I tempi di accredito effettivi possono dipendere dal metodo di
+                pagamento e dall’istituto utilizzato.
+              </p>
+            </div>
+          )}
+
           <div className="mt-5">
             <HideOrderButton orderId={order.id} />
           </div>

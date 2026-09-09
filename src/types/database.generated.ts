@@ -597,6 +597,7 @@ export type Database = {
             | Database["public"]["Enums"]["order_cancellation_request_status"]
             | null
           cancellation_requested_at: string | null
+          cancellation_resolution_note: string | null
           cancelled_at: string | null
           created_at: string
           currency: string
@@ -608,6 +609,10 @@ export type Database = {
           payment_provider_reference: string | null
           payment_status: Database["public"]["Enums"]["payment_status"]
           profile_id: string
+          refund_amount_minor: number | null
+          refund_provider: string | null
+          refund_reference: string | null
+          refunded_at: string | null
           reservation_released_at: string | null
           shipped_at: string | null
           shipping_address: Json
@@ -632,6 +637,7 @@ export type Database = {
             | Database["public"]["Enums"]["order_cancellation_request_status"]
             | null
           cancellation_requested_at?: string | null
+          cancellation_resolution_note?: string | null
           cancelled_at?: string | null
           created_at?: string
           currency?: string
@@ -643,6 +649,10 @@ export type Database = {
           payment_provider_reference?: string | null
           payment_status?: Database["public"]["Enums"]["payment_status"]
           profile_id: string
+          refund_amount_minor?: number | null
+          refund_provider?: string | null
+          refund_reference?: string | null
+          refunded_at?: string | null
           reservation_released_at?: string | null
           shipped_at?: string | null
           shipping_address: Json
@@ -667,6 +677,7 @@ export type Database = {
             | Database["public"]["Enums"]["order_cancellation_request_status"]
             | null
           cancellation_requested_at?: string | null
+          cancellation_resolution_note?: string | null
           cancelled_at?: string | null
           created_at?: string
           currency?: string
@@ -678,6 +689,10 @@ export type Database = {
           payment_provider_reference?: string | null
           payment_status?: Database["public"]["Enums"]["payment_status"]
           profile_id?: string
+          refund_amount_minor?: number | null
+          refund_provider?: string | null
+          refund_reference?: string | null
+          refunded_at?: string | null
           reservation_released_at?: string | null
           shipped_at?: string | null
           shipping_address?: Json
@@ -1485,6 +1500,17 @@ export type Database = {
         Returns: {
           slug: string
         }[]
+      }
+      resolve_admin_order_cancellation: {
+        Args: {
+          p_action: string
+          p_order_id: string
+          p_refund_amount_minor?: number
+          p_refund_provider?: string
+          p_refund_reference?: string
+          p_resolution_note?: string
+        }
+        Returns: string
       }
       set_account_cart_item_quantity: {
         Args: { product_slug: string; requested_quantity: number }
