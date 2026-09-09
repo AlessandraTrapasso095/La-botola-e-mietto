@@ -93,6 +93,11 @@ export type AccountOrderDetailView = Omit<AccountOrderView, "products"> & {
   shippingGrossAmountMinor: number;
   shippingAddress: unknown;
   billingAddress: unknown;
+  shippingCarrier: string | null;
+  trackingCode: string | null;
+  trackingUrl: string | null;
+  shippedAt: string | null;
+  deliveredAt: string | null;
   products: readonly {
     id: string;
     name: string;
@@ -132,6 +137,11 @@ export async function getServerAccountOrderByNumber(
       total_gross_amount_minor,
       shipping_address,
       billing_address,
+      shipping_carrier,
+      tracking_code,
+      tracking_url,
+      shipped_at,
+      delivered_at,
       order_items (
         id,
         product_name,
@@ -172,6 +182,11 @@ export async function getServerAccountOrderByNumber(
     totalGrossAmountMinor: Number(order.total_gross_amount_minor),
     shippingAddress: order.shipping_address,
     billingAddress: order.billing_address,
+    shippingCarrier: order.shipping_carrier,
+    trackingCode: order.tracking_code,
+    trackingUrl: order.tracking_url,
+    shippedAt: order.shipped_at,
+    deliveredAt: order.delivered_at,
     itemCount: order.order_items.reduce(
       (total, item) => total + item.quantity,
       0,

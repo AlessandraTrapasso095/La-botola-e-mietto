@@ -61,6 +61,11 @@ export type AdminOrderDetailView = AdminOrderView & {
   paymentProviderReference: string | null;
   stripeCheckoutSessionId: string | null;
   stripePaymentIntentId: string | null;
+  shippingCarrier: string | null;
+  trackingCode: string | null;
+  trackingUrl: string | null;
+  shippedAt: string | null;
+  deliveredAt: string | null;
   cancelledAt: string | null;
   reservationReleasedAt: string | null;
   cancellationRequestedAt: string | null;
@@ -221,6 +226,11 @@ export async function getServerAdminOrderByNumber(
       payment_method,
       stripe_checkout_session_id,
       stripe_payment_intent_id,
+      shipping_carrier,
+      tracking_code,
+      tracking_url,
+      shipped_at,
+      delivered_at,
       reservation_released_at,
       cancellation_requested_at,
       cancellation_request_status,
@@ -277,6 +287,11 @@ export async function getServerAdminOrderByNumber(
     paymentProviderReference: order.payment_provider_reference,
     stripeCheckoutSessionId: order.stripe_checkout_session_id,
     stripePaymentIntentId: order.stripe_payment_intent_id,
+    shippingCarrier: order.shipping_carrier,
+    trackingCode: order.tracking_code,
+    trackingUrl: order.tracking_url,
+    shippedAt: order.shipped_at,
+    deliveredAt: order.delivered_at,
     cancelledAt: order.cancelled_at,
     reservationReleasedAt: order.reservation_released_at,
     cancellationRequestedAt: order.cancellation_requested_at,

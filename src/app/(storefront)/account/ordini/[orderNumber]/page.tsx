@@ -83,22 +83,19 @@ function getAddressLines(value: unknown) {
 
   const name = [address.firstName, address.lastName]
     .filter(
-      (part): part is string =>
-        typeof part === "string" && part.length > 0,
+      (part): part is string => typeof part === "string" && part.length > 0,
     )
     .join(" ");
 
   const street = [address.street, address.streetNumber]
     .filter(
-      (part): part is string =>
-        typeof part === "string" && part.length > 0,
+      (part): part is string => typeof part === "string" && part.length > 0,
     )
     .join(" ");
 
   const city = [address.postalCode, address.city, address.province]
     .filter(
-      (part): part is string =>
-        typeof part === "string" && part.length > 0,
+      (part): part is string => typeof part === "string" && part.length > 0,
     )
     .join(" ");
 
@@ -153,8 +150,7 @@ export default async function AccountOrderDetailPage({
     !cancellationPending;
 
   const canRequestCancellation =
-    (order.paymentStatus === "paid" ||
-      order.paymentStatus === "authorized") &&
+    (order.paymentStatus === "paid" || order.paymentStatus === "authorized") &&
     (order.status === "received" || order.status === "preparing") &&
     order.cancellationRequestStatus !== "pending";
 
@@ -188,9 +184,7 @@ export default async function AccountOrderDetailPage({
         <div className="flex flex-wrap gap-2">
           <Badge>{orderStatusLabel(order.status)}</Badge>
 
-          <Badge>
-            Pagamento: {paymentStatusLabel(order.paymentStatus)}
-          </Badge>
+          <Badge>Pagamento: {paymentStatusLabel(order.paymentStatus)}</Badge>
 
           {order.cancellationRequestStatus === "pending" && (
             <Badge>Annullamento richiesto</Badge>
@@ -205,8 +199,8 @@ export default async function AccountOrderDetailPage({
           </p>
 
           <p className="text-text-muted mt-2 text-sm">
-            L’ordine è già stato registrato. Puoi completare il pagamento
-            senza creare un nuovo ordine oppure annullarlo.
+            L’ordine è già stato registrato. Puoi completare il pagamento senza
+            creare un nuovo ordine oppure annullarlo.
           </p>
 
           <div className="mt-5 flex flex-wrap gap-3">
@@ -224,8 +218,8 @@ export default async function AccountOrderDetailPage({
           </p>
 
           <p className="text-text-muted mt-2 text-sm">
-            Il tentativo di pagamento non è andato a buon fine. Puoi
-            annullare questo ordine.
+            Il tentativo di pagamento non è andato a buon fine. Puoi annullare
+            questo ordine.
           </p>
 
           <div className="mt-5">
@@ -241,16 +235,13 @@ export default async function AccountOrderDetailPage({
           </p>
 
           <p className="text-text-muted mt-2 text-sm">
-            Il pagamento è già stato effettuato. Puoi inviare una richiesta
-            di annullamento. La richiesta dovrà essere verificata e
-            approvata prima che l’ordine venga effettivamente annullato.
+            Il pagamento è già stato effettuato. Puoi inviare una richiesta di
+            annullamento. La richiesta dovrà essere verificata e approvata prima
+            che l’ordine venga effettivamente annullato.
           </p>
 
           <div className="mt-5">
-            <CancelOrderButton
-              orderId={order.id}
-              requiresAdminApproval
-            />
+            <CancelOrderButton orderId={order.id} requiresAdminApproval />
           </div>
         </div>
       )}
@@ -284,9 +275,7 @@ export default async function AccountOrderDetailPage({
 
       {bankTransferPending && (
         <div className="border-border-subtle bg-surface mt-8 border p-5 sm:p-6">
-          <p className="text-text-strong font-semibold">
-            Bonifico in attesa
-          </p>
+          <p className="text-text-strong font-semibold">Bonifico in attesa</p>
 
           <p className="text-text-muted mt-2 text-sm">
             Il tuo ordine è stato ricevuto ed è in attesa della verifica del
@@ -297,9 +286,7 @@ export default async function AccountOrderDetailPage({
 
       {order.status === "cancelled" && (
         <div className="border-border-subtle bg-surface mt-8 border p-5 sm:p-6">
-          <p className="text-text-strong font-semibold">
-            Ordine annullato
-          </p>
+          <p className="text-text-strong font-semibold">Ordine annullato</p>
 
           <p className="text-text-muted mt-2 text-sm">
             Questo ordine è stato annullato e non può più essere elaborato.
@@ -310,6 +297,74 @@ export default async function AccountOrderDetailPage({
           </div>
         </div>
       )}
+
+      {order.shippingMethod === "tnt" &&
+        (order.shippingCarrier ||
+          order.trackingCode ||
+          order.trackingUrl ||
+          order.shippedAt ||
+          order.deliveredAt) && (
+          <section className="border-border-subtle bg-surface mt-8 border p-5 sm:p-6">
+            <p className="text-accent text-xs font-semibold tracking-[var(--letter-spacing-label)] uppercase">
+              Spedizione
+            </p>
+
+            <h2 className="text-text-strong mt-2 font-serif text-xl">
+              Segui il tuo ordine
+            </h2>
+
+            <dl className="mt-5 grid gap-4 text-sm sm:grid-cols-2">
+              {order.shippingCarrier && (
+                <div>
+                  <dt className="text-text-muted">Corriere</dt>
+                  <dd className="text-text-strong mt-1 font-semibold">
+                    {order.shippingCarrier}
+                  </dd>
+                </div>
+              )}
+
+              {order.trackingCode && (
+                <div>
+                  <dt className="text-text-muted">Codice tracking</dt>
+                  <dd className="text-text-strong mt-1 font-mono text-xs break-all">
+                    {order.trackingCode}
+                  </dd>
+                </div>
+              )}
+
+              {order.shippedAt && (
+                <div>
+                  <dt className="text-text-muted">Spedito il</dt>
+                  <dd className="text-text-strong mt-1">
+                    {formatDate(order.shippedAt)}
+                  </dd>
+                </div>
+              )}
+
+              {order.deliveredAt && (
+                <div>
+                  <dt className="text-text-muted">Consegnato il</dt>
+                  <dd className="text-text-strong mt-1">
+                    {formatDate(order.deliveredAt)}
+                  </dd>
+                </div>
+              )}
+            </dl>
+
+            {order.trackingUrl && (
+              <div className="mt-6">
+                <a
+                  href={order.trackingUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="border-accent bg-accent inline-flex min-h-12 items-center justify-center border px-6 text-sm font-semibold tracking-[var(--letter-spacing-label)] text-black uppercase"
+                >
+                  Segui la spedizione
+                </a>
+              </div>
+            )}
+          </section>
+        )}
 
       <section className="border-border-subtle mt-8 border">
         <div className="border-border-subtle border-b p-5 sm:p-6">
@@ -325,9 +380,7 @@ export default async function AccountOrderDetailPage({
               className="flex flex-wrap items-start justify-between gap-5 p-5 sm:p-6"
             >
               <div>
-                <p className="text-text-strong font-semibold">
-                  {product.name}
-                </p>
+                <p className="text-text-strong font-semibold">{product.name}</p>
 
                 <p className="text-text-muted mt-1 text-sm">
                   Codice {product.code}
@@ -368,9 +421,7 @@ export default async function AccountOrderDetailPage({
         </section>
 
         <section className="border-border-subtle border p-5 sm:p-6">
-          <h2 className="text-text-strong font-serif text-xl">
-            Fatturazione
-          </h2>
+          <h2 className="text-text-strong font-serif text-xl">Fatturazione</h2>
 
           <div className="text-text-muted mt-4 grid gap-1 text-sm">
             {billingAddress.map((line) => (
@@ -381,9 +432,7 @@ export default async function AccountOrderDetailPage({
       </div>
 
       <section className="border-border-subtle mt-8 border p-5 sm:p-6">
-        <h2 className="text-text-strong font-serif text-xl">
-          Riepilogo
-        </h2>
+        <h2 className="text-text-strong font-serif text-xl">Riepilogo</h2>
 
         <dl className="mt-5 grid gap-3 text-sm">
           <div className="flex justify-between gap-5">
@@ -413,9 +462,7 @@ export default async function AccountOrderDetailPage({
           </div>
 
           <div className="border-border-subtle mt-2 flex justify-between gap-5 border-t pt-4 text-base">
-            <dt className="text-text-strong font-semibold">
-              Totale
-            </dt>
+            <dt className="text-text-strong font-semibold">Totale</dt>
 
             <dd className="text-text-strong font-semibold">
               {formatMoney(order.totalGrossAmountMinor)}

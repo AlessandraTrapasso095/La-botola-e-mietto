@@ -39,7 +39,9 @@ export async function updateAdminOrderStatus({
 
   const orderResponse = await client
     .from("orders")
-    .select("id, status, payment_status, cancellation_request_status")
+    .select(
+      "id, status, payment_status, cancellation_request_status, shipping_method",
+    )
     .eq("id", orderId)
     .single();
 
@@ -71,6 +73,13 @@ export async function updateAdminOrderStatus({
     );
   }
 
+  if (nextStatus === "shipped" && order.shipping_method === "tnt") {
+    throw new AuthHttpError(
+      409,
+      "Per una spedizione TNT usa il flusso dedicato con corriere e tracking.",
+    );
+  }
+
   if (
     nextStatus === "shipped" &&
     order.payment_status !== "paid" &&
@@ -97,6 +106,9 @@ export async function updateAdminOrderStatus({
     .update({
       status: nextStatus,
       updated_at: new Date().toISOString(),
+      ...(nextStatus === "delivered"
+        ? { delivered_at: new Date().toISOString() }
+        : {}),
     })
     .eq("id", order.id)
     .eq("status", order.status)

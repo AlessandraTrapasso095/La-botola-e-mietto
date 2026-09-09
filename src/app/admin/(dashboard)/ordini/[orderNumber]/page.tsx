@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { AdminOrderShippingForm } from "@/features/admin/order-shipping-form";
 import { AdminOrderStatusActions } from "@/features/admin/order-status-actions";
 import { notFound } from "next/navigation";
 
@@ -350,8 +351,6 @@ export default async function AdminOrderDetailPage({
               </table>
             </div>
           </section>
-
-          
         </div>
 
         <div className="grid content-start gap-5">
@@ -412,13 +411,82 @@ export default async function AdminOrderDetailPage({
             <h2 className="font-semibold">Gestione ordine</h2>
 
             <div className="mt-4">
-              <AdminOrderStatusActions
-                orderId={order.id}
-                status={order.status}
-                paymentStatus={order.paymentStatus}
-                cancellationRequestStatus={order.cancellationRequestStatus}
-              />
+              {order.shippingMethod === "tnt" &&
+              order.status === "preparing" ? (
+                <AdminOrderShippingForm
+                  orderId={order.id}
+                  disabled={
+                    order.paymentStatus !== "paid" &&
+                    order.paymentStatus !== "authorized"
+                  }
+                />
+              ) : (
+                <AdminOrderStatusActions
+                  orderId={order.id}
+                  status={order.status}
+                  paymentStatus={order.paymentStatus}
+                  cancellationRequestStatus={order.cancellationRequestStatus}
+                />
+              )}
             </div>
+
+            {order.shippingMethod === "tnt" &&
+              (order.status === "shipped" || order.status === "delivered") && (
+                <div className="mt-5 border-t border-white/10 pt-5">
+                  <p className="text-xs font-semibold tracking-wide text-white/40 uppercase">
+                    Spedizione
+                  </p>
+
+                  <dl className="mt-4 grid gap-3 text-sm">
+                    {order.shippingCarrier && (
+                      <div>
+                        <dt className="text-xs text-white/40">Corriere</dt>
+                        <dd className="mt-1">{order.shippingCarrier}</dd>
+                      </div>
+                    )}
+
+                    {order.trackingCode && (
+                      <div>
+                        <dt className="text-xs text-white/40">
+                          Codice tracking
+                        </dt>
+                        <dd className="mt-1 font-mono text-xs break-all">
+                          {order.trackingCode}
+                        </dd>
+                      </div>
+                    )}
+
+                    {order.shippedAt && (
+                      <div>
+                        <dt className="text-xs text-white/40">Spedito il</dt>
+                        <dd className="mt-1">{formatDate(order.shippedAt)}</dd>
+                      </div>
+                    )}
+
+                    {order.deliveredAt && (
+                      <div>
+                        <dt className="text-xs text-white/40">Consegnato il</dt>
+                        <dd className="mt-1">
+                          {formatDate(order.deliveredAt)}
+                        </dd>
+                      </div>
+                    )}
+
+                    {order.trackingUrl && (
+                      <div>
+                        <a
+                          href={order.trackingUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="inline-flex min-h-10 items-center text-sm font-semibold text-orange-300 hover:text-orange-200"
+                        >
+                          Apri tracking →
+                        </a>
+                      </div>
+                    )}
+                  </dl>
+                </div>
+              )}
           </section>
           <AddressCard
             title="Indirizzo di spedizione"
@@ -429,8 +497,6 @@ export default async function AdminOrderDetailPage({
             title="Indirizzo di fatturazione"
             value={order.billingAddress}
           />
-
-
         </div>
       </div>
 
@@ -452,9 +518,7 @@ export default async function AdminOrderDetailPage({
             </div>
 
             <div>
-              <dt className="text-xs text-white/40">
-                Richiesta annullamento
-              </dt>
+              <dt className="text-xs text-white/40">Richiesta annullamento</dt>
               <dd className="mt-1">
                 {cancellationLabel(order.cancellationRequestStatus)}
               </dd>
@@ -464,7 +528,7 @@ export default async function AdminOrderDetailPage({
               <div>
                 <dt className="text-xs text-white/40">Richiesta il</dt>
                 <dd className="mt-1">
-                {formatDate(order.cancellationRequestedAt)}
+                  {formatDate(order.cancellationRequestedAt)}
                 </dd>
               </div>
             )}
@@ -473,7 +537,7 @@ export default async function AdminOrderDetailPage({
               <div>
                 <dt className="text-xs text-white/40">Risolta il</dt>
                 <dd className="mt-1">
-                {formatDate(order.cancellationRequestResolvedAt)}
+                  {formatDate(order.cancellationRequestResolvedAt)}
                 </dd>
               </div>
             )}
@@ -501,30 +565,28 @@ export default async function AdminOrderDetailPage({
             <dl className="mt-4 grid gap-4 text-sm">
               {order.paymentProviderReference && (
                 <div>
-                <dt className="text-xs text-white/40">
-                  Provider reference
-                </dt>
-                <dd className="mt-1 font-mono text-xs break-all text-white/60">
-                  {order.paymentProviderReference}
-                </dd>
+                  <dt className="text-xs text-white/40">Provider reference</dt>
+                  <dd className="mt-1 font-mono text-xs break-all text-white/60">
+                    {order.paymentProviderReference}
+                  </dd>
                 </div>
               )}
 
               {order.stripeCheckoutSessionId && (
                 <div>
-                <dt className="text-xs text-white/40">Stripe Session</dt>
-                <dd className="mt-1 font-mono text-xs break-all text-white/60">
-                  {order.stripeCheckoutSessionId}
-                </dd>
+                  <dt className="text-xs text-white/40">Stripe Session</dt>
+                  <dd className="mt-1 font-mono text-xs break-all text-white/60">
+                    {order.stripeCheckoutSessionId}
+                  </dd>
                 </div>
               )}
 
               {order.stripePaymentIntentId && (
                 <div>
-                <dt className="text-xs text-white/40">Payment Intent</dt>
-                <dd className="mt-1 font-mono text-xs break-all text-white/60">
-                  {order.stripePaymentIntentId}
-                </dd>
+                  <dt className="text-xs text-white/40">Payment Intent</dt>
+                  <dd className="mt-1 font-mono text-xs break-all text-white/60">
+                    {order.stripePaymentIntentId}
+                  </dd>
                 </div>
               )}
             </dl>
