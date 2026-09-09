@@ -601,6 +601,7 @@ export type Database = {
           cancelled_at: string | null
           created_at: string
           currency: string
+          customer_cancellation_note: string | null
           delivered_at: string | null
           hidden_from_customer_at: string | null
           id: string
@@ -641,6 +642,7 @@ export type Database = {
           cancelled_at?: string | null
           created_at?: string
           currency?: string
+          customer_cancellation_note?: string | null
           delivered_at?: string | null
           hidden_from_customer_at?: string | null
           id?: string
@@ -681,6 +683,7 @@ export type Database = {
           cancelled_at?: string | null
           created_at?: string
           currency?: string
+          customer_cancellation_note?: string | null
           delivered_at?: string | null
           hidden_from_customer_at?: string | null
           id?: string
@@ -1091,6 +1094,10 @@ export type Database = {
       }
       profiles: {
         Row: {
+          admin_notify_cancellations: boolean
+          admin_notify_new_orders: boolean
+          admin_notify_payments: boolean
+          admin_notify_shipping: boolean
           birth_date: string | null
           created_at: string
           deleted_at: string | null
@@ -1105,6 +1112,10 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          admin_notify_cancellations?: boolean
+          admin_notify_new_orders?: boolean
+          admin_notify_payments?: boolean
+          admin_notify_shipping?: boolean
           birth_date?: string | null
           created_at?: string
           deleted_at?: string | null
@@ -1119,6 +1130,10 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          admin_notify_cancellations?: boolean
+          admin_notify_new_orders?: boolean
+          admin_notify_payments?: boolean
+          admin_notify_shipping?: boolean
           birth_date?: string | null
           created_at?: string
           deleted_at?: string | null
@@ -1417,6 +1432,16 @@ export type Database = {
         }[]
       }
       cancel_account_order: { Args: { p_order_id: string }; Returns: string }
+      cancel_admin_received_order: {
+        Args: {
+          p_customer_note: string
+          p_order_id: string
+          p_refund_amount_minor?: number
+          p_refund_provider?: string
+          p_refund_reference?: string
+        }
+        Returns: string
+      }
       catalog_filter_options: {
         Args: {
           brand_slug?: string
@@ -1526,6 +1551,10 @@ export type Database = {
           policy_version_value: string
         }
         Returns: {
+          admin_notify_cancellations: boolean
+          admin_notify_new_orders: boolean
+          admin_notify_payments: boolean
+          admin_notify_shipping: boolean
           birth_date: string | null
           created_at: string
           deleted_at: string | null

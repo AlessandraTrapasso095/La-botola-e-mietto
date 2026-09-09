@@ -21,6 +21,28 @@ function formatDate(value: string) {
   }).format(new Date(value));
 }
 
+function orderStatusBadgeClass(status: string) {
+  switch (status) {
+    case "received":
+      return "border-blue-500/30 bg-blue-500/10 text-blue-700";
+
+    case "preparing":
+      return "border-orange-500/30 bg-orange-500/10 text-orange-700";
+
+    case "shipped":
+      return "border-violet-500/30 bg-violet-500/10 text-violet-700";
+
+    case "delivered":
+      return "border-emerald-500/30 bg-emerald-500/10 text-emerald-700";
+
+    case "cancelled":
+      return "border-red-500/30 bg-red-500/10 text-red-700";
+
+    default:
+      return "";
+  }
+}
+
 function orderStatusLabel(status: AccountOrderView["status"]) {
   switch (status) {
     case "received":
@@ -126,7 +148,9 @@ export function OrdersList({
               </div>
 
               <div className="flex flex-wrap gap-2">
-                <Badge>{orderStatusLabel(order.status)}</Badge>
+                <Badge className={orderStatusBadgeClass(order.status)}>
+                  {orderStatusLabel(order.status)}
+                </Badge>
 
                 <Badge>
                   Pagamento: {paymentStatusLabel(order.paymentStatus)}

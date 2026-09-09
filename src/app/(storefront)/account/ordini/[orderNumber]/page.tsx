@@ -52,6 +52,28 @@ function orderStatusLabel(status: string) {
   }
 }
 
+function orderStatusBadgeClass(status: string) {
+  switch (status) {
+    case "received":
+      return "border-blue-500/30 bg-blue-500/10 text-blue-700";
+
+    case "preparing":
+      return "border-orange-500/30 bg-orange-500/10 text-orange-700";
+
+    case "shipped":
+      return "border-violet-500/30 bg-violet-500/10 text-violet-700";
+
+    case "delivered":
+      return "border-emerald-500/30 bg-emerald-500/10 text-emerald-700";
+
+    case "cancelled":
+      return "border-red-500/30 bg-red-500/10 text-red-700";
+
+    default:
+      return "";
+  }
+}
+
 function paymentStatusLabel(status: string) {
   switch (status) {
     case "pending":
@@ -182,7 +204,9 @@ export default async function AccountOrderDetailPage({
         </div>
 
         <div className="flex flex-wrap gap-2">
-          <Badge>{orderStatusLabel(order.status)}</Badge>
+          <Badge className={orderStatusBadgeClass(order.status)}>
+            {orderStatusLabel(order.status)}
+          </Badge>
 
           <Badge>Pagamento: {paymentStatusLabel(order.paymentStatus)}</Badge>
 
@@ -291,6 +315,18 @@ export default async function AccountOrderDetailPage({
           <p className="text-text-muted mt-2 text-sm">
             Questo ordine è stato annullato e non può più essere elaborato.
           </p>
+
+          {order.customerCancellationNote && (
+            <div className="border-border-subtle bg-surface-soft mt-5 border p-4">
+              <p className="text-text-muted text-xs font-semibold tracking-[var(--letter-spacing-label)] uppercase">
+                Comunicazione del negozio
+              </p>
+
+              <p className="text-text-strong mt-2 text-sm leading-6 whitespace-pre-wrap">
+                {order.customerCancellationNote}
+              </p>
+            </div>
+          )}
 
           {order.paymentStatus === "refunded" && (
             <div className="border-border-subtle bg-surface-soft mt-5 border p-4">

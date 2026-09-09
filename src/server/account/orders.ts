@@ -100,6 +100,7 @@ export type AccountOrderDetailView = Omit<AccountOrderView, "products"> & {
   deliveredAt: string | null;
   refundAmountMinor: number | null;
   refundedAt: string | null;
+  customerCancellationNote: string | null;
   products: readonly {
     id: string;
     name: string;
@@ -146,6 +147,7 @@ export async function getServerAccountOrderByNumber(
       delivered_at,
       refund_amount_minor,
       refunded_at,
+      customer_cancellation_note,
       order_items (
         id,
         product_name,
@@ -196,6 +198,7 @@ export async function getServerAccountOrderByNumber(
         ? null
         : Number(order.refund_amount_minor),
     refundedAt: order.refunded_at,
+    customerCancellationNote: order.customer_cancellation_note,
     itemCount: order.order_items.reduce(
       (total, item) => total + item.quantity,
       0,

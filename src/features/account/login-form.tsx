@@ -31,16 +31,30 @@ export function LoginForm({
   const { signIn } = useAccount();
   const [submissionState, setSubmissionState] = useState<LoginState>("idle");
   const [submissionError, setSubmissionError] = useState("");
+  const rememberedEmail =
+    typeof window !== "undefined"
+      ? (window.localStorage.getItem("lbm-login-email") ?? "")
+      : "";
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<LoginValues>({
     resolver: zodResolver(loginSchema),
-    defaultValues: { email: "", password: "", rememberMe: true },
+    defaultValues: {
+      email: rememberedEmail,
+      password: "",
+      rememberMe: rememberedEmail.length > 0,
+    },
   });
 
-  const submit = handleSubmit(async ({ email, password }) => {
+  const submit = handleSubmit(async ({ email, password, rememberMe }) => {
+    if (rememberMe) {
+      window.localStorage.setItem("lbm-login-email", email);
+    } else {
+      window.localStorage.removeItem("lbm-login-email");
+    }
     setSubmissionState("loading");
     setSubmissionError("");
     try {

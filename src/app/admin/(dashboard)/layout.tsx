@@ -60,6 +60,13 @@ export default async function AdminDashboardLayout({
           </Link>
 
           <Link
+            href="/admin/impostazioni"
+            className="rounded-md px-4 py-3 text-white/80 transition hover:bg-white/5 hover:text-white"
+          >
+            Impostazioni
+          </Link>
+
+          <Link
             href="/admin/clienti"
             className="rounded-md px-4 py-3 text-white/80 transition hover:bg-white/5 hover:text-white"
           >
@@ -68,12 +75,17 @@ export default async function AdminDashboardLayout({
         </nav>
 
         <div className="border-t border-white/10 p-4">
-          <div className="mb-3 px-1">
+          <Link
+            href="/admin/impostazioni"
+            className="mb-3 block rounded-md px-1 py-1 transition hover:bg-white/5"
+          >
             <p className="truncate text-sm font-medium text-white/90">
               {admin.firstName} {admin.lastName}
             </p>
-            <p className="text-xs text-white/40">Amministratore</p>
-          </div>
+            <p className="text-xs text-white/40">
+              Amministratore · Impostazioni
+            </p>
+          </Link>
 
           <AdminLogoutButton />
         </div>
@@ -88,15 +100,16 @@ export default async function AdminDashboardLayout({
           </div>
 
           <div className="flex items-center gap-4">
-            <div className="text-right">
+            <Link
+              href="/admin/impostazioni"
+              className="rounded-md px-2 py-1 text-right transition hover:bg-white/5"
+            >
               <p className="text-sm font-medium">
                 {admin.firstName} {admin.lastName}
               </p>
 
-              <p className="text-xs text-white/50">
-                Amministratore
-              </p>
-            </div>
+              <p className="text-xs text-white/50">Amministratore</p>
+            </Link>
 
             <div className="lg:hidden">
               <AdminLogoutButton compact />

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { AdminOrderCancellationActions } from "@/features/admin/order-cancellation-actions";
+import { AdminReceivedOrderCancellation } from "@/features/admin/received-order-cancellation";
 import { AdminOrderShippingForm } from "@/features/admin/order-shipping-form";
 import { AdminOrderStatusActions } from "@/features/admin/order-status-actions";
 import { notFound } from "next/navigation";
@@ -428,12 +429,23 @@ export default async function AdminOrderDetailPage({
                   }
                 />
               ) : (
-                <AdminOrderStatusActions
-                  orderId={order.id}
-                  status={order.status}
-                  paymentStatus={order.paymentStatus}
-                  cancellationRequestStatus={order.cancellationRequestStatus}
-                />
+                <>
+                  <AdminOrderStatusActions
+                    orderId={order.id}
+                    status={order.status}
+                    paymentStatus={order.paymentStatus}
+                    cancellationRequestStatus={order.cancellationRequestStatus}
+                  />
+
+                  {order.status === "received" &&
+                    order.cancellationRequestStatus !== "pending" && (
+                      <AdminReceivedOrderCancellation
+                        orderId={order.id}
+                        paymentMethod={order.paymentMethod}
+                        paymentStatus={order.paymentStatus}
+                      />
+                    )}
+                </>
               )}
             </div>
 
@@ -582,6 +594,18 @@ export default async function AdminOrderDetailPage({
                 <dt className="text-xs text-white/40">Riferimento rimborso</dt>
                 <dd className="mt-1 font-mono text-xs break-all text-white/60">
                   {order.refundReference}
+                </dd>
+              </div>
+            )}
+
+            {order.customerCancellationNote && (
+              <div>
+                <dt className="text-xs text-white/40">
+                  Comunicazione al cliente
+                </dt>
+
+                <dd className="mt-1 whitespace-pre-wrap text-white/70">
+                  {order.customerCancellationNote}
                 </dd>
               </div>
             )}

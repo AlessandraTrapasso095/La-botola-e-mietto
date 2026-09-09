@@ -18,6 +18,33 @@ function formatMoney(amountMinor: number) {
   }).format(amountMinor / 100);
 }
 
+function moneyKpiClass(amountMinor: number) {
+  const formatted = formatMoney(amountMinor).replace(/\s/g, "");
+  const length = formatted.length;
+
+  if (length <= 8) {
+    return "text-[2.5rem] xl:text-[2.75rem]";
+  }
+
+  if (length <= 10) {
+    return "text-[2.15rem] xl:text-[2.35rem]";
+  }
+
+  if (length <= 12) {
+    return "text-[1.8rem] xl:text-[2rem]";
+  }
+
+  if (length <= 14) {
+    return "text-[1.55rem] xl:text-[1.75rem]";
+  }
+
+  if (length <= 17) {
+    return "text-[1.3rem] xl:text-[1.5rem]";
+  }
+
+  return "text-[1.05rem] xl:text-[1.2rem]";
+}
+
 function formatDate(value: string) {
   return new Intl.DateTimeFormat("it-IT", {
     day: "2-digit",
@@ -106,7 +133,11 @@ export default async function AdminDashboardPage() {
         <div className="rounded-lg border border-white/10 bg-[#171717] p-5">
           <p className="text-sm text-white/50">Incassato</p>
 
-          <p className="mt-3 text-3xl font-semibold">
+          <p
+            className={`mt-3 max-w-full min-w-0 leading-none font-semibold tracking-[-0.03em] whitespace-nowrap tabular-nums ${moneyKpiClass(
+              dashboard.paidRevenueMinor,
+            )}`}
+          >
             {formatMoney(dashboard.paidRevenueMinor)}
           </p>
 

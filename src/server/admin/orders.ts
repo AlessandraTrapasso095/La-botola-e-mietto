@@ -71,6 +71,7 @@ export type AdminOrderDetailView = AdminOrderView & {
   cancellationRequestedAt: string | null;
   cancellationRequestResolvedAt: string | null;
   cancellationResolutionNote: string | null;
+  customerCancellationNote: string | null;
   refundProvider: string | null;
   refundReference: string | null;
   refundAmountMinor: number | null;
@@ -241,6 +242,7 @@ export async function getServerAdminOrderByNumber(
       cancellation_request_status,
       cancellation_request_resolved_at,
       cancellation_resolution_note,
+      customer_cancellation_note,
       refund_provider,
       refund_reference,
       refund_amount_minor,
@@ -307,6 +309,7 @@ export async function getServerAdminOrderByNumber(
     cancellationRequestedAt: order.cancellation_requested_at,
     cancellationRequestResolvedAt: order.cancellation_request_resolved_at,
     cancellationResolutionNote: order.cancellation_resolution_note,
+    customerCancellationNote: order.customer_cancellation_note,
     refundProvider: order.refund_provider,
     refundReference: order.refund_reference,
     refundAmountMinor:

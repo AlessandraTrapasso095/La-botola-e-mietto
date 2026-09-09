@@ -7,8 +7,19 @@ import { ADMIN_ACTIVITY_STORAGE_KEY } from "@/features/admin/admin-session";
 import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
 
 export function AdminLoginForm() {
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(() =>
+    typeof window !== "undefined"
+      ? (window.localStorage.getItem("lbm-admin-login-email") ?? "")
+      : "",
+  );
+
   const [password, setPassword] = useState("");
+
+  const [rememberMe, setRememberMe] = useState(() =>
+    typeof window !== "undefined"
+      ? Boolean(window.localStorage.getItem("lbm-admin-login-email"))
+      : false,
+  );
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -47,6 +58,12 @@ export function AdminLoginForm() {
         throw new Error(
           "Questo account non è autorizzato ad accedere all’amministrazione.",
         );
+      }
+
+      if (rememberMe) {
+        window.localStorage.setItem("lbm-admin-login-email", email);
+      } else {
+        window.localStorage.removeItem("lbm-admin-login-email");
       }
 
       window.localStorage.setItem(
@@ -118,7 +135,18 @@ export function AdminLoginForm() {
         />
       </div>
 
-      <div className="flex justify-end">
+      <div className="flex items-center justify-between gap-4">
+        <label className="flex cursor-pointer items-center gap-2 text-sm text-white/60">
+          <input
+            type="checkbox"
+            checked={rememberMe}
+            onChange={(event) => setRememberMe(event.target.checked)}
+            className="size-4 accent-orange-400"
+          />
+
+          <span>Ricordami</span>
+        </label>
+
         <Link
           href="/admin/password-dimenticata"
           className="inline-flex min-h-10 items-center text-sm font-medium text-orange-300 transition hover:text-orange-200"
