@@ -28,6 +28,7 @@ export type EmailTemplateKey =
   | "customer-order-delivered"
   | "customer-order-cancelled-admin"
   | "customer-order-cancelled-self"
+  | "customer-cancellation-requested"
   | "customer-cancellation-approved"
   | "customer-cancellation-rejected"
   | "customer-password-changed"

@@ -2,6 +2,7 @@ import { type NextRequest } from "next/server";
 import { z } from "zod";
 
 import { cancelAdminReceivedOrder } from "@/server/admin/cancel-received-order";
+import { safelySendAdminOrderCancelledEmail } from "@/server/email/safe-send";
 import {
   authErrorResponse,
   authJson,
@@ -26,6 +27,8 @@ export async function POST(request: NextRequest) {
     const input = await parseAuthInput(request, schema);
 
     const result = await cancelAdminReceivedOrder(input);
+
+    await safelySendAdminOrderCancelledEmail(input.orderId);
 
     return authJson(result);
   } catch (error) {

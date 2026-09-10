@@ -2,6 +2,13 @@ import "server-only";
 
 import { sendNewOrderEmails } from "@/server/email/order-created";
 import {
+  sendAdminOrderCancelledEmail,
+  sendCancellationApprovedEmail,
+  sendCancellationRejectedEmail,
+  sendCustomerCancellationRequestedEmails,
+  sendCustomerOrderCancelledEmails,
+} from "@/server/email/order-cancellation";
+import {
   sendOrderDeliveredEmail,
   sendOrderPreparingEmail,
   sendOrderShippedEmail,
@@ -53,5 +60,37 @@ export async function safelySendOrderShippedEmail(orderId: string) {
 export async function safelySendOrderDeliveredEmail(orderId: string) {
   return safelySend("notifica ordine consegnato", orderId, () =>
     sendOrderDeliveredEmail(orderId),
+  );
+}
+
+export async function safelySendCustomerCancellationRequestedEmails(
+  orderId: string,
+) {
+  return safelySend("richiesta annullamento ordine", orderId, () =>
+    sendCustomerCancellationRequestedEmails(orderId),
+  );
+}
+
+export async function safelySendCustomerOrderCancelledEmails(orderId: string) {
+  return safelySend("annullamento ordine cliente", orderId, () =>
+    sendCustomerOrderCancelledEmails(orderId),
+  );
+}
+
+export async function safelySendAdminOrderCancelledEmail(orderId: string) {
+  return safelySend("annullamento ordine admin", orderId, () =>
+    sendAdminOrderCancelledEmail(orderId),
+  );
+}
+
+export async function safelySendCancellationApprovedEmail(orderId: string) {
+  return safelySend("annullamento ordine approvato", orderId, () =>
+    sendCancellationApprovedEmail(orderId),
+  );
+}
+
+export async function safelySendCancellationRejectedEmail(orderId: string) {
+  return safelySend("annullamento ordine rifiutato", orderId, () =>
+    sendCancellationRejectedEmail(orderId),
   );
 }

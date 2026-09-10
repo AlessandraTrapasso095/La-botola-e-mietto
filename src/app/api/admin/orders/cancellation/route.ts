@@ -9,6 +9,10 @@ import {
   requireSupabaseAuthMode,
 } from "@/server/auth/http";
 import { resolveAdminOrderCancellation } from "@/server/admin/resolve-order-cancellation";
+import {
+  safelySendCancellationApprovedEmail,
+  safelySendCancellationRejectedEmail,
+} from "@/server/email/safe-send";
 
 const adminCancellationSchema = z.object({
   orderId: z.string().uuid(),
@@ -25,6 +29,12 @@ export async function POST(request: NextRequest) {
     const input = await parseAuthInput(request, adminCancellationSchema);
 
     const result = await resolveAdminOrderCancellation(input);
+
+    if (result.action === "approved") {
+      await safelySendCancellationApprovedEmail(input.orderId);
+    } else {
+      await safelySendCancellationRejectedEmail(input.orderId);
+    }
 
     return authJson(result, 200);
   } catch (error) {
