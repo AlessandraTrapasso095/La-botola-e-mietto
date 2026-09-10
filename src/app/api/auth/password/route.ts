@@ -10,6 +10,7 @@ import {
   requireSupabaseAuthMode,
 } from "@/server/auth/http";
 import { createSupabaseServerClient } from "@/server/supabase";
+import { safelySendPasswordChangedEmail } from "@/server/email/safe-send";
 
 export async function POST(request: NextRequest) {
   try {
@@ -24,7 +25,9 @@ export async function POST(request: NextRequest) {
     if (userError || !userData.user) {
       throw new AuthHttpError(401, "Accesso richiesto.");
     }
-    const { error } = await client.auth.updateUser({ password });
+    const { data: updatedUserData, error } = await client.auth.updateUser({
+      password,
+    });
     if (error) {
       if (error.code === "same_password") {
         throw new AuthHttpError(
@@ -38,6 +41,14 @@ export async function POST(request: NextRequest) {
         "Aggiornamento della password non riuscito.",
       );
     }
+    const passwordChangeOccurrenceId =
+      updatedUserData.user.updated_at ?? new Date().toISOString();
+
+    await safelySendPasswordChangedEmail(
+      userData.user.id,
+      passwordChangeOccurrenceId,
+    );
+
     return authJson(null);
   } catch (error) {
     return authErrorResponse(error);

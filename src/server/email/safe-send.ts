@@ -1,5 +1,10 @@
 import "server-only";
 
+import {
+  sendAdminEmailChangedEmail,
+  sendAdminEmailChangeRequestedEmail,
+  sendPasswordChangedEmail,
+} from "@/server/email/account-security";
 import { sendNewOrderEmails } from "@/server/email/order-created";
 import {
   sendAdminOrderCancelledEmail,
@@ -92,5 +97,42 @@ export async function safelySendCancellationApprovedEmail(orderId: string) {
 export async function safelySendCancellationRejectedEmail(orderId: string) {
   return safelySend("annullamento ordine rifiutato", orderId, () =>
     sendCancellationRejectedEmail(orderId),
+  );
+}
+
+export async function safelySendPasswordChangedEmail(
+  userId: string,
+  occurrenceId: string,
+) {
+  return safelySend("notifica cambio password", userId, () =>
+    sendPasswordChangedEmail(userId, occurrenceId),
+  );
+}
+
+export async function safelySendAdminEmailChangeRequestedEmail(
+  userId: string,
+  newEmail: string,
+  occurrenceId: string,
+) {
+  return safelySend("richiesta cambio email admin", userId, () =>
+    sendAdminEmailChangeRequestedEmail({
+      userId,
+      newEmail,
+      occurrenceId,
+    }),
+  );
+}
+
+export async function safelySendAdminEmailChangedEmail(
+  userId: string,
+  email: string,
+  occurrenceId: string,
+) {
+  return safelySend("conferma cambio email admin", userId, () =>
+    sendAdminEmailChangedEmail({
+      userId,
+      email,
+      occurrenceId,
+    }),
   );
 }

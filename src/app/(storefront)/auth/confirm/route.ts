@@ -6,6 +6,8 @@ import { getPublicEnvironment } from "@/config/public-env";
 import { getSafeRedirectPath } from "@/lib/auth/safe-redirect";
 import { getRequestOrigin } from "@/server/auth/http";
 import { getServerEnvironment } from "@/server/env";
+import { safelySendAdminEmailChangedEmail } from "@/server/email/safe-send";
+import { createSupabaseAdminClient } from "@/server/supabase-admin";
 import type { Database } from "@/types/database.generated";
 
 const allowedTypes = new Set<EmailOtpType>([
@@ -94,6 +96,65 @@ export async function GET(request: NextRequest) {
     destination.pathname = getFailurePath(requestedType);
     destination.searchParams.set("errore", "collegamento-non-valido");
     return NextResponse.redirect(destination);
+  }
+
+  /*
+   * Dopo una conferma Auth controlliamo se l'indirizzo email
+   * presente in Supabase Auth è diverso da quello del profilo.
+   * Questo permette di completare in modo sicuro il cambio email
+   * anche quando il callback arriva tramite PKCE code.
+   */
+  const { data: confirmedUserData } = await client.auth.getUser();
+  const confirmedUser = confirmedUserData.user;
+
+  if (confirmedUser?.email) {
+    const admin = createSupabaseAdminClient();
+
+    const profileResponse = await admin
+      .from("profiles")
+      .select("id, email, role")
+      .eq("id", confirmedUser.id)
+      .maybeSingle();
+
+    if (
+      profileResponse.data &&
+      profileResponse.data.email !== confirmedUser.email
+    ) {
+      const previousEmail = profileResponse.data.email;
+
+      const updateResponse = await admin
+        .from("profiles")
+        .update({
+          email: confirmedUser.email,
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", confirmedUser.id)
+        .select("id")
+        .single();
+
+      if (!updateResponse.error) {
+        if (profileResponse.data.role === "admin") {
+          const emailChangedOccurrenceId =
+            confirmedUser.updated_at ?? new Date().toISOString();
+
+          await safelySendAdminEmailChangedEmail(
+            confirmedUser.id,
+            confirmedUser.email,
+            emailChangedOccurrenceId,
+          );
+        }
+
+        console.info("[auth] email profilo sincronizzata", {
+          userId: confirmedUser.id,
+          previousEmail,
+        });
+      } else {
+        console.error("[auth] sincronizzazione email profilo non riuscita", {
+          userId: confirmedUser.id,
+          error: updateResponse.error.message,
+        });
+      }
+    }
   }
 
   return response;

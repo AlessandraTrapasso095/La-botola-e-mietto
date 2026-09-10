@@ -11,6 +11,7 @@ import {
   requireSupabaseAuthMode,
 } from "@/server/auth/http";
 import { createSupabaseServerClient } from "@/server/supabase";
+import { safelySendAdminEmailChangeRequestedEmail } from "@/server/email/safe-send";
 
 const schema = z.object({
   email: z
@@ -42,7 +43,7 @@ export async function POST(request: NextRequest) {
 
     const client = await createSupabaseServerClient();
 
-    const { error } = await client.auth.updateUser({
+    const { data: updatedUserData, error } = await client.auth.updateUser({
       email: input.email,
     });
 
@@ -52,6 +53,15 @@ export async function POST(request: NextRequest) {
         "Non è stato possibile avviare la modifica dell’email.",
       );
     }
+
+    const emailChangeOccurrenceId =
+      updatedUserData.user.updated_at ?? new Date().toISOString();
+
+    await safelySendAdminEmailChangeRequestedEmail(
+      adminUser.id,
+      input.email,
+      emailChangeOccurrenceId,
+    );
 
     return authJson({
       updated: true,
