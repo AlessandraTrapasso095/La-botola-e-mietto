@@ -58,7 +58,9 @@ export function CategoryShowcase() {
                   sizes={
                     index === 0
                       ? "(min-width: 1024px) 42vw, 100vw"
-                      : "(min-width: 1024px) 34vw, (min-width: 640px) 50vw, 100vw"
+                      : index === 5
+                        ? "100vw"
+                        : "(min-width: 1024px) 34vw, (min-width: 640px) 50vw, 100vw"
                   }
                   className="object-cover"
                   style={{ objectPosition: category.media.position }}

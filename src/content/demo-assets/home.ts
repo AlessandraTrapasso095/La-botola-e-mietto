@@ -7,7 +7,7 @@ export const homeCategories = [
     description:
       "Single malt, blended, bourbon e rye selezionati per origine e carattere.",
     href: "/categoria/whisky-whiskey",
-    media: demoMedia.whiskyCellar,
+    media: demoMedia.homeWhiskyMacallanM,
     featured: true,
   },
   {
@@ -15,21 +15,21 @@ export const homeCategories = [
     eyebrow: "Caraibi e America Latina",
     description: "Tradizioni di melassa, agricole e riserve da meditazione.",
     href: "/categoria/rum-rhum",
-    media: demoMedia.rumCellar,
+    media: demoMedia.homeRumHampden,
   },
   {
     title: "Gin",
     eyebrow: "Botaniche e territorio",
     description: "London Dry, distilled e interpretazioni contemporanee.",
     href: "/categoria/gin",
-    media: demoMedia.ginBotanicals,
+    media: demoMedia.homeGinGiniu,
   },
   {
     title: "Tequila | Mezcal",
     eyebrow: "Agave e maestria",
     description: "Blanco, reposado, añejo e mezcal dalla forte identità.",
     href: "/categoria/tequila-mezcal",
-    media: demoMedia.curation,
+    media: demoMedia.homeTequilaAhaToro,
   },
   {
     title: "Amari | Vermouth",
@@ -37,7 +37,7 @@ export const homeCategories = [
     description:
       "Erbe, spezie e ricette storiche per degustazione e miscelazione.",
     href: "/categoria/amari",
-    media: demoMedia.ginMediterranean,
+    media: demoMedia.homeAmariChartreuse,
   },
   {
     title: "Bottiglie Rare",
@@ -45,7 +45,7 @@ export const homeCategories = [
     description:
       "Etichette ricercate, confezioni speciali e release fuori catalogo.",
     href: "/categoria/bottiglie-rare",
-    media: demoMedia.rareCollection,
+    media: demoMedia.homeRareCapovilla,
   },
 ] as const;
 

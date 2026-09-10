@@ -84,12 +84,12 @@ export function CurationStory() {
         <Reveal className="border-border-subtle bg-surface grid overflow-hidden border lg:grid-cols-[1.12fr_0.88fr]">
           <div className="image-hover relative min-h-[28rem] lg:min-h-[42rem]">
             <Image
-              src={demoMedia.curation.src}
-              alt={demoMedia.curation.alt}
+              src={demoMedia.homeCuration.src}
+              alt={demoMedia.homeCuration.alt}
               fill
               sizes="(min-width: 1024px) 58vw, 100vw"
               className="object-cover"
-              style={{ objectPosition: demoMedia.curation.position }}
+              style={{ objectPosition: demoMedia.homeCuration.position }}
             />
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-black/35" />
           </div>

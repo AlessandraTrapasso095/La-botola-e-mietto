@@ -14,8 +14,8 @@ export function HeroSection() {
   return (
     <section className="hero-section relative isolate min-h-[46rem] overflow-hidden md:min-h-[50rem] xl:max-h-[62rem] xl:min-h-[calc(100svh-2.5rem)]">
       <Image
-        src={demoMedia.hero.src}
-        alt={demoMedia.hero.alt}
+        src={demoMedia.homeHeroLouisXiii.src}
+        alt={demoMedia.homeHeroLouisXiii.alt}
         fill
         priority
         loading="eager"
