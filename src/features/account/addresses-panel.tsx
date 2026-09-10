@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import type { AccountAddress } from "@/content/account/account-data";
 import { addressInputSchema } from "@/lib/validation/address";
+import { europeanCountries } from "@/lib/european-countries";
 import { supabaseAddressService } from "@/services/addresses/address-service";
 import type { AddressInput } from "@/types/customer";
 
@@ -558,12 +559,11 @@ function AddressForm({
         onChange={(event) => onChange("countryCode", event.target.value)}
         autoComplete="country"
       >
-        <option value="IT">Italia</option>
-        <option value="AT">Austria</option>
-        <option value="CH">Svizzera</option>
-        <option value="DE">Germania</option>
-        <option value="FR">Francia</option>
-        <option value="SI">Slovenia</option>
+        {europeanCountries.map((country) => (
+          <option key={country.code} value={country.code}>
+            {country.name}
+          </option>
+        ))}
       </Select>
       <fieldset className="border-border-subtle grid gap-3 border p-4 sm:col-span-2">
         <legend className="text-text-muted px-2 text-xs font-semibold uppercase">

@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { isEuropeanCountryCode } from "@/lib/european-countries";
+
 export const italianProvinceCodes = [
   "AG",
   "AL",
@@ -134,6 +136,10 @@ export const addressInputSchema = z
       .trim()
       .toUpperCase()
       .regex(/^[A-Z]{2}$/, "Usa un codice paese di due lettere.")
+      .refine(
+        (value) => isEuropeanCountryCode(value),
+        "Seleziona un paese europeo supportato.",
+      )
       .default("IT"),
     phone: requiredText("Inserisci il telefono.", 40).min(
       6,
