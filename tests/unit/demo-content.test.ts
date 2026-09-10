@@ -9,7 +9,7 @@ describe("contenuti editoriali Milestone 1A", () => {
     expect(homeCategories.every((category) => category.media.src)).toBe(true);
     expect(
       homeCategories.every((category) =>
-        category.media.src.startsWith("/images/demo/"),
+        category.media.src.startsWith("/images/homepage/featured/"),
       ),
     ).toBe(true);
   });
