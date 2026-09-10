@@ -37,17 +37,17 @@ describe("carrello e spedizione gratuita", () => {
     );
 
     await waitFor(() =>
-      expect(screen.getByText(/Aggiungi 30,00 € per/)).toBeVisible(),
+      expect(screen.getByText(/Aggiungi 70,00 € per/)).toBeVisible(),
     );
-    expect(screen.getByText(/Aggiungi 30,00 € per/)).toBeVisible();
+    expect(screen.getByText(/Aggiungi 70,00 € per/)).toBeVisible();
     await user.selectOptions(
       screen.getByLabelText(`Quantità di ${product.name}`),
-      "2",
+      "4",
     );
     expect(
       screen.getByText("Hai ottenuto la spedizione gratuita in Italia."),
     ).toBeVisible();
-    expect(screen.getAllByText("60,00 €").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("120,00 €").length).toBeGreaterThan(0);
   });
 
   it("calcola il limite senza importi frazionari", () => {

@@ -132,16 +132,14 @@ describe("AdminOrderStatusActions", () => {
   it("invia al server esclusivamente lo stato successivo previsto", async () => {
     const user = userEvent.setup();
 
-    const fetchMock = vi
-      .spyOn(globalThis, "fetch")
-      .mockResolvedValue(
-        new Response(JSON.stringify({ status: "preparing" }), {
-          status: 200,
-          headers: {
-            "content-type": "application/json",
-          },
-        }),
-      );
+    const fetchMock = vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      new Response(JSON.stringify({ status: "preparing" }), {
+        status: 200,
+        headers: {
+          "content-type": "application/json",
+        },
+      }),
+    );
 
     render(
       <AdminOrderStatusActions
@@ -152,9 +150,9 @@ describe("AdminOrderStatusActions", () => {
       />,
     );
 
-    await user.click(
-      screen.getByRole("button", { name: "Prendi in carico" }),
-    );
+    await user.click(screen.getByRole("button", { name: "Prendi in carico" }));
+
+    await user.click(screen.getByRole("button", { name: "Conferma" }));
 
     expect(fetchMock).toHaveBeenCalledWith(
       "/api/admin/orders/status",
@@ -197,9 +195,9 @@ describe("AdminOrderStatusActions", () => {
       />,
     );
 
-    await user.click(
-      screen.getByRole("button", { name: "Prendi in carico" }),
-    );
+    await user.click(screen.getByRole("button", { name: "Prendi in carico" }));
+
+    await user.click(screen.getByRole("button", { name: "Conferma" }));
 
     expect(
       await screen.findByText("Transizione non consentita."),

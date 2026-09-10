@@ -17,7 +17,7 @@ describe("businessInfo", () => {
   });
 
   it("conserva soglia e costo di spedizione in unità minori", () => {
-    expect(businessInfo.freeShippingThresholdMinor).toBe(6_000n);
-    expect(businessInfo.standardShippingGrossAmountMinor).toBe(750n);
+    expect(businessInfo.freeShippingThresholdMinor).toBe(10_000n);
+    expect(businessInfo.standardShippingGrossAmountMinor).toBe(990n);
   });
 });
