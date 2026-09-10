@@ -6,7 +6,10 @@ import { getPublicEnvironment } from "@/config/public-env";
 import { getSafeRedirectPath } from "@/lib/auth/safe-redirect";
 import { getRequestOrigin } from "@/server/auth/http";
 import { getServerEnvironment } from "@/server/env";
-import { safelySendAdminEmailChangedEmail } from "@/server/email/safe-send";
+import {
+  safelySendAdminEmailChangedEmail,
+  safelySendRegistrationCompletedEmail,
+} from "@/server/email/safe-send";
 import { createSupabaseAdminClient } from "@/server/supabase-admin";
 import type { Database } from "@/types/database.generated";
 
@@ -106,6 +109,10 @@ export async function GET(request: NextRequest) {
    */
   const { data: confirmedUserData } = await client.auth.getUser();
   const confirmedUser = confirmedUserData.user;
+
+  if (confirmedUser && requestedType === "signup") {
+    await safelySendRegistrationCompletedEmail(confirmedUser.id);
+  }
 
   if (confirmedUser?.email) {
     const admin = createSupabaseAdminClient();

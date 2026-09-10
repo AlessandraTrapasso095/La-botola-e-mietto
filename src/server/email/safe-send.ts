@@ -6,6 +6,7 @@ import {
   sendPasswordChangedEmail,
 } from "@/server/email/account-security";
 import { sendNewOrderEmails } from "@/server/email/order-created";
+import { sendRegistrationCompletedEmail } from "@/server/email/registration";
 import {
   sendAdminOrderCancelledEmail,
   sendCancellationApprovedEmail,
@@ -134,5 +135,11 @@ export async function safelySendAdminEmailChangedEmail(
       email,
       occurrenceId,
     }),
+  );
+}
+
+export async function safelySendRegistrationCompletedEmail(userId: string) {
+  return safelySend("conferma registrazione completata", userId, () =>
+    sendRegistrationCompletedEmail(userId),
   );
 }

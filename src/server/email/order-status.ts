@@ -344,7 +344,7 @@ export async function sendOrderDeliveredEmail(orderId: string) {
     recipient: customer.email,
   });
 
-  return sendTrackedEmail({
+  const customerResult = await sendTrackedEmail({
     eventKey,
     eventType: "order.delivered",
     templateKey: "customer-order-delivered",
@@ -354,4 +354,77 @@ export async function sendOrderDeliveredEmail(orderId: string) {
       order_number: order.order_number,
     },
   });
+
+  const adminClient = createSupabaseAdminClient();
+
+  const adminResponse = await adminClient
+    .from("profiles")
+    .select("id, email")
+    .eq("role", "admin")
+    .eq("admin_notify_shipping", true)
+    .is("deleted_at", null);
+
+  if (adminResponse.error) {
+    throw new Error(
+      "Destinatari amministrativi per la consegna non disponibili.",
+    );
+  }
+
+  const adminResults = [];
+
+  for (const recipient of adminResponse.data) {
+    if (!recipient.email) continue;
+
+    const adminMessage = createBrandedEmailMessage({
+      to: recipient.email,
+      subject:
+        `Ordine consegnato — ${order.order_number} — ` + "La Botola e Mietto",
+      preheader: `Ordine ${order.order_number} consegnato`,
+      title: "Ordine consegnato",
+      intro: `L’ordine ${order.order_number} risulta consegnato.`,
+      sections: [
+        {
+          title: "Cliente",
+          content: [name || "Cliente", customer.email].join("\n"),
+        },
+        {
+          title: "Consegna",
+          content: deliveredDate
+            ? `Consegna registrata il: ${deliveredDate}`
+            : "La consegna dell’ordine è stata registrata.",
+        },
+      ],
+      action: {
+        label: "Apri ordine in admin",
+        href: `${siteUrl()}/admin/ordini/${encodeURIComponent(
+          order.order_number,
+        )}`,
+      },
+    });
+
+    const adminEventKey = createEmailEventKey({
+      eventType: "order.delivered",
+      entityId: order.id,
+      audience: "admin",
+      recipient: recipient.email,
+    });
+
+    adminResults.push(
+      await sendTrackedEmail({
+        eventKey: adminEventKey,
+        eventType: "order.delivered",
+        templateKey: "admin-order-delivered",
+        message: adminMessage,
+        metadata: {
+          order_id: order.id,
+          order_number: order.order_number,
+        },
+      }),
+    );
+  }
+
+  return {
+    customer: customerResult,
+    admins: adminResults,
+  };
 }
