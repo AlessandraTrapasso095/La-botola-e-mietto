@@ -396,6 +396,57 @@ export type Database = {
           },
         ]
       }
+      email_deliveries: {
+        Row: {
+          attempt_count: number
+          created_at: string
+          event_key: string
+          event_type: string
+          failed_at: string | null
+          id: string
+          last_error: string | null
+          metadata: Json
+          provider_message_id: string | null
+          recipient_email: string
+          sent_at: string | null
+          status: string
+          template_key: string
+          updated_at: string
+        }
+        Insert: {
+          attempt_count?: number
+          created_at?: string
+          event_key: string
+          event_type: string
+          failed_at?: string | null
+          id?: string
+          last_error?: string | null
+          metadata?: Json
+          provider_message_id?: string | null
+          recipient_email: string
+          sent_at?: string | null
+          status?: string
+          template_key: string
+          updated_at?: string
+        }
+        Update: {
+          attempt_count?: number
+          created_at?: string
+          event_key?: string
+          event_type?: string
+          failed_at?: string | null
+          id?: string
+          last_error?: string | null
+          metadata?: Json
+          provider_message_id?: string | null
+          recipient_email?: string
+          sent_at?: string | null
+          status?: string
+          template_key?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       inventory: {
         Row: {
           available_quantity: number | null
@@ -606,6 +657,7 @@ export type Database = {
           hidden_from_customer_at: string | null
           id: string
           order_number: string
+          paid_at: string | null
           payment_method: Database["public"]["Enums"]["payment_method"]
           payment_provider_reference: string | null
           payment_status: Database["public"]["Enums"]["payment_status"]
@@ -647,6 +699,7 @@ export type Database = {
           hidden_from_customer_at?: string | null
           id?: string
           order_number: string
+          paid_at?: string | null
           payment_method?: Database["public"]["Enums"]["payment_method"]
           payment_provider_reference?: string | null
           payment_status?: Database["public"]["Enums"]["payment_status"]
@@ -688,6 +741,7 @@ export type Database = {
           hidden_from_customer_at?: string | null
           id?: string
           order_number?: string
+          paid_at?: string | null
           payment_method?: Database["public"]["Enums"]["payment_method"]
           payment_provider_reference?: string | null
           payment_status?: Database["public"]["Enums"]["payment_status"]
@@ -1485,6 +1539,16 @@ export type Database = {
         }
         Returns: boolean
       }
+      confirm_admin_bank_transfer: {
+        Args: { p_order_id: string }
+        Returns: {
+          order_id: string
+          order_number: string
+          order_status: Database["public"]["Enums"]["order_status"]
+          paid_at: string
+          payment_status: Database["public"]["Enums"]["payment_status"]
+        }[]
+      }
       current_user_is_admin: { Args: never; Returns: boolean }
       delete_account_address: {
         Args: { address_id_value: string }
@@ -1644,7 +1708,7 @@ export type Database = {
       payment_method: "stripe" | "bank_transfer" | "satispay"
       payment_status: "pending" | "authorized" | "paid" | "failed" | "refunded"
       product_status: "draft" | "active" | "archived"
-      shipping_method: "store_pickup" | "tnt"
+      shipping_method: "store_pickup" | "tnt" | "fedex"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1796,7 +1860,7 @@ export const Constants = {
       payment_method: ["stripe", "bank_transfer", "satispay"],
       payment_status: ["pending", "authorized", "paid", "failed", "refunded"],
       product_status: ["draft", "active", "archived"],
-      shipping_method: ["store_pickup", "tnt"],
+      shipping_method: ["store_pickup", "tnt", "fedex"],
     },
   },
 } as const

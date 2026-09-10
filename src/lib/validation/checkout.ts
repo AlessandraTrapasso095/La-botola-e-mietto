@@ -1,12 +1,8 @@
 import { z } from "zod";
 
-export const shippingMethodSchema = z.enum(["store_pickup", "tnt"]);
+export const shippingMethodSchema = z.enum(["store_pickup", "tnt", "fedex"]);
 
-export const paymentMethodSchema = z.enum([
-  "stripe",
-  "bank_transfer",
-  "satispay",
-]);
+export const paymentMethodSchema = z.enum(["stripe", "bank_transfer"]);
 
 export const checkoutInputSchema = z
   .object({
@@ -16,7 +12,7 @@ export const checkoutInputSchema = z
     paymentMethod: paymentMethodSchema,
   })
   .superRefine((input, context) => {
-    if (input.shippingMethod === "tnt" && !input.shippingAddressId) {
+    if (input.shippingMethod !== "store_pickup" && !input.shippingAddressId) {
       context.addIssue({
         code: "custom",
         path: ["shippingAddressId"],

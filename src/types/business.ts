@@ -19,6 +19,7 @@ export type BusinessInfo = {
   whatsappMessage: string;
   freeShippingThresholdMinor: bigint;
   standardShippingGrossAmountMinor: bigint;
+  internationalShippingGrossAmountMinor: bigint;
   currency: "EUR";
   locale: "it-IT";
 };

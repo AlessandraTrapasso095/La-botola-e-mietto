@@ -14,9 +14,9 @@ describe("contratto server shipping admin", () => {
     "utf8",
   );
 
-  it("accetta tracking solo per spedizioni TNT", () => {
+  it("accetta tracking per TNT e FedEx ma non per ritiro", () => {
     expect(shippingSource).toContain(
-      'order.shipping_method !== "tnt"',
+      'order.shipping_method === "store_pickup"',
     );
 
     expect(shippingSource).toContain(
@@ -25,9 +25,7 @@ describe("contratto server shipping admin", () => {
   });
 
   it("richiede che l'ordine sia in preparazione", () => {
-    expect(shippingSource).toContain(
-      'order.status !== "preparing"',
-    );
+    expect(shippingSource).toContain('order.status !== "preparing"');
 
     expect(shippingSource).toContain(
       "L’ordine deve essere in preparazione prima della spedizione.",
@@ -35,13 +33,9 @@ describe("contratto server shipping admin", () => {
   });
 
   it("richiede pagamento acquisito o autorizzato", () => {
-    expect(shippingSource).toContain(
-      'order.payment_status !== "paid"',
-    );
+    expect(shippingSource).toContain('order.payment_status !== "paid"');
 
-    expect(shippingSource).toContain(
-      'order.payment_status !== "authorized"',
-    );
+    expect(shippingSource).toContain('order.payment_status !== "authorized"');
   });
 
   it("blocca la spedizione con richiesta di annullamento pendente", () => {
@@ -56,15 +50,9 @@ describe("contratto server shipping admin", () => {
 
   it("salva tracking e timestamp insieme allo stato shipped", () => {
     expect(shippingSource).toContain('status: "shipped"');
-    expect(shippingSource).toContain(
-      "shipping_carrier: normalizedCarrier",
-    );
-    expect(shippingSource).toContain(
-      "tracking_code: normalizedTrackingCode",
-    );
-    expect(shippingSource).toContain(
-      "tracking_url: normalizedTrackingUrl",
-    );
+    expect(shippingSource).toContain("shipping_carrier: normalizedCarrier");
+    expect(shippingSource).toContain("tracking_code: normalizedTrackingCode");
+    expect(shippingSource).toContain("tracking_url: normalizedTrackingUrl");
     expect(shippingSource).toContain("shipped_at: shippedAt");
   });
 
@@ -75,24 +63,18 @@ describe("contratto server shipping admin", () => {
     );
   });
 
-  it("impedisce a TNT di usare il vecchio flusso shipped", () => {
-    expect(statusSource).toContain(
-      'nextStatus === "shipped"',
-    );
+  it("impedisce alle spedizioni di usare il vecchio flusso shipped", () => {
+    expect(statusSource).toContain('nextStatus === "shipped"');
+
+    expect(statusSource).toContain('order.shipping_method !== "store_pickup"');
 
     expect(statusSource).toContain(
-      'order.shipping_method === "tnt"',
-    );
-
-    expect(statusSource).toContain(
-      "Per una spedizione TNT usa il flusso dedicato con corriere e tracking.",
+      "Per una spedizione usa il flusso dedicato con corriere e tracking.",
     );
   });
 
   it("salva delivered_at quando l'ordine diventa consegnato", () => {
-    expect(statusSource).toContain(
-      'nextStatus === "delivered"',
-    );
+    expect(statusSource).toContain('nextStatus === "delivered"');
 
     expect(statusSource).toContain("delivered_at");
   });

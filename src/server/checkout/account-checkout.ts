@@ -17,6 +17,19 @@ async function requireAccountUser(client: SupabaseClient<Database>) {
   return data.user;
 }
 
+function mapActivePaymentMethod(
+  method: Database["public"]["Enums"]["payment_method"],
+): CheckoutResult["paymentMethod"] {
+  if (method === "stripe" || method === "bank_transfer") {
+    return method;
+  }
+
+  throw new AuthHttpError(
+    500,
+    "Il checkout ha restituito un metodo di pagamento non più supportato.",
+  );
+}
+
 function mapCheckoutResult(
   row: Database["public"]["Functions"]["checkout_account_cart"]["Returns"][number],
 ): CheckoutResult {
@@ -26,7 +39,7 @@ function mapCheckoutResult(
     orderStatus: row.order_status,
     paymentStatus: row.payment_status,
     shippingMethod: row.shipping_method,
-    paymentMethod: row.payment_method,
+    paymentMethod: mapActivePaymentMethod(row.payment_method),
     subtotalNetAmountMinor: row.subtotal_net_amount_minor,
     vatAmountMinor: row.vat_amount_minor,
     shippingGrossAmountMinor: row.shipping_gross_amount_minor,

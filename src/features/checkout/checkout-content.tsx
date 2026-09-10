@@ -6,13 +6,17 @@ import { useMemo, useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { Divider } from "@/components/ui/divider";
 import { Heading } from "@/components/ui/heading";
-import { businessInfo } from "@/config/business";
 import { useCommerce } from "@/features/commerce/commerce-provider";
 import {
   type PaymentMethod,
   type ShippingMethod,
 } from "@/lib/validation/checkout";
 import { formatEuroMinor } from "@/lib/money";
+import {
+  calculateShippingGrossAmountMinor,
+  shippingCarrierLabel,
+  shippingMethodForCountry,
+} from "@/lib/shipping";
 import { checkoutService } from "@/services/checkout/checkout-service";
 import { stripeCheckoutService } from "@/services/checkout/stripe-checkout-service";
 import type { Address } from "@/types/customer";
@@ -87,7 +91,6 @@ export function CheckoutContent({
     number: string;
     totalMinor: number;
     paymentMethod: PaymentMethod;
-    stripeRedirectFailed?: boolean;
   } | null>(null);
 
   const shippingAddresses = addresses.filter(
@@ -98,18 +101,26 @@ export function CheckoutContent({
     (address) => address.type === "billing",
   );
 
-  const qualifiesForFreeShipping =
-    cart.subtotalMinor >= Number(businessInfo.freeShippingThresholdMinor);
+  const selectedShippingAddress = shippingAddresses.find(
+    (address) => address.id === shippingAddressId,
+  );
 
-  const shippingMinor =
-    shippingMethod === "store_pickup" || qualifiesForFreeShipping
-      ? 0
-      : Number(businessInfo.standardShippingGrossAmountMinor);
+  const effectiveShippingMethod: ShippingMethod =
+    shippingMethod === "store_pickup"
+      ? "store_pickup"
+      : shippingMethodForCountry(selectedShippingAddress?.countryCode ?? "IT");
+
+  const shippingMinor = calculateShippingGrossAmountMinor({
+    method: effectiveShippingMethod,
+    subtotalMinor: cart.subtotalMinor,
+  });
+
+  const shippingCarrier = shippingCarrierLabel(effectiveShippingMethod);
 
   const estimatedTotalMinor = cart.subtotalMinor + shippingMinor;
 
   const effectiveBillingAddressId =
-    shippingMethod === "tnt" && billingSameAsShipping
+    shippingMethod !== "store_pickup" && billingSameAsShipping
       ? shippingAddressId
       : billingAddressId;
 
@@ -123,7 +134,7 @@ export function CheckoutContent({
       return;
     }
 
-    if (shippingMethod === "tnt" && !shippingAddressId) {
+    if (shippingMethod !== "store_pickup" && !shippingAddressId) {
       setError("Seleziona un indirizzo di spedizione.");
       return;
     }
@@ -138,9 +149,10 @@ export function CheckoutContent({
 
     try {
       const result = await checkoutService.create({
-        shippingAddressId: shippingMethod === "tnt" ? shippingAddressId : null,
+        shippingAddressId:
+          shippingMethod !== "store_pickup" ? shippingAddressId : null,
         billingAddressId: effectiveBillingAddressId,
-        shippingMethod,
+        shippingMethod: effectiveShippingMethod,
         paymentMethod,
       });
 
@@ -154,15 +166,14 @@ export function CheckoutContent({
 
           window.location.assign(stripeSession.redirectUrl);
           return;
-        } catch {
+        } catch (stripeError: unknown) {
           setRedirectingToPayment(false);
 
-          setCompletedOrder({
-            number: result.orderNumber,
-            totalMinor: result.totalGrossAmountMinor,
-            paymentMethod: result.paymentMethod,
-            stripeRedirectFailed: true,
-          });
+          setError(
+            stripeError instanceof Error
+              ? stripeError.message
+              : "Non è stato possibile avviare il pagamento Stripe.",
+          );
 
           return;
         }
@@ -240,31 +251,11 @@ export function CheckoutContent({
           </strong>
         </p>
 
-        {completedOrder.paymentMethod === "stripe" &&
-        completedOrder.stripeRedirectFailed ? (
-          <div className="border-border-subtle mx-auto mt-6 max-w-xl border p-5">
-            <p className="text-text-strong font-semibold">
-              L’ordine è stato registrato, ma non è stato possibile aprire
-              Stripe.
-            </p>
-            <p className="text-text-muted mt-2 text-sm">
-              Il pagamento non è stato addebitato. Potrai riprovare dalla pagina
-              dell’ordine.
-            </p>
-          </div>
-        ) : null}
-
         {completedOrder.paymentMethod === "bank_transfer" ? (
           <p className="text-text-muted mx-auto mt-6 max-w-xl">
             Riceverai le indicazioni necessarie per effettuare il bonifico
-            bancario.
-          </p>
-        ) : null}
-
-        {completedOrder.paymentMethod === "satispay" ? (
-          <p className="text-text-muted mx-auto mt-6 max-w-xl">
-            Riceverai le indicazioni necessarie per completare il pagamento
-            tramite Satispay.
+            bancario. Se non ricevi l&apos;email, controlla anche nella cartella
+            Posta indesiderata o Spam.
           </p>
         ) : null}
 
@@ -340,27 +331,27 @@ export function CheckoutContent({
                 type="radio"
                 name="shippingMethod"
                 value="tnt"
-                checked={shippingMethod === "tnt"}
+                checked={shippingMethod !== "store_pickup"}
                 onChange={() => setShippingMethod("tnt")}
                 className="mt-1"
               />
 
               <span className="flex-1">
                 <span className="text-text-strong block font-semibold">
-                  Spedizione TNT
+                  Spedizione {shippingCarrier}
                 </span>
 
                 <span className="text-text-muted mt-1 block text-sm">
-                  Consegna indicativa entro 72 ore lavorative.
+                  {effectiveShippingMethod === "fedex"
+                    ? "Spedizione internazionale tramite FedEx."
+                    : "Consegna indicativa entro 72 ore lavorative."}
                 </span>
               </span>
 
               <strong className="text-text-strong">
-                {qualifiesForFreeShipping
+                {shippingMinor === 0
                   ? "Gratuita"
-                  : formatEuroMinor(
-                      businessInfo.standardShippingGrossAmountMinor,
-                    )}
+                  : formatEuroMinor(BigInt(shippingMinor))}
               </strong>
             </label>
 
@@ -389,7 +380,7 @@ export function CheckoutContent({
           </div>
         </section>
 
-        {shippingMethod === "tnt" ? (
+        {shippingMethod !== "store_pickup" ? (
           <section className="border-border-subtle mt-6 border p-5 sm:p-7">
             <div className="flex flex-wrap items-center justify-between gap-4">
               <h2 className="text-text-strong font-serif text-2xl">
@@ -460,7 +451,7 @@ export function CheckoutContent({
             </Link>
           </div>
 
-          {shippingMethod === "tnt" ? (
+          {shippingMethod !== "store_pickup" ? (
             <label className="border-border-subtle mt-6 flex cursor-pointer items-start gap-3 border p-4">
               <input
                 type="checkbox"
@@ -484,7 +475,7 @@ export function CheckoutContent({
             </label>
           ) : null}
 
-          {shippingMethod === "tnt" && billingSameAsShipping ? (
+          {shippingMethod !== "store_pickup" && billingSameAsShipping ? (
             <div className="border-border-subtle bg-surface-elevated mt-4 border p-4">
               <p className="text-text-muted text-sm">
                 Verrà utilizzato automaticamente l’indirizzo di spedizione
@@ -551,10 +542,11 @@ export function CheckoutContent({
 
               <span>
                 <span className="text-text-strong block font-semibold">
-                  Carta o pagamento online
+                  Carta, Google Pay, Apple Pay, Paypal o a rate con Klarna
                 </span>
                 <span className="text-text-muted mt-1 block text-sm">
-                  Pagamento sicuro gestito tramite Stripe.
+                  Pagamento sicuro tramite Stripe. Klarna viene mostrato quando
+                  disponibile per l’acquisto.
                 </span>
               </span>
             </label>
@@ -575,26 +567,6 @@ export function CheckoutContent({
                 </span>
                 <span className="text-text-muted mt-1 block text-sm">
                   Riceverai i dati necessari dopo la conferma dell’ordine.
-                </span>
-              </span>
-            </label>
-
-            <label className="border-border-subtle has-checked:border-accent flex cursor-pointer gap-4 border p-4">
-              <input
-                type="radio"
-                name="paymentMethod"
-                value="satispay"
-                checked={paymentMethod === "satispay"}
-                onChange={() => setPaymentMethod("satispay")}
-                className="mt-1"
-              />
-
-              <span>
-                <span className="text-text-strong block font-semibold">
-                  Satispay
-                </span>
-                <span className="text-text-muted mt-1 block text-sm">
-                  Completa il pagamento con il servizio Satispay.
                 </span>
               </span>
             </label>
@@ -674,7 +646,7 @@ export function CheckoutContent({
             disabled={
               submitting ||
               !effectiveBillingAddressId ||
-              (shippingMethod === "tnt" && !shippingAddressId)
+              (shippingMethod !== "store_pickup" && !shippingAddressId)
             }
           >
             {submitting

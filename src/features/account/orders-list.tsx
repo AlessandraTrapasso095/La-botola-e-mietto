@@ -181,9 +181,11 @@ export function OrdersList({
               <div>
                 <dt className="text-text-muted">Consegna</dt>
                 <dd className="text-text-strong mt-1">
-                  {order.shippingMethod === "tnt"
-                    ? "Spedizione TNT"
-                    : "Ritiro in negozio"}
+                  {order.shippingMethod === "store_pickup"
+                    ? "Ritiro in negozio"
+                    : order.shippingMethod === "fedex"
+                      ? "Spedizione FedEx"
+                      : "Spedizione TNT"}
                 </dd>
               </div>
             </dl>

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { AdminOrderCancellationActions } from "@/features/admin/order-cancellation-actions";
 import { AdminReceivedOrderCancellation } from "@/features/admin/received-order-cancellation";
 import { AdminOrderShippingForm } from "@/features/admin/order-shipping-form";
+import { ConfirmBankTransferButton } from "@/features/admin/confirm-bank-transfer-button";
 import { AdminOrderStatusActions } from "@/features/admin/order-status-actions";
 import { notFound } from "next/navigation";
 
@@ -112,6 +113,8 @@ function shippingMethodLabel(method: AdminShippingMethod) {
       return "Ritiro in negozio";
     case "tnt":
       return "Spedizione TNT";
+    case "fedex":
+      return "Spedizione FedEx";
   }
 }
 
@@ -294,6 +297,18 @@ export default async function AdminOrderDetailPage({
           <p className="mt-1 text-xs text-white/40">
             {paymentStatusLabel(order.paymentStatus)}
           </p>
+
+          {order.paidAt ? (
+            <p className="mt-2 text-xs text-emerald-300">
+              Ricevuto il {formatDate(order.paidAt)}
+            </p>
+          ) : null}
+
+          {order.paymentMethod === "bank_transfer" &&
+          order.paymentStatus === "pending" &&
+          order.status !== "cancelled" ? (
+            <ConfirmBankTransferButton orderId={order.id} />
+          ) : null}
         </div>
 
         <div className="rounded-lg border border-white/10 bg-[#171717] p-5">
@@ -419,7 +434,7 @@ export default async function AdminOrderDetailPage({
             <h2 className="font-semibold">Gestione ordine</h2>
 
             <div className="mt-4">
-              {order.shippingMethod === "tnt" &&
+              {order.shippingMethod !== "store_pickup" &&
               order.status === "preparing" ? (
                 <AdminOrderShippingForm
                   orderId={order.id}
@@ -449,7 +464,7 @@ export default async function AdminOrderDetailPage({
               )}
             </div>
 
-            {order.shippingMethod === "tnt" &&
+            {order.shippingMethod !== "store_pickup" &&
               (order.status === "shipped" || order.status === "delivered") && (
                 <div className="mt-5 border-t border-white/10 pt-5">
                   <p className="text-xs font-semibold tracking-wide text-white/40 uppercase">

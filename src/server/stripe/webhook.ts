@@ -2,6 +2,10 @@ import "server-only";
 
 import type Stripe from "stripe";
 
+import {
+  safelySendNewOrderEmails,
+  safelySendPaymentReceivedEmail,
+} from "@/server/email/safe-send";
 import { createSupabaseAdminClient } from "@/server/supabase-admin";
 
 function getOrderId(session: Stripe.Checkout.Session) {
@@ -24,9 +28,10 @@ function getPaymentIntentId(session: Stripe.Checkout.Session) {
 
 async function completePayment(session: Stripe.Checkout.Session) {
   const admin = createSupabaseAdminClient();
+  const orderId = getOrderId(session);
 
   const { error } = await admin.rpc("complete_stripe_order_payment", {
-    p_order_id: getOrderId(session),
+    p_order_id: orderId,
     p_checkout_session_id: session.id,
     p_payment_intent_id: getPaymentIntentId(session),
   });
@@ -34,6 +39,16 @@ async function completePayment(session: Stripe.Checkout.Session) {
   if (error) {
     throw new Error(`Conferma pagamento Stripe non riuscita: ${error.message}`);
   }
+
+  /*
+   * L'email non deve mai compromettere un pagamento
+   * Stripe già correttamente acquisito.
+   *
+   * Il safe notifier intercetta eventuali errori Resend
+   * e il delivery log impedisce duplicati in caso di retry.
+   */
+  await safelySendNewOrderEmails(orderId);
+  await safelySendPaymentReceivedEmail(orderId);
 }
 
 async function failPayment(session: Stripe.Checkout.Session) {

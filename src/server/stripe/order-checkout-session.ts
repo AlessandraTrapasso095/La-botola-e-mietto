@@ -43,7 +43,10 @@ function createLineItems(
         currency: order.currency.toLowerCase(),
         unit_amount: order.shipping_gross_amount_minor,
         product_data: {
-          name: "Spedizione TNT",
+          name:
+            order.shipping_method === "fedex"
+              ? "Spedizione FedEx"
+              : "Spedizione TNT",
         },
       },
     });

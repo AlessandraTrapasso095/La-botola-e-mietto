@@ -13,7 +13,7 @@ export type AccountOrderView = {
   paymentStatus: "pending" | "authorized" | "paid" | "failed" | "refunded";
   cancellationRequestStatus: "pending" | "approved" | "rejected" | null;
   paymentMethod: "stripe" | "bank_transfer" | "satispay";
-  shippingMethod: "store_pickup" | "tnt";
+  shippingMethod: "store_pickup" | "tnt" | "fedex";
   totalGrossAmountMinor: number;
   itemCount: number;
   products: readonly {

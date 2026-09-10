@@ -27,7 +27,7 @@ export type AdminCancellationRequestStatus =
 
 export type AdminPaymentMethod = "stripe" | "bank_transfer" | "satispay";
 
-export type AdminShippingMethod = "store_pickup" | "tnt";
+export type AdminShippingMethod = "store_pickup" | "tnt" | "fedex";
 
 export type AdminOrderCustomer = {
   id: string;
@@ -51,6 +51,7 @@ export type AdminOrderView = {
 };
 
 export type AdminOrderDetailView = AdminOrderView & {
+  paidAt: string | null;
   updatedAt: string;
   currency: string;
   subtotalNetAmountMinor: number;
@@ -219,6 +220,7 @@ export async function getServerAdminOrderByNumber(
       updated_at,
       status,
       payment_status,
+      paid_at,
       currency,
       subtotal_net_amount_minor,
       vat_amount_minor,
@@ -286,6 +288,7 @@ export async function getServerAdminOrderByNumber(
       profilesById.get(order.profile_id) ?? fallbackCustomer(order.profile_id),
     status: order.status,
     paymentStatus: order.payment_status,
+    paidAt: order.paid_at,
     cancellationRequestStatus: order.cancellation_request_status,
     paymentMethod: order.payment_method,
     shippingMethod: order.shipping_method,

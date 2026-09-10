@@ -3,6 +3,7 @@ import "server-only";
 import { getServerAdminUser } from "@/server/admin/admin-user";
 import { AuthHttpError } from "@/server/auth/http";
 import { createSupabaseAdminClient } from "@/server/supabase-admin";
+import { safelySendOrderShippedEmail } from "@/server/email/safe-send";
 
 type ShipOrderInput = {
   orderId: string;
@@ -77,7 +78,7 @@ export async function shipAdminOrder({
 
   const order = orderResponse.data;
 
-  if (order.shipping_method !== "tnt") {
+  if (order.shipping_method === "store_pickup") {
     throw new AuthHttpError(
       409,
       "Il tracking è disponibile solo per gli ordini con spedizione.",
@@ -143,6 +144,8 @@ export async function shipAdminOrder({
       "Lo stato dell’ordine è cambiato nel frattempo. Aggiorna la pagina e riprova.",
     );
   }
+
+  await safelySendOrderShippedEmail(order.id);
 
   return {
     status: updateResponse.data.status,

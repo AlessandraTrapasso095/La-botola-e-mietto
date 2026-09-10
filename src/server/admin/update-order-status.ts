@@ -4,6 +4,10 @@ import { AuthHttpError } from "@/server/auth/http";
 import { getServerAdminUser } from "@/server/admin/admin-user";
 import { createSupabaseAdminClient } from "@/server/supabase-admin";
 import type { AdminOrderStatus } from "@/server/admin/orders";
+import {
+  safelySendOrderDeliveredEmail,
+  safelySendOrderPreparingEmail,
+} from "@/server/email/safe-send";
 
 const allowedTransitions: Record<
   Exclude<AdminOrderStatus, "cancelled">,
@@ -73,10 +77,10 @@ export async function updateAdminOrderStatus({
     );
   }
 
-  if (nextStatus === "shipped" && order.shipping_method === "tnt") {
+  if (nextStatus === "shipped" && order.shipping_method !== "store_pickup") {
     throw new AuthHttpError(
       409,
-      "Per una spedizione TNT usa il flusso dedicato con corriere e tracking.",
+      "Per una spedizione usa il flusso dedicato con corriere e tracking.",
     );
   }
 
@@ -120,6 +124,14 @@ export async function updateAdminOrderStatus({
       409,
       "Lo stato dell’ordine è cambiato nel frattempo. Aggiorna la pagina e riprova.",
     );
+  }
+
+  if (updateResponse.data.status === "preparing") {
+    await safelySendOrderPreparingEmail(order.id);
+  }
+
+  if (updateResponse.data.status === "delivered") {
+    await safelySendOrderDeliveredEmail(order.id);
   }
 
   return {

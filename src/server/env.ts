@@ -20,8 +20,10 @@ const serverEnvironmentSchema = z.object({
   SUPABASE_SERVICE_ROLE_KEY: optionalSecret,
   STRIPE_SECRET_KEY: optionalSecret,
   STRIPE_WEBHOOK_SECRET: optionalSecret,
+  EMAIL_PROVIDER: optionalSecret,
   EMAIL_PROVIDER_API_KEY: optionalSecret,
   EMAIL_FROM_ADDRESS: optionalSecret,
+  EMAIL_FROM_NAME: optionalSecret,
 });
 
 export function getServerEnvironment() {
@@ -31,7 +33,9 @@ export function getServerEnvironment() {
     SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY,
     STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
     STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET,
+    EMAIL_PROVIDER: process.env.EMAIL_PROVIDER,
     EMAIL_PROVIDER_API_KEY: process.env.EMAIL_PROVIDER_API_KEY,
     EMAIL_FROM_ADDRESS: process.env.EMAIL_FROM_ADDRESS,
+    EMAIL_FROM_NAME: process.env.EMAIL_FROM_NAME,
   });
 }

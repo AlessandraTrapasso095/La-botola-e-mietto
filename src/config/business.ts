@@ -18,8 +18,9 @@ export const businessInfo = {
   phone: "+39 348 260 7738",
   whatsappMessage:
     "Ciao, avrei bisogno di informazioni su un prodotto di La Botola e Mietto.",
-  freeShippingThresholdMinor: 6_000n,
-  standardShippingGrossAmountMinor: 750n,
+  freeShippingThresholdMinor: 10_000n,
+  standardShippingGrossAmountMinor: 990n,
+  internationalShippingGrossAmountMinor: 2_290n,
   currency: "EUR",
   locale: "it-IT",
 } as const satisfies BusinessInfo;
