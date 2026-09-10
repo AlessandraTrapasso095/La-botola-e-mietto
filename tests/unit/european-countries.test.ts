@@ -5,26 +5,56 @@ import {
   isEuropeanCountryCode,
 } from "@/lib/european-countries";
 
-describe("European shipping countries", () => {
-  it("includes Italy and major European destinations", () => {
-    expect(isEuropeanCountryCode("IT")).toBe(true);
-    expect(isEuropeanCountryCode("FR")).toBe(true);
-    expect(isEuropeanCountryCode("DE")).toBe(true);
-    expect(isEuropeanCountryCode("ES")).toBe(true);
-    expect(isEuropeanCountryCode("GB")).toBe(true);
-    expect(isEuropeanCountryCode("CH")).toBe(true);
-    expect(isEuropeanCountryCode("NO")).toBe(true);
+describe("Schengen shipping countries", () => {
+  it("includes the 29 Schengen countries", () => {
+    const expectedCodes = [
+      "AT",
+      "BE",
+      "BG",
+      "HR",
+      "CZ",
+      "DK",
+      "EE",
+      "FI",
+      "FR",
+      "DE",
+      "GR",
+      "HU",
+      "IS",
+      "IT",
+      "LV",
+      "LI",
+      "LT",
+      "LU",
+      "MT",
+      "NL",
+      "NO",
+      "PL",
+      "PT",
+      "RO",
+      "SK",
+      "SI",
+      "ES",
+      "SE",
+      "CH",
+    ];
+
+    expect(europeanCountries.map((country) => country.code)).toEqual(
+      expectedCodes,
+    );
   });
 
-  it("includes European non-EU countries", () => {
-    expect(isEuropeanCountryCode("AL")).toBe(true);
-    expect(isEuropeanCountryCode("RS")).toBe(true);
-    expect(isEuropeanCountryCode("ME")).toBe(true);
-    expect(isEuropeanCountryCode("UA")).toBe(true);
-    expect(isEuropeanCountryCode("MD")).toBe(true);
+  it("excludes European countries outside Schengen", () => {
+    expect(isEuropeanCountryCode("GB")).toBe(false);
+    expect(isEuropeanCountryCode("IE")).toBe(false);
+    expect(isEuropeanCountryCode("CY")).toBe(false);
+    expect(isEuropeanCountryCode("AL")).toBe(false);
+    expect(isEuropeanCountryCode("RS")).toBe(false);
+    expect(isEuropeanCountryCode("UA")).toBe(false);
+    expect(isEuropeanCountryCode("TR")).toBe(false);
   });
 
-  it("does not allow countries outside the supported European list", () => {
+  it("does not allow countries outside Europe", () => {
     expect(isEuropeanCountryCode("US")).toBe(false);
     expect(isEuropeanCountryCode("CA")).toBe(false);
     expect(isEuropeanCountryCode("JP")).toBe(false);
