@@ -530,3 +530,75 @@ export async function getAdminProductEditOptions(): Promise<AdminProductEditOpti
       })),
   };
 }
+
+export type AdminTaxonomyBrand = {
+  id: string;
+  name: string;
+  slug: string;
+  country: string | null;
+  description: string | null;
+  status: string;
+};
+
+export type AdminTaxonomyCategory = {
+  id: string;
+  parentId: string | null;
+  name: string;
+  slug: string;
+  description: string | null;
+  sortOrder: number;
+  status: string;
+};
+
+export type AdminTaxonomyData = {
+  brands: AdminTaxonomyBrand[];
+  categories: AdminTaxonomyCategory[];
+  subcategories: AdminTaxonomyCategory[];
+};
+
+export async function getAdminTaxonomyData(): Promise<AdminTaxonomyData> {
+  const admin = createSupabaseAdminClient();
+
+  const [brandsResponse, categoriesResponse] = await Promise.all([
+    admin
+      .from("brands")
+      .select("id,name,slug,country,description,status")
+      .is("deleted_at", null)
+      .order("name", { ascending: true }),
+
+    admin
+      .from("categories")
+      .select("id,parent_id,name,slug,description,sort_order,status")
+      .is("deleted_at", null)
+      .order("sort_order", { ascending: true })
+      .order("name", { ascending: true }),
+  ]);
+
+  if (brandsResponse.error) {
+    throw new Error(
+      `Impossibile caricare i marchi: ${brandsResponse.error.message}`,
+    );
+  }
+
+  if (categoriesResponse.error) {
+    throw new Error(
+      `Impossibile caricare le categorie: ${categoriesResponse.error.message}`,
+    );
+  }
+
+  const categories = (categoriesResponse.data ?? []).map((item) => ({
+    id: item.id,
+    parentId: item.parent_id,
+    name: item.name,
+    slug: item.slug,
+    description: item.description,
+    sortOrder: item.sort_order,
+    status: item.status,
+  }));
+
+  return {
+    brands: brandsResponse.data ?? [],
+    categories: categories.filter((item) => item.parentId === null),
+    subcategories: categories.filter((item) => item.parentId !== null),
+  };
+}
