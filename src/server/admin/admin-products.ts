@@ -272,3 +272,178 @@ export async function getAdminProducts(
     categories: categoriesResponse.data ?? [],
   };
 }
+
+export type AdminProductDetail = {
+  id: string;
+  code: string;
+  name: string;
+  slug: string;
+  status: string;
+  description: string | null;
+  tastingNotes: string | null;
+  serviceNotes: string | null;
+  origin: string | null;
+  producer: string | null;
+  country: string | null;
+  capacityMl: number | null;
+  capacityLabel: string;
+  packQuantity: number | null;
+  alcoholPercentage: number | null;
+  isNew: boolean;
+  isLimited: boolean;
+  brandName: string | null;
+  categoryName: string | null;
+  subcategoryName: string | null;
+  stockQuantity: number;
+  reservedQuantity: number;
+  availableQuantity: number;
+  netAmountMinor: number | null;
+  vatRateBasisPoints: number | null;
+  currency: string | null;
+};
+
+export async function getAdminProductDetail(
+  productId: string,
+): Promise<AdminProductDetail | null> {
+  const admin = createSupabaseAdminClient();
+
+  const [productResponse, inventoryResponse, priceResponse] = await Promise.all(
+    [
+      admin
+        .from("products")
+        .select(
+          `
+        id,
+        code,
+        name,
+        slug,
+        status,
+        description,
+        tasting_notes,
+        service_notes,
+        origin,
+        producer,
+        country,
+        capacity_ml,
+        capacity_label,
+        pack_quantity,
+        alcohol_percentage,
+        is_new,
+        is_limited,
+        deleted_at,
+        brands (
+          name
+        ),
+        category:categories!products_category_id_fkey (
+          name
+        ),
+        subcategory:categories!products_subcategory_id_fkey (
+          name
+        )
+      `,
+        )
+        .eq("id", productId)
+        .is("deleted_at", null)
+        .maybeSingle(),
+
+      admin
+        .from("inventory")
+        .select(
+          `
+        stock_quantity,
+        reserved_quantity,
+        available_quantity
+      `,
+        )
+        .eq("product_id", productId)
+        .maybeSingle(),
+
+      admin
+        .from("prices")
+        .select(
+          `
+        net_amount_minor,
+        vat_rate_basis_points,
+        currency
+      `,
+        )
+        .eq("product_id", productId)
+        .is("valid_to", null)
+        .maybeSingle(),
+    ],
+  );
+
+  if (productResponse.error) {
+    throw new Error(
+      `Impossibile caricare il prodotto admin: ${productResponse.error.message}`,
+    );
+  }
+
+  if (inventoryResponse.error) {
+    throw new Error(
+      `Impossibile caricare lo stock prodotto: ${inventoryResponse.error.message}`,
+    );
+  }
+
+  if (priceResponse.error) {
+    throw new Error(
+      `Impossibile caricare il prezzo prodotto: ${priceResponse.error.message}`,
+    );
+  }
+
+  const product = productResponse.data;
+
+  if (!product) {
+    return null;
+  }
+
+  const brand = Array.isArray(product.brands)
+    ? product.brands[0]
+    : product.brands;
+
+  const category = Array.isArray(product.category)
+    ? product.category[0]
+    : product.category;
+
+  const subcategory = Array.isArray(product.subcategory)
+    ? product.subcategory[0]
+    : product.subcategory;
+
+  const inventory = inventoryResponse.data;
+  const price = priceResponse.data;
+
+  return {
+    id: product.id,
+    code: product.code,
+    name: product.name,
+    slug: product.slug,
+    status: product.status,
+    description: product.description,
+    tastingNotes: product.tasting_notes,
+    serviceNotes: product.service_notes,
+    origin: product.origin,
+    producer: product.producer,
+    country: product.country,
+    capacityMl: product.capacity_ml,
+    capacityLabel: product.capacity_label,
+    packQuantity: product.pack_quantity,
+    alcoholPercentage:
+      product.alcohol_percentage === null
+        ? null
+        : Number(product.alcohol_percentage),
+    isNew: product.is_new,
+    isLimited: product.is_limited,
+    brandName: brand?.name ?? null,
+    categoryName: category?.name ?? null,
+    subcategoryName: subcategory?.name ?? null,
+    stockQuantity: inventory?.stock_quantity ?? 0,
+    reservedQuantity: inventory?.reserved_quantity ?? 0,
+    availableQuantity: inventory?.available_quantity ?? 0,
+    netAmountMinor:
+      price?.net_amount_minor === null || price?.net_amount_minor === undefined
+        ? null
+        : Number(price.net_amount_minor),
+    vatRateBasisPoints: price?.vat_rate_basis_points ?? null,
+    currency: price?.currency ?? null,
+  };
+}
