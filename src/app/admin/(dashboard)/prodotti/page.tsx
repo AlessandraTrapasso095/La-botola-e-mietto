@@ -21,7 +21,7 @@ function parsePage(value: string) {
 }
 
 function parseStatus(value: string): AdminProductStatus {
-  if (value === "active" || value === "draft") {
+  if (value === "active" || value === "draft" || value === "archived") {
     return value;
   }
 
@@ -144,6 +144,7 @@ export default async function AdminProductsPage({
             <option value="all">Tutti</option>
             <option value="active">Attivi</option>
             <option value="draft">Bozze</option>
+            <option value="archived">Archiviati</option>
           </select>
         </label>
 
@@ -357,18 +358,30 @@ export default async function AdminProductsPage({
 }
 
 function StatusBadge({ status }: { status: string }) {
-  const active = status === "active";
+  const config =
+    status === "active"
+      ? {
+          label: "Attivo",
+          className: "bg-emerald-500/10 text-emerald-300",
+        }
+      : status === "archived"
+        ? {
+            label: "Archiviato",
+            className: "bg-red-500/10 text-red-300",
+          }
+        : {
+            label: "Bozza",
+            className: "bg-white/10 text-white/50",
+          };
 
   return (
     <span
       className={[
         "inline-flex rounded-full px-2.5 py-1 text-xs font-medium",
-        active
-          ? "bg-emerald-500/10 text-emerald-300"
-          : "bg-white/10 text-white/50",
+        config.className,
       ].join(" ")}
     >
-      {active ? "Attivo" : "Bozza"}
+      {config.label}
     </span>
   );
 }

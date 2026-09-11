@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { AdminProductStatusControl } from "@/features/admin/admin-product-status-control";
 import { getAdminProductDetail } from "@/server/admin/admin-products";
 
 function formatMoney(amountMinor: number | null, currency = "EUR") {
@@ -192,9 +193,14 @@ export default async function AdminProductDetailPage({
           </Section>
 
           <Section title="Gestione">
-            <p className="text-sm leading-6 text-white/45">
-              In questa fase il dettaglio è in sola lettura. Modifica anagrafica
-              e stato prodotto verranno abilitate nei prossimi passaggi.
+            <AdminProductStatusControl
+              productId={product.id}
+              currentStatus={product.status}
+            />
+
+            <p className="mt-5 border-t border-white/10 pt-5 text-xs leading-5 text-white/30">
+              La modifica dell’anagrafica prodotto verrà gestita nei prossimi
+              passaggi.
             </p>
           </Section>
         </div>
@@ -282,18 +288,30 @@ function Badge({ children }: { children: React.ReactNode }) {
 }
 
 function StatusBadge({ status }: { status: string }) {
-  const active = status === "active";
+  const config =
+    status === "active"
+      ? {
+          label: "Attivo",
+          className: "bg-emerald-500/10 text-emerald-300",
+        }
+      : status === "archived"
+        ? {
+            label: "Archiviato",
+            className: "bg-red-500/10 text-red-300",
+          }
+        : {
+            label: "Bozza",
+            className: "bg-white/10 text-white/50",
+          };
 
   return (
     <span
       className={[
         "rounded-full px-2.5 py-1 text-xs font-medium",
-        active
-          ? "bg-emerald-500/10 text-emerald-300"
-          : "bg-white/10 text-white/50",
+        config.className,
       ].join(" ")}
     >
-      {active ? "Attivo" : "Bozza"}
+      {config.label}
     </span>
   );
 }

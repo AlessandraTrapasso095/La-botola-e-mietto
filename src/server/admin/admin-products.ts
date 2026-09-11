@@ -6,7 +6,7 @@ export const adminProductsPageSize = 50;
 
 export type AdminProductAvailability = "all" | "available" | "unavailable";
 
-export type AdminProductStatus = "all" | "active" | "draft";
+export type AdminProductStatus = "all" | "active" | "draft" | "archived";
 
 export type AdminProductsFilters = {
   query?: string;

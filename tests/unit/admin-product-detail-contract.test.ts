@@ -42,6 +42,13 @@ describe("admin product detail", () => {
     expect(page).not.toContain('name="stock');
   });
 
+  it("exposes product status management separately from stock", () => {
+    const page = source("src/app/admin/(dashboard)/prodotti/[id]/page.tsx");
+
+    expect(page).toContain("AdminProductStatusControl");
+    expect(page).toContain("currentStatus={product.status}");
+  });
+
   it("links back to admin list and storefront product", () => {
     const page = source("src/app/admin/(dashboard)/prodotti/[id]/page.tsx");
 
