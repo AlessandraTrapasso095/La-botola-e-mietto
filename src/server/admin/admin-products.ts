@@ -291,8 +291,11 @@ export type AdminProductDetail = {
   alcoholPercentage: number | null;
   isNew: boolean;
   isLimited: boolean;
+  brandId: string | null;
   brandName: string | null;
+  categoryId: string;
   categoryName: string | null;
+  subcategoryId: string | null;
   subcategoryName: string | null;
   stockQuantity: number;
   reservedQuantity: number;
@@ -331,6 +334,9 @@ export async function getAdminProductDetail(
         is_new,
         is_limited,
         deleted_at,
+        brand_id,
+        category_id,
+        subcategory_id,
         brands (
           name
         ),
@@ -433,8 +439,11 @@ export async function getAdminProductDetail(
         : Number(product.alcohol_percentage),
     isNew: product.is_new,
     isLimited: product.is_limited,
+    brandId: product.brand_id,
     brandName: brand?.name ?? null,
+    categoryId: product.category_id,
     categoryName: category?.name ?? null,
+    subcategoryId: product.subcategory_id,
     subcategoryName: subcategory?.name ?? null,
     stockQuantity: inventory?.stock_quantity ?? 0,
     reservedQuantity: inventory?.reserved_quantity ?? 0,
@@ -445,5 +454,79 @@ export async function getAdminProductDetail(
         : Number(price.net_amount_minor),
     vatRateBasisPoints: price?.vat_rate_basis_points ?? null,
     currency: price?.currency ?? null,
+  };
+}
+
+export type AdminProductEditOptions = {
+  brands: Array<{
+    id: string;
+    name: string;
+  }>;
+  categories: Array<{
+    id: string;
+    name: string;
+  }>;
+  subcategories: Array<{
+    id: string;
+    name: string;
+    parentId: string;
+  }>;
+};
+
+export async function getAdminProductEditOptions(): Promise<AdminProductEditOptions> {
+  const admin = createSupabaseAdminClient();
+
+  const [brandsResponse, categoriesResponse, subcategoriesResponse] =
+    await Promise.all([
+      admin
+        .from("brands")
+        .select("id,name")
+        .is("deleted_at", null)
+        .order("name", { ascending: true }),
+
+      admin
+        .from("categories")
+        .select("id,name")
+        .is("deleted_at", null)
+        .is("parent_id", null)
+        .order("sort_order", { ascending: true })
+        .order("name", { ascending: true }),
+
+      admin
+        .from("categories")
+        .select("id,name,parent_id")
+        .is("deleted_at", null)
+        .not("parent_id", "is", null)
+        .order("name", { ascending: true }),
+    ]);
+
+  if (brandsResponse.error) {
+    throw new Error(
+      `Impossibile caricare i marchi admin: ${brandsResponse.error.message}`,
+    );
+  }
+
+  if (categoriesResponse.error) {
+    throw new Error(
+      `Impossibile caricare le categorie admin: ${categoriesResponse.error.message}`,
+    );
+  }
+
+  if (subcategoriesResponse.error) {
+    throw new Error(
+      `Impossibile caricare le sottocategorie admin: ${subcategoriesResponse.error.message}`,
+    );
+  }
+
+  return {
+    brands: brandsResponse.data ?? [],
+    categories: categoriesResponse.data ?? [],
+    subcategories: (subcategoriesResponse.data ?? [])
+      .filter((item) => item.parent_id)
+      .map((item) => ({
+        id: item.id,
+        name: item.name,
+        parentId: item.parent_id as string,
+      })),
   };
 }

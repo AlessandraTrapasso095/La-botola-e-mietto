@@ -1,8 +1,12 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { AdminProductEditForm } from "@/features/admin/admin-product-edit-form";
 import { AdminProductStatusControl } from "@/features/admin/admin-product-status-control";
-import { getAdminProductDetail } from "@/server/admin/admin-products";
+import {
+  getAdminProductDetail,
+  getAdminProductEditOptions,
+} from "@/server/admin/admin-products";
 
 function formatMoney(amountMinor: number | null, currency = "EUR") {
   if (amountMinor === null) return "—";
@@ -31,7 +35,10 @@ export default async function AdminProductDetailPage({
 }) {
   const { id } = await params;
 
-  const product = await getAdminProductDetail(id);
+  const [product, editOptions] = await Promise.all([
+    getAdminProductDetail(id),
+    getAdminProductEditOptions(),
+  ]);
 
   if (!product) {
     notFound();
@@ -89,6 +96,8 @@ export default async function AdminProductDetailPage({
           </Link>
         </div>
       </div>
+
+      <AdminProductEditForm product={product} options={editOptions} />
 
       <div className="grid gap-6 xl:grid-cols-[minmax(0,2fr)_minmax(320px,1fr)]">
         <div className="space-y-6">
