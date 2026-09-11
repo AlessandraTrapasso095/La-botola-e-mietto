@@ -303,6 +303,14 @@ export type AdminProductDetail = {
   netAmountMinor: number | null;
   vatRateBasisPoints: number | null;
   currency: string | null;
+  primaryImage: {
+    id: string;
+    storagePath: string;
+    thumbnailPath: string | null;
+    altText: string;
+    width: number;
+    height: number;
+  } | null;
 };
 
 export async function getAdminProductDetail(
@@ -403,6 +411,34 @@ export async function getAdminProductDetail(
     return null;
   }
 
+  const primaryImageResponse = await admin
+    .from("product_images")
+    .select(
+      "id,storage_path,thumbnail_path,alt_text,width,height,is_primary,sort_order",
+    )
+    .eq("product_id", productId)
+    .order("is_primary", { ascending: false })
+    .order("sort_order", { ascending: true })
+    .limit(1)
+    .maybeSingle();
+
+  if (primaryImageResponse.error) {
+    throw new Error(
+      `Impossibile caricare l’immagine prodotto: ${primaryImageResponse.error.message}`,
+    );
+  }
+
+  const primaryImage = primaryImageResponse.data
+    ? {
+        id: primaryImageResponse.data.id,
+        storagePath: primaryImageResponse.data.storage_path,
+        thumbnailPath: primaryImageResponse.data.thumbnail_path,
+        altText: primaryImageResponse.data.alt_text,
+        width: primaryImageResponse.data.width,
+        height: primaryImageResponse.data.height,
+      }
+    : null;
+
   const brand = Array.isArray(product.brands)
     ? product.brands[0]
     : product.brands;
@@ -454,6 +490,7 @@ export async function getAdminProductDetail(
         : Number(price.net_amount_minor),
     vatRateBasisPoints: price?.vat_rate_basis_points ?? null,
     currency: price?.currency ?? null,
+    primaryImage,
   };
 }
 

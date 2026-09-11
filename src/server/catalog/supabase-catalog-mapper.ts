@@ -2,6 +2,8 @@ import "server-only";
 
 import { z } from "zod";
 
+import { resolveProductImageUrl } from "@/lib/product-image-url";
+
 import type { DemoMediaAsset } from "@/content/demo-assets/media";
 import { createEuro, formatEuroMinor } from "@/lib/money";
 import { calculateGrossPrice } from "@/server/pricing";
@@ -87,10 +89,6 @@ const placeholderMedia: DemoMediaAsset = {
   position: "center",
 };
 
-function publicAssetPath(path: string) {
-  return path.startsWith("/") ? path : `/${path}`;
-}
-
 function createProductMedia(row: CatalogProductDatabaseRow): DemoMediaAsset {
   if (!row.image_path || !row.image_width || !row.image_height) {
     return {
@@ -100,9 +98,9 @@ function createProductMedia(row: CatalogProductDatabaseRow): DemoMediaAsset {
   }
 
   return {
-    src: publicAssetPath(row.image_path),
+    src: resolveProductImageUrl(row.image_path),
     thumbnailSrc: row.thumbnail_path
-      ? publicAssetPath(row.thumbnail_path)
+      ? resolveProductImageUrl(row.thumbnail_path)
       : undefined,
     alt: row.image_alt_text?.trim() || row.name,
     width: row.image_width,
@@ -240,9 +238,9 @@ export function mapSupabaseProductImage(rowValue: unknown): DemoMediaAsset {
     .parse(rowValue);
 
   return {
-    src: publicAssetPath(row.storage_path),
+    src: resolveProductImageUrl(row.storage_path),
     thumbnailSrc: row.thumbnail_path
-      ? publicAssetPath(row.thumbnail_path)
+      ? resolveProductImageUrl(row.thumbnail_path)
       : undefined,
     alt: row.alt_text,
     width: row.width,

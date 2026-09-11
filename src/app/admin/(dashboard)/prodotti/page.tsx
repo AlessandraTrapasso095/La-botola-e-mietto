@@ -109,9 +109,19 @@ export default async function AdminProductsPage({
           </p>
         </div>
 
-        <div className="rounded-md border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-white/60">
-          {result.totalCount.toLocaleString("it-IT")}{" "}
-          {result.totalCount === 1 ? "prodotto" : "prodotti"}
+        <div className="flex flex-col gap-3 sm:items-end">
+          <Link
+            href="/admin/prodotti/nuovo"
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-md bg-orange-500 px-5 text-sm font-semibold text-black transition hover:bg-orange-400"
+          >
+            <span className="text-xl leading-none">+</span>
+            Nuovo prodotto
+          </Link>
+
+          <div className="rounded-md border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-white/60">
+            {result.totalCount.toLocaleString("it-IT")}{" "}
+            {result.totalCount === 1 ? "prodotto" : "prodotti"}
+          </div>
         </div>
       </div>
 

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { AdminProductEditForm } from "@/features/admin/admin-product-edit-form";
+import { AdminProductImagePreview } from "@/features/admin/admin-product-image-preview";
 import { AdminProductStatusControl } from "@/features/admin/admin-product-status-control";
 import {
   getAdminProductDetail,
@@ -88,7 +89,7 @@ export default async function AdminProductDetailPage({
           </div>
 
           <Link
-            href={`/prodotti/${product.slug}`}
+            href={`/prodotto/${product.slug}`}
             target="_blank"
             className="inline-flex h-10 items-center justify-center rounded-md border border-white/10 px-4 text-sm font-medium text-white/70 transition hover:bg-white/5 hover:text-white"
           >
@@ -96,6 +97,12 @@ export default async function AdminProductDetailPage({
           </Link>
         </div>
       </div>
+
+      <AdminProductImagePreview
+        productId={product.id}
+        productName={product.name}
+        image={product.primaryImage}
+      />
 
       <AdminProductEditForm product={product} options={editOptions} />
 

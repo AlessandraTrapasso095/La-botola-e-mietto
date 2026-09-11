@@ -53,6 +53,6 @@ describe("admin product detail", () => {
     const page = source("src/app/admin/(dashboard)/prodotti/[id]/page.tsx");
 
     expect(page).toContain('href="/admin/prodotti"');
-    expect(page).toContain("href={`/prodotti/${product.slug}`}");
+    expect(page).toContain("href={`/prodotto/${product.slug}`}");
   });
 });

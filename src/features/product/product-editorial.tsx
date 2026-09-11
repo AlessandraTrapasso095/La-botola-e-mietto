@@ -42,12 +42,7 @@ export function ProductEditorial({ product }: { product: CatalogProductView }) {
           Caratteristiche
         </h2>
         <dl className="mt-6">
-          {[
-            ...product.characteristics,
-            ...(product.producer
-              ? [{ label: "Produttore", value: product.producer }]
-              : []),
-          ].map((characteristic) => (
+          {product.characteristics.map((characteristic) => (
             <div
               key={characteristic.label}
               className="border-border-subtle grid grid-cols-[0.8fr_1.2fr] gap-4 border-b py-4 text-sm"

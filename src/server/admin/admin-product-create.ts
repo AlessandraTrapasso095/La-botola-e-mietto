@@ -6,59 +6,49 @@ import { z } from "zod";
 import { getServerAdminUser } from "@/server/admin/admin-user";
 import { createSupabaseAdminClient } from "@/server/supabase-admin";
 
-const nullablePositiveInteger = z.union([
-  z.number().int().positive(),
-  z.null(),
-]);
-
-const nullableAlcohol = z.union([z.number().min(0).max(100), z.null()]);
-
-const adminProductEditSchema = z.object({
-  productId: z.string().uuid(),
+const schema = z.object({
   code: z.string().trim().min(1).max(100),
-  name: z.string().trim().min(1).max(300),
+  name: z.string().trim().min(1).max(500),
   slug: z
     .string()
     .trim()
     .min(1)
-    .max(300)
+    .max(500)
     .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
   brandId: z.string().uuid().nullable(),
   categoryId: z.string().uuid(),
   subcategoryId: z.string().uuid().nullable(),
-  description: z.string().max(10000),
-  tastingNotes: z.string().max(10000),
-  serviceNotes: z.string().max(10000),
+  description: z.string().max(20000),
+  tastingNotes: z.string().max(20000),
+  serviceNotes: z.string().max(20000),
   origin: z.string().max(500),
   producer: z.string().max(500),
-  country: z.string().max(200),
-  capacityMl: nullablePositiveInteger,
+  country: z.string().max(300),
+  capacityMl: z.number().int().positive().nullable(),
   capacityLabel: z.string().trim().min(1).max(100),
-  packQuantity: nullablePositiveInteger,
-  alcoholPercentage: nullableAlcohol,
+  packQuantity: z.number().int().positive(),
+  alcoholPercentage: z.number().min(0).max(100).nullable(),
   isNew: z.boolean(),
   isLimited: z.boolean(),
   netAmountMinor: z.number().int().nonnegative(),
   vatRateBasisPoints: z.number().int().min(0).max(10000),
 });
 
-export type AdminProductEditInput = z.infer<typeof adminProductEditSchema>;
+export type AdminProductCreateInput = z.infer<typeof schema>;
 
-export async function updateAdminProduct(input: AdminProductEditInput) {
+export async function createAdminProduct(input: AdminProductCreateInput) {
   const adminUser = await getServerAdminUser();
 
   if (!adminUser) {
     throw new Error("Accesso amministratore richiesto.");
   }
 
-  const data = adminProductEditSchema.parse(input);
-
+  const data = schema.parse(input);
   const admin = createSupabaseAdminClient();
 
-  const { error } = await admin.rpc(
-    "admin_update_product" as never,
+  const { data: productId, error } = await admin.rpc(
+    "admin_create_product" as never,
     {
-      p_product_id: data.productId,
       p_code: data.code,
       p_name: data.name,
       p_slug: data.slug,
@@ -86,15 +76,22 @@ export async function updateAdminProduct(input: AdminProductEditInput) {
     if (
       error.message.includes("duplicate key value violates unique constraint")
     ) {
-      throw new Error("Codice o slug già utilizzato da un altro prodotto.");
+      throw new Error(
+        "Esiste già un prodotto con questo codice o con questo slug.",
+      );
     }
 
-    throw new Error(`Impossibile aggiornare il prodotto: ${error.message}`);
+    throw new Error(`Impossibile creare il prodotto: ${error.message}`);
+  }
+
+  if (!productId || typeof productId !== "string") {
+    throw new Error(
+      "Il prodotto è stato creato ma non è stato possibile recuperarne l’identificativo.",
+    );
   }
 
   revalidatePath("/admin/prodotti");
-  revalidatePath(`/admin/prodotti/${data.productId}`);
-  revalidatePath(`/prodotto/${data.slug}`);
-  revalidatePath("/");
   revalidatePath("/prodotti");
+
+  return productId;
 }

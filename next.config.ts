@@ -2,11 +2,21 @@ import type { NextConfig } from "next";
 
 const isDevelopment = process.env.NODE_ENV === "development";
 
+const supabaseImageRemotePatterns = process.env.NEXT_PUBLIC_SUPABASE_URL
+  ? [
+      {
+        protocol: "https" as const,
+        hostname: new URL(process.env.NEXT_PUBLIC_SUPABASE_URL).hostname,
+        pathname: "/storage/v1/object/public/product-images/**",
+      },
+    ]
+  : [];
+
 const contentSecurityPolicy = [
   "default-src 'self'",
   `script-src 'self' 'unsafe-inline'${isDevelopment ? " 'unsafe-eval'" : ""}`,
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: blob:",
+  "img-src 'self' data: blob: https://*.supabase.co",
   "font-src 'self' data:",
   "connect-src 'self' https://*.supabase.co wss://*.supabase.co",
   "media-src 'self'",
@@ -50,6 +60,7 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   images: {
     formats: ["image/avif", "image/webp"],
+    remotePatterns: supabaseImageRemotePatterns,
   },
   async headers() {
     return [
