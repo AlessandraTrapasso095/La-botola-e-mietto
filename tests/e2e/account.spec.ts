@@ -70,7 +70,7 @@ test("accesso da header, dashboard, sezioni account e logout", async ({
   await expect(page).toHaveURL(/\/account$/, { timeout: 30_000 });
 
   const routes = [
-    ["Ordini", "/account/ordini", "Ordini"],
+    ["Ordini", "/account/ordini", "I miei ordini"],
     ["Offerte", "/account/offerte", "Offerte"],
     ["Preferiti", "/account/preferiti", "Crea la tua collezione personale."],
     ["Indirizzi", "/account/indirizzi", "Indirizzi"],
@@ -119,11 +119,14 @@ test("registrazione, recupero password e accesso da menu mobile", async ({
   await expect(page).toHaveURL(/\/accedi$/, { timeout: 30_000 });
 
   await page.getByRole("link", { name: "Password dimenticata?" }).click();
-  await page.waitForLoadState("networkidle");
-  await page.waitForTimeout(250);
-  const resetEmail = page.getByLabel("Email");
-  await resetEmail.fill("cliente@example.com");
-  await expect(resetEmail).toHaveValue("cliente@example.com");
+  await expect(page).toHaveURL(/\/password-dimenticata$/, {
+    timeout: 30_000,
+  });
+
+  const resetEmail = page.locator("#reset-email");
+  await expect(resetEmail).toBeVisible();
+  await resetEmail.fill(accountAccessCredentials.email);
+  await expect(resetEmail).toHaveValue(accountAccessCredentials.email);
   await page.getByRole("button", { name: "Invia istruzioni" }).click();
   await expect(
     page.getByText(/riceverai le istruzioni per procedere/),

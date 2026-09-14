@@ -34,12 +34,12 @@ describe("admin product detail", () => {
     expect(page).toContain("Magazzino");
   });
 
-  it("keeps inventory read-only until stock management", () => {
+  it("renders stock management separately from reservations", () => {
     const page = source("src/app/admin/(dashboard)/prodotti/[id]/page.tsx");
 
-    expect(page).toContain("Step 35 — Stock");
-    expect(page).toContain("Management.");
-    expect(page).not.toContain('name="stock');
+    expect(page).toContain("AdminProductStockControl");
+    expect(page).toContain("currentStockQuantity={product.stockQuantity}");
+    expect(page).toContain("reservedQuantity={product.reservedQuantity}");
   });
 
   it("exposes product status management separately from stock", () => {

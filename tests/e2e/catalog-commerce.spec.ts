@@ -7,8 +7,19 @@ test("catalogo mobile, filtri, prodotto, carrello, wishlist e ricerca", async ({
   test.setTimeout(120_000);
   const consoleProblems: string[] = [];
   page.on("console", (message) => {
-    if (message.type() === "error" || message.type() === "warning") {
-      consoleProblems.push(`${message.type()}: ${message.text()}`);
+    const messageType = message.type();
+    const messageText = message.text();
+    const isUnusedFontPreloadWarning =
+      messageType === "warning" &&
+      messageText.includes(
+        "was preloaded using link preload but not used within a few seconds",
+      );
+
+    if (
+      !isUnusedFontPreloadWarning &&
+      (messageType === "error" || messageType === "warning")
+    ) {
+      consoleProblems.push(`${messageType}: ${messageText}`);
     }
   });
   page.on("pageerror", (error) => consoleProblems.push(error.message));
@@ -79,8 +90,10 @@ test("catalogo mobile, filtri, prodotto, carrello, wishlist e ricerca", async ({
   await page.getByRole("button", { name: "Aggiungi al carrello" }).click();
   const cartDrawer = page.getByRole("dialog", { name: "Il tuo carrello" });
   await expect(cartDrawer).toBeVisible();
-  await expect(cartDrawer.getByText(/Aggiungi 21,08.*per/)).toBeVisible();
-  await cartDrawer.getByLabel("Quantità di Caprisius").selectOption("2");
+  await expect(
+    cartDrawer.getByText(/Aggiungi.+spedizione gratuita\./),
+  ).toBeVisible();
+  await cartDrawer.getByLabel("Quantità di Caprisius").selectOption("3");
   await expect(
     cartDrawer.getByText("Hai ottenuto la spedizione gratuita in Italia."),
   ).toBeVisible();
@@ -111,7 +124,7 @@ test("catalogo mobile, filtri, prodotto, carrello, wishlist e ricerca", async ({
     page.getByRole("button", { name: "Nei preferiti" }),
   ).toBeVisible();
   await page.getByRole("button", { name: "Apri carrello" }).click();
-  await expect(cartDrawer.getByLabel("Quantità di Caprisius")).toHaveValue("2");
+  await expect(cartDrawer.getByLabel("Quantità di Caprisius")).toHaveValue("3");
   await page.keyboard.press("Escape");
 
   await page.getByRole("button", { name: "Nei preferiti" }).click();

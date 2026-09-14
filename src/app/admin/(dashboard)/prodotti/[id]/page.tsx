@@ -3,9 +3,12 @@ import { notFound } from "next/navigation";
 
 import { AdminProductEditForm } from "@/features/admin/admin-product-edit-form";
 import { AdminProductImagePreview } from "@/features/admin/admin-product-image-preview";
+import { AdminProductInventoryHistory } from "@/features/admin/admin-product-inventory-history";
 import { AdminProductStatusControl } from "@/features/admin/admin-product-status-control";
+import { AdminProductStockControl } from "@/features/admin/admin-product-stock-control";
 import {
   getAdminProductDetail,
+  getAdminProductInventoryMovements,
   getAdminProductEditOptions,
 } from "@/server/admin/admin-products";
 
@@ -36,9 +39,10 @@ export default async function AdminProductDetailPage({
 }) {
   const { id } = await params;
 
-  const [product, editOptions] = await Promise.all([
+  const [product, editOptions, inventoryMovements] = await Promise.all([
     getAdminProductDetail(id),
     getAdminProductEditOptions(),
+    getAdminProductInventoryMovements(id),
   ]);
 
   if (!product) {
@@ -202,10 +206,11 @@ export default async function AdminProductDetailPage({
               />
             </div>
 
-            <p className="mt-5 text-xs leading-5 text-white/30">
-              La modifica delle quantità verrà gestita nello Step 35 — Stock
-              Management.
-            </p>
+            <AdminProductStockControl
+              productId={product.id}
+              currentStockQuantity={product.stockQuantity}
+              reservedQuantity={product.reservedQuantity}
+            />
           </Section>
 
           <Section title="Gestione">
@@ -221,6 +226,8 @@ export default async function AdminProductDetailPage({
           </Section>
         </div>
       </div>
+
+      <AdminProductInventoryHistory movements={inventoryMovements} />
     </div>
   );
 }

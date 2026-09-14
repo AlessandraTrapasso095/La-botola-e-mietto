@@ -500,6 +500,90 @@ export type Database = {
           },
         ]
       }
+      inventory_movements: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          movement_type: string
+          note: string | null
+          order_id: string | null
+          product_id: string
+          reserved_after: number
+          reserved_before: number
+          reserved_delta: number
+          stock_after: number
+          stock_before: number
+          stock_delta: number
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          movement_type: string
+          note?: string | null
+          order_id?: string | null
+          product_id: string
+          reserved_after: number
+          reserved_before: number
+          reserved_delta?: number
+          stock_after: number
+          stock_before: number
+          stock_delta?: number
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          movement_type?: string
+          note?: string | null
+          order_id?: string | null
+          product_id?: string
+          reserved_after?: number
+          reserved_before?: number
+          reserved_delta?: number
+          stock_after?: number
+          stock_before?: number
+          stock_delta?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "inventory_movements_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "inventory_movements_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "catalog_products_projection"
+            referencedColumns: ["product_id"]
+          },
+          {
+            foreignKeyName: "inventory_movements_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "catalog_products_source_view"
+            referencedColumns: ["product_id"]
+          },
+          {
+            foreignKeyName: "inventory_movements_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "catalog_products_view"
+            referencedColumns: ["product_id"]
+          },
+          {
+            foreignKeyName: "inventory_movements_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       offers: {
         Row: {
           created_at: string
@@ -656,6 +740,7 @@ export type Database = {
           delivered_at: string | null
           hidden_from_customer_at: string | null
           id: string
+          inventory_committed_at: string | null
           order_number: string
           paid_at: string | null
           payment_method: Database["public"]["Enums"]["payment_method"]
@@ -698,6 +783,7 @@ export type Database = {
           delivered_at?: string | null
           hidden_from_customer_at?: string | null
           id?: string
+          inventory_committed_at?: string | null
           order_number: string
           paid_at?: string | null
           payment_method?: Database["public"]["Enums"]["payment_method"]
@@ -740,6 +826,7 @@ export type Database = {
           delivered_at?: string | null
           hidden_from_customer_at?: string | null
           id?: string
+          inventory_committed_at?: string | null
           order_number?: string
           paid_at?: string | null
           payment_method?: Database["public"]["Enums"]["payment_method"]
@@ -1484,6 +1571,157 @@ export type Database = {
           quantity: number
           slug: string
         }[]
+      }
+      admin_create_product: {
+        Args: {
+          p_alcohol_percentage: number
+          p_brand_id: string
+          p_capacity_label: string
+          p_capacity_ml: number
+          p_category_id: string
+          p_code: string
+          p_country: string
+          p_description: string
+          p_is_limited: boolean
+          p_is_new: boolean
+          p_name: string
+          p_net_amount_minor: number
+          p_origin: string
+          p_pack_quantity: number
+          p_producer: string
+          p_service_notes: string
+          p_slug: string
+          p_subcategory_id: string
+          p_tasting_notes: string
+          p_vat_rate_basis_points: number
+        }
+        Returns: string
+      }
+      admin_delete_brand: { Args: { p_brand_id: string }; Returns: undefined }
+      admin_delete_category: {
+        Args: { p_category_id: string }
+        Returns: undefined
+      }
+      admin_delete_product_image: {
+        Args: { p_product_id: string }
+        Returns: {
+          image_id: string
+          storage_path: string
+          thumbnail_path: string
+        }[]
+      }
+      admin_register_product_image: {
+        Args: {
+          p_alt_text: string
+          p_height: number
+          p_product_id: string
+          p_storage_path: string
+          p_width: number
+        }
+        Returns: string
+      }
+      admin_replace_product_image: {
+        Args: {
+          p_alt_text: string
+          p_height: number
+          p_product_id: string
+          p_storage_path: string
+          p_width: number
+        }
+        Returns: {
+          image_id: string
+          previous_storage_path: string
+          previous_thumbnail_path: string
+        }[]
+      }
+      admin_replace_product_image_with_thumbnail: {
+        Args: {
+          p_alt_text: string
+          p_height: number
+          p_product_id: string
+          p_storage_path: string
+          p_thumbnail_path: string
+          p_width: number
+        }
+        Returns: {
+          image_id: string
+          previous_storage_path: string
+          previous_thumbnail_path: string
+        }[]
+      }
+      admin_set_product_status: {
+        Args: {
+          p_product_id: string
+          p_status: Database["public"]["Enums"]["product_status"]
+        }
+        Returns: {
+          product_id: string
+          product_status: Database["public"]["Enums"]["product_status"]
+        }[]
+      }
+      admin_set_product_stock: {
+        Args: {
+          p_created_by: string
+          p_note: string
+          p_product_id: string
+          p_stock_quantity: number
+        }
+        Returns: {
+          available_quantity: number
+          movement_id: string
+          product_id: string
+          reserved_quantity: number
+          stock_quantity: number
+        }[]
+      }
+      admin_update_product: {
+        Args: {
+          p_alcohol_percentage: number
+          p_brand_id: string
+          p_capacity_label: string
+          p_capacity_ml: number
+          p_category_id: string
+          p_code: string
+          p_country: string
+          p_description: string
+          p_is_limited: boolean
+          p_is_new: boolean
+          p_name: string
+          p_net_amount_minor: number
+          p_origin: string
+          p_pack_quantity: number
+          p_producer: string
+          p_product_id: string
+          p_service_notes: string
+          p_slug: string
+          p_subcategory_id: string
+          p_tasting_notes: string
+          p_vat_rate_basis_points: number
+        }
+        Returns: undefined
+      }
+      admin_upsert_brand: {
+        Args: {
+          p_country: string
+          p_description: string
+          p_id: string
+          p_name: string
+          p_slug: string
+          p_status: Database["public"]["Enums"]["product_status"]
+        }
+        Returns: string
+      }
+      admin_upsert_category: {
+        Args: {
+          p_description: string
+          p_id: string
+          p_name: string
+          p_parent_id: string
+          p_slug: string
+          p_sort_order: number
+          p_status: Database["public"]["Enums"]["product_status"]
+        }
+        Returns: string
       }
       cancel_account_order: { Args: { p_order_id: string }; Returns: string }
       cancel_admin_received_order: {

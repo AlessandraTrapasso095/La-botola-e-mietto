@@ -639,3 +639,120 @@ export async function getAdminTaxonomyData(): Promise<AdminTaxonomyData> {
     subcategories: categories.filter((item) => item.parentId !== null),
   };
 }
+
+export type AdminProductInventoryMovement = {
+  id: string;
+  movementType: string;
+  stockDelta: number;
+  reservedDelta: number;
+  stockBefore: number;
+  stockAfter: number;
+  reservedBefore: number;
+  reservedAfter: number;
+  note: string | null;
+  orderId: string | null;
+  orderNumber: string | null;
+  createdById: string | null;
+  createdByName: string;
+  createdAt: string;
+};
+
+export async function getAdminProductInventoryMovements(
+  productId: string,
+  limit = 25,
+): Promise<AdminProductInventoryMovement[]> {
+  const admin = createSupabaseAdminClient();
+
+  const normalizedLimit = Math.min(Math.max(Math.trunc(limit), 1), 100);
+
+  const movementsResponse = await admin
+    .from("inventory_movements")
+    .select(
+      `
+        id,
+        movement_type,
+        stock_delta,
+        reserved_delta,
+        stock_before,
+        stock_after,
+        reserved_before,
+        reserved_after,
+        note,
+        order_id,
+        created_by,
+        created_at,
+        orders (
+          order_number
+        )
+      `,
+    )
+    .eq("product_id", productId)
+    .order("created_at", { ascending: false })
+    .limit(normalizedLimit);
+
+  if (movementsResponse.error) {
+    throw new Error(
+      `Impossibile caricare lo storico magazzino: ${movementsResponse.error.message}`,
+    );
+  }
+
+  const movements = movementsResponse.data ?? [];
+
+  const creatorIds = Array.from(
+    new Set(
+      movements
+        .map((movement) => movement.created_by)
+        .filter((id): id is string => Boolean(id)),
+    ),
+  );
+
+  const creatorsResponse =
+    creatorIds.length > 0
+      ? await admin
+          .from("profiles")
+          .select("id,first_name,last_name,email")
+          .in("id", creatorIds)
+      : null;
+
+  if (creatorsResponse?.error) {
+    throw new Error(
+      `Impossibile caricare gli autori dei movimenti: ${creatorsResponse.error.message}`,
+    );
+  }
+
+  const creatorNames = new Map(
+    (creatorsResponse?.data ?? []).map((profile) => {
+      const fullName = [profile.first_name, profile.last_name]
+        .filter(Boolean)
+        .join(" ")
+        .trim();
+
+      return [profile.id, fullName || profile.email || "Amministratore"];
+    }),
+  );
+
+  return movements.map((movement) => {
+    const order = Array.isArray(movement.orders)
+      ? movement.orders[0]
+      : movement.orders;
+
+    return {
+      id: movement.id,
+      movementType: movement.movement_type,
+      stockDelta: movement.stock_delta,
+      reservedDelta: movement.reserved_delta,
+      stockBefore: movement.stock_before,
+      stockAfter: movement.stock_after,
+      reservedBefore: movement.reserved_before,
+      reservedAfter: movement.reserved_after,
+      note: movement.note,
+      orderId: movement.order_id,
+      orderNumber: order?.order_number ?? null,
+      createdById: movement.created_by,
+      createdByName: movement.created_by
+        ? (creatorNames.get(movement.created_by) ?? "Amministratore")
+        : "Sistema",
+      createdAt: movement.created_at,
+    };
+  });
+}

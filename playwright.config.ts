@@ -1,5 +1,8 @@
 import { defineConfig, devices } from "@playwright/test";
 
+const e2eAuthService =
+  process.env.AUTH_SERVICE === "supabase" ? "supabase" : "demo";
+
 export default defineConfig({
   testDir: "./tests/e2e",
   fullyParallel: true,
@@ -19,9 +22,9 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: "npm run dev -- --webpack --hostname 127.0.0.1",
+    command: `AUTH_SERVICE=${e2eAuthService} npm run dev -- --webpack --hostname 127.0.0.1`,
     url: "http://127.0.0.1:3000/favicon.ico",
-    reuseExistingServer: !process.env.CI,
+    reuseExistingServer: false,
     timeout: 300_000,
   },
 });
