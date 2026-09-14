@@ -67,6 +67,13 @@ export default async function AdminDashboardLayout({
           </Link>
 
           <Link
+            href="/admin/sconti"
+            className="rounded-md px-4 py-3 text-white/80 transition hover:bg-white/5 hover:text-white"
+          >
+            Sconti
+          </Link>
+
+          <Link
             href="/admin/impostazioni"
             className="rounded-md px-4 py-3 text-white/80 transition hover:bg-white/5 hover:text-white"
           >
