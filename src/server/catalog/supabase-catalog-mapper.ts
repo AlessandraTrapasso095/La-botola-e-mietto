@@ -7,7 +7,7 @@ import { resolveProductImageUrl } from "@/lib/product-image-url";
 import type { DemoMediaAsset } from "@/content/demo-assets/media";
 import { createEuro, formatEuroMinor } from "@/lib/money";
 import { calculateGrossPrice } from "@/server/pricing";
-import { createCatalogTenPercentOffer } from "@/lib/offer-pricing";
+import { createCatalogOfferView } from "@/lib/offer-pricing";
 import type {
   Brand,
   CatalogOfferView,
@@ -127,8 +127,22 @@ function createOffer(
 ): CatalogOfferView | null {
   if (!row.offer_id) return null;
 
-  return createCatalogTenPercentOffer(
-    toSafeMinorNumber(grossAmountMinor, "Prezzo lordo corrente"),
+  const currentGrossPriceMinor = toSafeMinorNumber(
+    grossAmountMinor,
+    "Prezzo lordo corrente",
+  );
+
+  const previousGrossPriceMinor =
+    row.previous_gross_amount_minor === null
+      ? null
+      : toSafeMinorNumber(
+          BigInt(row.previous_gross_amount_minor),
+          "Prezzo lordo precedente",
+        );
+
+  return createCatalogOfferView(
+    currentGrossPriceMinor,
+    previousGrossPriceMinor,
   );
 }
 

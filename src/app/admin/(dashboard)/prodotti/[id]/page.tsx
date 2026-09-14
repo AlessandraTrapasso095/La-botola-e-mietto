@@ -4,12 +4,14 @@ import { notFound } from "next/navigation";
 import { AdminProductEditForm } from "@/features/admin/admin-product-edit-form";
 import { AdminProductImagePreview } from "@/features/admin/admin-product-image-preview";
 import { AdminProductInventoryHistory } from "@/features/admin/admin-product-inventory-history";
+import { AdminProductOfferControl } from "@/features/admin/admin-product-offer-control";
 import { AdminProductStatusControl } from "@/features/admin/admin-product-status-control";
 import { AdminProductStockControl } from "@/features/admin/admin-product-stock-control";
 import {
   getAdminProductDetail,
   getAdminProductInventoryMovements,
   getAdminProductEditOptions,
+  getAdminProductOffer,
 } from "@/server/admin/admin-products";
 
 function formatMoney(amountMinor: number | null, currency = "EUR") {
@@ -39,10 +41,11 @@ export default async function AdminProductDetailPage({
 }) {
   const { id } = await params;
 
-  const [product, editOptions, inventoryMovements] = await Promise.all([
+  const [product, editOptions, inventoryMovements, offer] = await Promise.all([
     getAdminProductDetail(id),
     getAdminProductEditOptions(),
     getAdminProductInventoryMovements(id),
+    getAdminProductOffer(id),
   ]);
 
   if (!product) {
@@ -92,13 +95,27 @@ export default async function AdminProductDetailPage({
             </div>
           </div>
 
-          <Link
-            href={`/prodotto/${product.slug}`}
-            target="_blank"
-            className="inline-flex h-10 items-center justify-center rounded-md border border-white/10 px-4 text-sm font-medium text-white/70 transition hover:bg-white/5 hover:text-white"
-          >
-            Vedi nello store ↗
-          </Link>
+          {product.status === "active" ? (
+            <Link
+              href={`/prodotto/${product.slug}`}
+              target="_blank"
+              className="inline-flex h-10 items-center justify-center rounded-md border border-white/10 px-4 text-sm font-medium text-white/70 transition hover:bg-white/5 hover:text-white"
+            >
+              Vedi nello store ↗
+            </Link>
+          ) : (
+            <div className="max-w-md rounded-lg border border-white/10 bg-white/[0.02] px-4 py-3">
+              <p className="text-sm font-medium text-white/60">
+                Non visibile nello store
+              </p>
+
+              <p className="mt-1 text-xs leading-5 text-white/35">
+                {product.status === "archived"
+                  ? "Il prodotto è archiviato e non è visibile nello store. Impostalo su Attivo per renderlo nuovamente pubblico."
+                  : "Il prodotto è in bozza e non è visibile nello store. Impostalo su Attivo per pubblicarlo."}
+              </p>
+            </div>
+          )}
         </div>
       </div>
 
@@ -110,89 +127,89 @@ export default async function AdminProductDetailPage({
 
       <AdminProductEditForm product={product} options={editOptions} />
 
-      <div className="grid gap-6 xl:grid-cols-[minmax(0,2fr)_minmax(320px,1fr)]">
-        <div className="space-y-6">
-          <Section title="Anagrafica">
-            <DataGrid>
-              <DataItem label="Codice" value={product.code} />
-              <DataItem label="Slug" value={product.slug} />
-              <DataItem label="Marchio" value={product.brandName} />
-              <DataItem label="Categoria" value={product.categoryName} />
-              <DataItem
-                label="Sottocategoria"
-                value={product.subcategoryName}
-              />
-              <DataItem label="Produttore" value={product.producer} />
-              <DataItem label="Paese" value={product.country} />
-              <DataItem label="Origine" value={product.origin} />
-            </DataGrid>
-          </Section>
+      <div className="space-y-6">
+        <Section title="Anagrafica">
+          <DataGrid>
+            <DataItem label="Codice" value={product.code} />
+            <DataItem label="Slug" value={product.slug} />
+            <DataItem label="Marchio" value={product.brandName} />
+            <DataItem label="Categoria" value={product.categoryName} />
+            <DataItem label="Sottocategoria" value={product.subcategoryName} />
+            <DataItem label="Produttore" value={product.producer} />
+            <DataItem label="Paese" value={product.country} />
+            <DataItem label="Origine" value={product.origin} />
+          </DataGrid>
+        </Section>
 
-          <Section title="Caratteristiche">
-            <DataGrid>
-              <DataItem label="Formato" value={product.capacityLabel} />
+        <Section title="Caratteristiche">
+          <DataGrid>
+            <DataItem label="Formato" value={product.capacityLabel} />
 
-              <DataItem
-                label="Capacità"
-                value={product.capacityMl ? `${product.capacityMl} ml` : null}
-              />
-
-              <DataItem
-                label="Quantità confezione"
-                value={
-                  product.packQuantity ? String(product.packQuantity) : null
-                }
-              />
-
-              <DataItem
-                label="Gradazione"
-                value={
-                  product.alcoholPercentage === null
-                    ? null
-                    : `${product.alcoholPercentage}% Vol.`
-                }
-              />
-            </DataGrid>
-          </Section>
-
-          <Section title="Contenuti prodotto">
-            <TextItem label="Descrizione" value={product.description} />
-
-            <TextItem
-              label="Note di degustazione"
-              value={product.tastingNotes}
+            <DataItem
+              label="Capacità"
+              value={product.capacityMl ? `${product.capacityMl} ml` : null}
             />
 
-            <TextItem label="Note di servizio" value={product.serviceNotes} />
-          </Section>
-        </div>
+            <DataItem
+              label="Quantità confezione"
+              value={product.packQuantity ? String(product.packQuantity) : null}
+            />
 
-        <div className="space-y-6">
-          <Section title="Prezzo corrente">
-            <div className="space-y-5">
-              <DataItem
-                label="Prezzo netto"
-                value={formatMoney(
-                  product.netAmountMinor,
-                  product.currency ?? "EUR",
-                )}
-              />
+            <DataItem
+              label="Gradazione"
+              value={
+                product.alcoholPercentage === null
+                  ? null
+                  : `${product.alcoholPercentage}% Vol.`
+              }
+            />
+          </DataGrid>
+        </Section>
 
-              <DataItem
-                label="IVA"
-                value={vatPercentage === null ? null : `${vatPercentage}%`}
-              />
+        <Section title="Contenuti prodotto">
+          <TextItem label="Descrizione" value={product.description} />
 
-              <div className="border-t border-white/10 pt-5">
-                <p className="text-xs text-white/40">Prezzo lordo</p>
+          <TextItem label="Note di degustazione" value={product.tastingNotes} />
 
-                <p className="mt-2 text-2xl font-semibold text-white">
-                  {formatMoney(grossAmountMinor, product.currency ?? "EUR")}
-                </p>
-              </div>
+          <TextItem label="Note di servizio" value={product.serviceNotes} />
+        </Section>
+
+        <Section title="Prezzo corrente">
+          <div className="grid gap-5 sm:grid-cols-3">
+            <DataItem
+              label="Prezzo netto"
+              value={formatMoney(
+                product.netAmountMinor,
+                product.currency ?? "EUR",
+              )}
+            />
+
+            <DataItem
+              label="IVA"
+              value={vatPercentage === null ? null : `${vatPercentage}%`}
+            />
+
+            <div>
+              <p className="text-xs text-white/40">Prezzo lordo</p>
+
+              <p className="mt-1.5 text-2xl font-semibold text-white">
+                {formatMoney(grossAmountMinor, product.currency ?? "EUR")}
+              </p>
             </div>
-          </Section>
+          </div>
+        </Section>
 
+        <Section title="Offerta prodotto">
+          <AdminProductOfferControl
+            productId={product.id}
+            currentNetAmountMinor={product.netAmountMinor}
+            vatRateBasisPoints={product.vatRateBasisPoints}
+            currency={product.currency}
+            offer={offer}
+          />
+        </Section>
+
+        <div className="grid gap-6 xl:grid-cols-2">
           <Section title="Magazzino">
             <div className="grid gap-4">
               <StockItem label="Stock totale" value={product.stockQuantity} />
@@ -220,8 +237,7 @@ export default async function AdminProductDetailPage({
             />
 
             <p className="mt-5 border-t border-white/10 pt-5 text-xs leading-5 text-white/30">
-              La modifica dell’anagrafica prodotto verrà gestita nei prossimi
-              passaggi.
+              Gestisci qui lo stato e la visibilità del prodotto nello store.
             </p>
           </Section>
         </div>

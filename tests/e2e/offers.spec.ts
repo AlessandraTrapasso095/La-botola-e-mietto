@@ -49,7 +49,7 @@ test("le offerte reali sono navigabili da header, pagina e prodotto", async ({
   await expect(visibleCards).toHaveCount(12);
   for (const card of await visibleCards.all()) {
     await expect(card.getByText("In offerta", { exact: true })).toBeVisible();
-    await expect(card.locator("del")).toBeVisible();
+    await expect(card.locator("del")).toHaveCount(0);
   }
 
   const firstOfferLink = visibleCards
@@ -65,7 +65,7 @@ test("le offerte reali sono navigabili da header, pagina e prodotto", async ({
   await expect(
     page.getByText("In offerta", { exact: true }).first(),
   ).toBeVisible();
-  await expect(page.locator("main del")).toBeVisible();
+  await expect(page.locator("main del")).toHaveCount(0);
 
   await page.getByRole("button", { name: "Aggiungi al carrello" }).click();
   const cartDrawer = page.getByRole("dialog", { name: "Il tuo carrello" });

@@ -1,5 +1,5 @@
 import type { CatalogOfferView } from "@/content/catalog/types";
-import { createCatalogTenPercentOffer } from "@/lib/offer-pricing";
+import { createCatalogOfferView } from "@/lib/offer-pricing";
 
 export const catalogOfferProductCodes = [
   "AB3197",
@@ -66,5 +66,5 @@ export function getCatalogOfferView(
 ): CatalogOfferView | null {
   if (!isCatalogOfferProductCode(productCode)) return null;
 
-  return createCatalogTenPercentOffer(currentGrossPriceMinor);
+  return createCatalogOfferView(currentGrossPriceMinor, null);
 }

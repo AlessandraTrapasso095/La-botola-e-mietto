@@ -1597,6 +1597,10 @@ export type Database = {
         }
         Returns: string
       }
+      admin_deactivate_product_offer: {
+        Args: { p_product_id: string }
+        Returns: string
+      }
       admin_delete_brand: { Args: { p_brand_id: string }; Returns: undefined }
       admin_delete_category: {
         Args: { p_category_id: string }
@@ -1648,6 +1652,10 @@ export type Database = {
           previous_storage_path: string
           previous_thumbnail_path: string
         }[]
+      }
+      admin_set_product_offer: {
+        Args: { p_discount_percentage: number; p_product_id: string }
+        Returns: string
       }
       admin_set_product_status: {
         Args: {

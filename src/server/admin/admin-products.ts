@@ -756,3 +756,61 @@ export async function getAdminProductInventoryMovements(
     };
   });
 }
+
+export type AdminProductOffer = {
+  id: string;
+  promotionalNetAmountMinor: number | null;
+  startsAt: string | null;
+  endsAt: string | null;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export async function getAdminProductOffer(
+  productId: string,
+): Promise<AdminProductOffer | null> {
+  const admin = createSupabaseAdminClient();
+
+  const offerResponse = await admin
+    .from("offers")
+    .select(
+      `
+        id,
+        promotional_net_amount_minor,
+        starts_at,
+        ends_at,
+        is_active,
+        created_at,
+        updated_at
+      `,
+    )
+    .eq("product_id", productId)
+    .eq("is_active", true)
+    .maybeSingle();
+
+  if (offerResponse.error) {
+    throw new Error(
+      `Impossibile caricare l’offerta prodotto: ${offerResponse.error.message}`,
+    );
+  }
+
+  const offer = offerResponse.data;
+
+  if (!offer) {
+    return null;
+  }
+
+  return {
+    id: offer.id,
+    promotionalNetAmountMinor:
+      offer.promotional_net_amount_minor === null
+        ? null
+        : Number(offer.promotional_net_amount_minor),
+    startsAt: offer.starts_at,
+    endsAt: offer.ends_at,
+    isActive: offer.is_active,
+    createdAt: offer.created_at,
+    updatedAt: offer.updated_at,
+  };
+}

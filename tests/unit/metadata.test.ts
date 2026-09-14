@@ -5,8 +5,12 @@ import { brandAssets } from "@/config/brand";
 import { baseMetadata, defaultSiteUrl } from "@/config/metadata";
 
 describe("metadata base", () => {
-  it("usa URL canonico e identità centralizzata", () => {
-    expect(baseMetadata.metadataBase?.toString()).toBe(`${defaultSiteUrl}/`);
+  it("usa URL configurato con fallback canonico e identità centralizzata", () => {
+    const expectedSiteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? defaultSiteUrl;
+
+    expect(baseMetadata.metadataBase?.toString()).toBe(
+      new URL(expectedSiteUrl).toString(),
+    );
     expect(baseMetadata.applicationName).toBe(businessInfo.brandName);
     expect(baseMetadata.description).toContain("Selezione italiana");
   });

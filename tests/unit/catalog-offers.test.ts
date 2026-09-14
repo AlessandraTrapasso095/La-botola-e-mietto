@@ -29,7 +29,7 @@ describe("prodotti in offerta", () => {
     ).toBe(true);
   });
 
-  it("espone prezzo precedente e sconto del 10% per i prodotti in offerta", () => {
+  it("non inventa prezzo precedente o percentuale assenti dalla sorgente", () => {
     const currentGrossPriceMinor = 1000;
     const offer = getCatalogOfferView(
       catalogOfferProductCodes[0],
@@ -38,9 +38,9 @@ describe("prodotti in offerta", () => {
 
     expect(offer).not.toBeNull();
     expect(offer?.isActive).toBe(true);
-    expect(offer?.previousGrossPriceMinor).toBe(1111);
-    expect(offer?.previousGrossPrice).toBeTruthy();
-    expect(offer?.discountPercentage).toBe(10);
+    expect(offer?.previousGrossPriceMinor).toBeNull();
+    expect(offer?.previousGrossPrice).toBeNull();
+    expect(offer?.discountPercentage).toBeNull();
 
     expect(
       getCatalogOfferView("CODICE-NON-IN-OFFERTA", currentGrossPriceMinor),
