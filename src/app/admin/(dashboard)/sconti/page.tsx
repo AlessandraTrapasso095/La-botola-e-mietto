@@ -186,8 +186,8 @@ export default async function AdminDiscountsPage({
   const hasFilters = Boolean(query) || status !== "all";
 
   return (
-    <div className="space-y-8">
-      <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+    <div className="min-w-0 space-y-6 sm:space-y-8">
+      <div className="flex min-w-0 flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="text-xs font-semibold tracking-[0.18em] text-orange-400 uppercase">
             Promozioni
@@ -203,7 +203,7 @@ export default async function AdminDiscountsPage({
 
         <Link
           href="/admin/prodotti"
-          className="inline-flex min-h-11 items-center justify-center rounded-md bg-orange-500 px-5 text-sm font-semibold text-black transition hover:bg-orange-400"
+          className="inline-flex min-h-11 w-full items-center justify-center rounded-md bg-orange-500 px-5 text-sm font-semibold text-black transition hover:bg-orange-400 sm:w-auto"
         >
           Gestisci prodotti
         </Link>
@@ -229,7 +229,7 @@ export default async function AdminDiscountsPage({
 
         <AdminPromotionCodeManager promotionCodes={promotionCodes} />
 
-        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-6">
+        <div className="grid min-w-0 gap-3 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-6">
           <SummaryCard
             label="Codici totali"
             value={promotionSummary.totalCount}
@@ -274,101 +274,200 @@ export default async function AdminDiscountsPage({
               </p>
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full min-w-[1320px] divide-y divide-white/10 text-sm">
-                <thead className="bg-white/[0.03]">
-                  <tr className="text-left text-xs font-semibold tracking-wide text-white/40 uppercase">
-                    <th className="px-5 py-4">Codice</th>
-                    <th className="px-5 py-4">Sconto</th>
-                    <th className="px-5 py-4">Ordine minimo</th>
-                    <th className="px-5 py-4">Utilizzi</th>
-                    <th className="px-5 py-4">Pagati</th>
-                    <th className="px-5 py-4">Sconto generato</th>
-                    <th className="px-5 py-4">Validità</th>
-                    <th className="px-5 py-4">Stato</th>
-                    <th className="px-5 py-4">Aggiornato</th>
-                  </tr>
-                </thead>
+            <>
+              <div className="divide-y divide-white/10 2xl:hidden">
+                {promotionCodes.map((code) => {
+                  const runtimeStatus = promotionCodeRuntimeStatus(code);
 
-                <tbody className="divide-y divide-white/5">
-                  {promotionCodes.map((code) => {
-                    const runtimeStatus = promotionCodeRuntimeStatus(code);
+                  return (
+                    <article key={code.id} className="min-w-0 p-4 sm:p-5">
+                      <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                        <div className="min-w-0">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <p className="max-w-full font-mono font-semibold break-all text-white">
+                              {code.code}
+                            </p>
 
-                    return (
-                      <tr
-                        key={code.id}
-                        className="transition hover:bg-white/[0.025]"
-                      >
-                        <td className="px-5 py-4">
-                          <p className="font-mono font-semibold text-white">
-                            {code.code}
-                          </p>
+                            <span
+                              className={`inline-flex rounded-full border px-2.5 py-1 text-xs font-semibold ${promotionCodeStatusClasses(
+                                code.isActive,
+                              )}`}
+                            >
+                              {runtimeStatus}
+                            </span>
+                          </div>
 
-                          <p className="mt-1 max-w-xs text-xs text-white/35">
+                          <p className="mt-2 text-sm leading-5 break-words text-white/45">
                             {code.description || "Nessuna descrizione"}
                           </p>
-                        </td>
+                        </div>
 
-                        <td className="px-5 py-4 font-semibold text-orange-300">
+                        <p className="shrink-0 text-xl font-semibold text-orange-300 sm:text-right">
                           {formatPromotionDiscount(code)}
-                        </td>
+                        </p>
+                      </div>
 
-                        <td className="px-5 py-4 text-white/65">
-                          {code.minimumOrderGrossAmountMinor === 0
-                            ? "Nessun minimo"
-                            : formatMoney(
-                                code.minimumOrderGrossAmountMinor,
-                                code.currency,
-                              )}
-                        </td>
+                      <dl className="mt-4 grid min-w-0 grid-cols-2 gap-3">
+                        <div className="min-w-0 rounded-md border border-white/[0.07] bg-[#111111] p-3">
+                          <dt className="text-[11px] text-white/35">
+                            Ordine minimo
+                          </dt>
+                          <dd className="mt-1 text-sm break-words text-white/70">
+                            {code.minimumOrderGrossAmountMinor === 0
+                              ? "Nessun minimo"
+                              : formatMoney(
+                                  code.minimumOrderGrossAmountMinor,
+                                  code.currency,
+                                )}
+                          </dd>
+                        </div>
 
-                        <td className="px-5 py-4 text-white/65">
-                          {code.usageLimit === null
-                            ? `${code.usageCount} / ∞`
-                            : `${code.usageCount} / ${code.usageLimit}`}
-                        </td>
+                        <div className="min-w-0 rounded-md border border-white/[0.07] bg-[#111111] p-3">
+                          <dt className="text-[11px] text-white/35">
+                            Utilizzi
+                          </dt>
+                          <dd className="mt-1 text-sm text-white/70">
+                            {code.usageLimit === null
+                              ? `${code.usageCount} / ∞`
+                              : `${code.usageCount} / ${code.usageLimit}`}
+                          </dd>
+                        </div>
 
-                        <td className="px-5 py-4 font-semibold text-emerald-300">
-                          {code.paidUsageCount}
-                        </td>
+                        <div className="min-w-0 rounded-md border border-white/[0.07] bg-[#111111] p-3">
+                          <dt className="text-[11px] text-white/35">
+                            Ordini pagati
+                          </dt>
+                          <dd className="mt-1 text-sm font-semibold text-emerald-300">
+                            {code.paidUsageCount}
+                          </dd>
+                        </div>
 
-                        <td className="px-5 py-4 font-semibold text-orange-300">
-                          {formatMoney(
-                            code.paidDiscountGrossAmountMinor,
-                            code.currency,
-                          )}
-                        </td>
+                        <div className="min-w-0 rounded-md border border-white/[0.07] bg-[#111111] p-3">
+                          <dt className="text-[11px] text-white/35">
+                            Sconto generato
+                          </dt>
+                          <dd className="mt-1 text-sm font-semibold break-words text-orange-300">
+                            {formatMoney(
+                              code.paidDiscountGrossAmountMinor,
+                              code.currency,
+                            )}
+                          </dd>
+                        </div>
 
-                        <td className="px-5 py-4 text-xs leading-5 text-white/50">
-                          {formatPromotionWindow(code)}
-                        </td>
+                        <div className="col-span-2 min-w-0 rounded-md border border-white/[0.07] bg-[#111111] p-3">
+                          <dt className="text-[11px] text-white/35">
+                            Validità
+                          </dt>
+                          <dd className="mt-1 text-xs leading-5 break-words text-white/55">
+                            {formatPromotionWindow(code)}
+                          </dd>
+                        </div>
 
-                        <td className="px-5 py-4">
-                          <span
-                            className={`inline-flex rounded-full border px-2.5 py-1 text-xs font-semibold ${promotionCodeStatusClasses(
-                              code.isActive,
-                            )}`}
-                          >
-                            {runtimeStatus}
-                          </span>
-                        </td>
+                        <div className="col-span-2 min-w-0 text-xs text-white/35">
+                          Aggiornato {formatDate(code.updatedAt)}
+                        </div>
+                      </dl>
+                    </article>
+                  );
+                })}
+              </div>
 
-                        <td className="px-5 py-4 text-white/55">
-                          {formatDate(code.updatedAt)}
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
+              <div className="hidden 2xl:block">
+                <table className="w-full min-w-[1320px] divide-y divide-white/10 text-sm">
+                  <thead className="bg-white/[0.03]">
+                    <tr className="text-left text-xs font-semibold tracking-wide text-white/40 uppercase">
+                      <th className="px-5 py-4">Codice</th>
+                      <th className="px-5 py-4">Sconto</th>
+                      <th className="px-5 py-4">Ordine minimo</th>
+                      <th className="px-5 py-4">Utilizzi</th>
+                      <th className="px-5 py-4">Pagati</th>
+                      <th className="px-5 py-4">Sconto generato</th>
+                      <th className="px-5 py-4">Validità</th>
+                      <th className="px-5 py-4">Stato</th>
+                      <th className="px-5 py-4">Aggiornato</th>
+                    </tr>
+                  </thead>
+
+                  <tbody className="divide-y divide-white/5">
+                    {promotionCodes.map((code) => {
+                      const runtimeStatus = promotionCodeRuntimeStatus(code);
+
+                      return (
+                        <tr
+                          key={code.id}
+                          className="transition hover:bg-white/[0.025]"
+                        >
+                          <td className="px-5 py-4">
+                            <p className="font-mono font-semibold text-white">
+                              {code.code}
+                            </p>
+
+                            <p className="mt-1 max-w-xs text-xs text-white/35">
+                              {code.description || "Nessuna descrizione"}
+                            </p>
+                          </td>
+
+                          <td className="px-5 py-4 font-semibold text-orange-300">
+                            {formatPromotionDiscount(code)}
+                          </td>
+
+                          <td className="px-5 py-4 text-white/65">
+                            {code.minimumOrderGrossAmountMinor === 0
+                              ? "Nessun minimo"
+                              : formatMoney(
+                                  code.minimumOrderGrossAmountMinor,
+                                  code.currency,
+                                )}
+                          </td>
+
+                          <td className="px-5 py-4 text-white/65">
+                            {code.usageLimit === null
+                              ? `${code.usageCount} / ∞`
+                              : `${code.usageCount} / ${code.usageLimit}`}
+                          </td>
+
+                          <td className="px-5 py-4 font-semibold text-emerald-300">
+                            {code.paidUsageCount}
+                          </td>
+
+                          <td className="px-5 py-4 font-semibold text-orange-300">
+                            {formatMoney(
+                              code.paidDiscountGrossAmountMinor,
+                              code.currency,
+                            )}
+                          </td>
+
+                          <td className="px-5 py-4 text-xs leading-5 text-white/50">
+                            {formatPromotionWindow(code)}
+                          </td>
+
+                          <td className="px-5 py-4">
+                            <span
+                              className={`inline-flex rounded-full border px-2.5 py-1 text-xs font-semibold ${promotionCodeStatusClasses(
+                                code.isActive,
+                              )}`}
+                            >
+                              {runtimeStatus}
+                            </span>
+                          </td>
+
+                          <td className="px-5 py-4 text-white/55">
+                            {formatDate(code.updatedAt)}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </>
           )}
         </div>
       </section>
 
       <div className="border-t border-white/10 pt-2" />
 
-      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid min-w-0 gap-3 sm:grid-cols-2 xl:grid-cols-4">
         <SummaryCard
           label="Offerte attive"
           value={result.summary.activeCount}
@@ -390,7 +489,7 @@ export default async function AdminDiscountsPage({
 
       <form
         method="get"
-        className="grid gap-4 rounded-lg border border-white/10 bg-[#171717] p-5 md:grid-cols-2 xl:grid-cols-[minmax(0,2fr)_minmax(220px,1fr)_auto]"
+        className="grid min-w-0 gap-4 rounded-lg border border-white/10 bg-[#171717] p-4 sm:p-5 md:grid-cols-2 xl:grid-cols-[minmax(0,2fr)_minmax(220px,1fr)_auto]"
       >
         <label className="space-y-2">
           <span className="text-xs font-medium text-white/50">
@@ -422,10 +521,10 @@ export default async function AdminDiscountsPage({
           </select>
         </label>
 
-        <div className="flex items-end gap-3">
+        <div className="grid gap-3 md:col-span-2 md:grid-cols-2 xl:col-span-1 xl:flex xl:items-end">
           <button
             type="submit"
-            className="inline-flex h-11 items-center justify-center rounded-md bg-orange-500 px-5 text-sm font-semibold text-black transition hover:bg-orange-400"
+            className="inline-flex h-11 w-full items-center justify-center rounded-md bg-orange-500 px-5 text-sm font-semibold text-black transition hover:bg-orange-400 xl:w-auto"
           >
             Applica
           </button>
@@ -433,7 +532,7 @@ export default async function AdminDiscountsPage({
           {hasFilters ? (
             <Link
               href="/admin/sconti"
-              className="inline-flex h-11 items-center justify-center rounded-md border border-white/10 px-5 text-sm font-medium text-white/70 transition hover:bg-white/5 hover:text-white"
+              className="inline-flex h-11 w-full items-center justify-center rounded-md border border-white/10 px-5 text-sm font-medium text-white/70 transition hover:bg-white/5 hover:text-white xl:w-auto"
             >
               Azzera
             </Link>
@@ -474,110 +573,203 @@ export default async function AdminDiscountsPage({
             </Link>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[1100px] divide-y divide-white/10 text-sm">
-              <thead className="bg-white/[0.03]">
-                <tr className="text-left text-xs font-semibold tracking-wide text-white/40 uppercase">
-                  <th className="px-5 py-4">Prodotto</th>
-                  <th className="px-5 py-4">Listino</th>
-                  <th className="px-5 py-4">Promozione</th>
-                  <th className="px-5 py-4">Sconto</th>
-                  <th className="px-5 py-4">Stato</th>
-                  <th className="px-5 py-4">Creata</th>
-                  <th className="px-5 py-4">Ultimo aggiornamento</th>
-                  <th className="px-5 py-4" />
-                </tr>
-              </thead>
+          <>
+            <div className="divide-y divide-white/10 2xl:hidden">
+              {result.offers.map((offer) => {
+                const currency = offer.currency ?? "EUR";
 
-              <tbody className="divide-y divide-white/5">
-                {result.offers.map((offer) => {
-                  const currency = offer.currency ?? "EUR";
+                const regularGrossAmountMinor = calculateGrossMinor(
+                  offer.regularNetAmountMinor,
+                  offer.vatRateBasisPoints,
+                );
 
-                  const regularGrossAmountMinor = calculateGrossMinor(
-                    offer.regularNetAmountMinor,
-                    offer.vatRateBasisPoints,
-                  );
+                const promotionalGrossAmountMinor = calculateGrossMinor(
+                  offer.promotionalNetAmountMinor,
+                  offer.vatRateBasisPoints,
+                );
 
-                  const promotionalGrossAmountMinor = calculateGrossMinor(
-                    offer.promotionalNetAmountMinor,
-                    offer.vatRateBasisPoints,
-                  );
-
-                  return (
-                    <tr
-                      key={offer.id}
-                      className="transition hover:bg-white/[0.025]"
-                    >
-                      <td className="px-5 py-4">
-                        <p className="font-medium text-white">
+                return (
+                  <article key={offer.id} className="min-w-0 p-4 sm:p-5">
+                    <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                      <div className="min-w-0">
+                        <p className="font-semibold break-words text-white">
                           {offer.productName}
                         </p>
 
                         <div className="mt-1 flex flex-wrap gap-x-3 gap-y-1 text-xs text-white/35">
-                          <span className="font-mono">{offer.productCode}</span>
-
-                          <span>Prodotto: {offer.productStatus}</span>
-                        </div>
-                      </td>
-
-                      <td className="px-5 py-4 font-medium text-white/70">
-                        {formatMoney(regularGrossAmountMinor, currency)}
-                      </td>
-
-                      <td className="px-5 py-4 font-semibold text-orange-300">
-                        {formatMoney(promotionalGrossAmountMinor, currency)}
-                      </td>
-
-                      <td className="px-5 py-4">
-                        {offer.discountPercentage === null ? (
-                          <span className="text-white/35">—</span>
-                        ) : (
-                          <span className="font-semibold text-orange-300">
-                            −{offer.discountPercentage}%
+                          <span className="font-mono break-all">
+                            {offer.productCode}
                           </span>
-                        )}
-                      </td>
 
-                      <td className="px-5 py-4">
-                        <span
-                          className={`inline-flex rounded-full border px-2.5 py-1 text-xs font-semibold ${offerStatusClasses(
-                            offer.isActive,
-                          )}`}
-                        >
-                          {offer.isActive ? "Attiva" : "Archiviata"}
-                        </span>
-                      </td>
+                          <span className="break-words">
+                            Prodotto: {offer.productStatus}
+                          </span>
+                        </div>
+                      </div>
 
-                      <td className="px-5 py-4 text-white/55">
-                        {formatDate(offer.createdAt)}
-                      </td>
+                      <span
+                        className={`inline-flex w-fit shrink-0 rounded-full border px-2.5 py-1 text-xs font-semibold ${offerStatusClasses(
+                          offer.isActive,
+                        )}`}
+                      >
+                        {offer.isActive ? "Attiva" : "Archiviata"}
+                      </span>
+                    </div>
 
-                      <td className="px-5 py-4 text-white/55">
-                        {formatDate(offer.updatedAt)}
-                      </td>
+                    <dl className="mt-4 grid min-w-0 grid-cols-2 gap-3">
+                      <div className="min-w-0 rounded-md border border-white/[0.07] bg-[#111111] p-3">
+                        <dt className="text-[11px] text-white/35">Listino</dt>
+                        <dd className="mt-1 text-sm font-medium break-words text-white/70">
+                          {formatMoney(regularGrossAmountMinor, currency)}
+                        </dd>
+                      </div>
 
-                      <td className="px-5 py-4 text-right">
-                        <Link
-                          href={`/admin/prodotti/${offer.productId}`}
-                          className="text-sm font-medium whitespace-nowrap text-orange-300 transition hover:text-orange-200"
-                        >
-                          Apri prodotto
-                        </Link>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+                      <div className="min-w-0 rounded-md border border-white/[0.07] bg-[#111111] p-3">
+                        <dt className="text-[11px] text-white/35">
+                          Promozione
+                        </dt>
+                        <dd className="mt-1 text-sm font-semibold break-words text-orange-300">
+                          {formatMoney(promotionalGrossAmountMinor, currency)}
+                        </dd>
+                      </div>
+
+                      <div className="min-w-0 rounded-md border border-white/[0.07] bg-[#111111] p-3">
+                        <dt className="text-[11px] text-white/35">Sconto</dt>
+                        <dd className="mt-1 text-sm font-semibold text-orange-300">
+                          {offer.discountPercentage === null
+                            ? "—"
+                            : `−${offer.discountPercentage}%`}
+                        </dd>
+                      </div>
+
+                      <div className="min-w-0 rounded-md border border-white/[0.07] bg-[#111111] p-3">
+                        <dt className="text-[11px] text-white/35">
+                          Aggiornata
+                        </dt>
+                        <dd className="mt-1 text-xs leading-5 break-words text-white/55">
+                          {formatDate(offer.updatedAt)}
+                        </dd>
+                      </div>
+                    </dl>
+
+                    <Link
+                      href={`/admin/prodotti/${offer.productId}`}
+                      className="mt-4 inline-flex min-h-11 w-full items-center justify-center rounded-md bg-orange-500 px-4 text-sm font-semibold text-black transition hover:bg-orange-400 sm:w-auto"
+                    >
+                      Apri prodotto
+                    </Link>
+                  </article>
+                );
+              })}
+            </div>
+
+            <div className="hidden 2xl:block">
+              <table className="w-full min-w-[1100px] divide-y divide-white/10 text-sm">
+                <thead className="bg-white/[0.03]">
+                  <tr className="text-left text-xs font-semibold tracking-wide text-white/40 uppercase">
+                    <th className="px-5 py-4">Prodotto</th>
+                    <th className="px-5 py-4">Listino</th>
+                    <th className="px-5 py-4">Promozione</th>
+                    <th className="px-5 py-4">Sconto</th>
+                    <th className="px-5 py-4">Stato</th>
+                    <th className="px-5 py-4">Creata</th>
+                    <th className="px-5 py-4">Ultimo aggiornamento</th>
+                    <th className="px-5 py-4" />
+                  </tr>
+                </thead>
+
+                <tbody className="divide-y divide-white/5">
+                  {result.offers.map((offer) => {
+                    const currency = offer.currency ?? "EUR";
+
+                    const regularGrossAmountMinor = calculateGrossMinor(
+                      offer.regularNetAmountMinor,
+                      offer.vatRateBasisPoints,
+                    );
+
+                    const promotionalGrossAmountMinor = calculateGrossMinor(
+                      offer.promotionalNetAmountMinor,
+                      offer.vatRateBasisPoints,
+                    );
+
+                    return (
+                      <tr
+                        key={offer.id}
+                        className="transition hover:bg-white/[0.025]"
+                      >
+                        <td className="px-5 py-4">
+                          <p className="font-medium text-white">
+                            {offer.productName}
+                          </p>
+
+                          <div className="mt-1 flex flex-wrap gap-x-3 gap-y-1 text-xs text-white/35">
+                            <span className="font-mono">
+                              {offer.productCode}
+                            </span>
+
+                            <span>Prodotto: {offer.productStatus}</span>
+                          </div>
+                        </td>
+
+                        <td className="px-5 py-4 font-medium text-white/70">
+                          {formatMoney(regularGrossAmountMinor, currency)}
+                        </td>
+
+                        <td className="px-5 py-4 font-semibold text-orange-300">
+                          {formatMoney(promotionalGrossAmountMinor, currency)}
+                        </td>
+
+                        <td className="px-5 py-4">
+                          {offer.discountPercentage === null ? (
+                            <span className="text-white/35">—</span>
+                          ) : (
+                            <span className="font-semibold text-orange-300">
+                              −{offer.discountPercentage}%
+                            </span>
+                          )}
+                        </td>
+
+                        <td className="px-5 py-4">
+                          <span
+                            className={`inline-flex rounded-full border px-2.5 py-1 text-xs font-semibold ${offerStatusClasses(
+                              offer.isActive,
+                            )}`}
+                          >
+                            {offer.isActive ? "Attiva" : "Archiviata"}
+                          </span>
+                        </td>
+
+                        <td className="px-5 py-4 text-white/55">
+                          {formatDate(offer.createdAt)}
+                        </td>
+
+                        <td className="px-5 py-4 text-white/55">
+                          {formatDate(offer.updatedAt)}
+                        </td>
+
+                        <td className="px-5 py-4 text-right">
+                          <Link
+                            href={`/admin/prodotti/${offer.productId}`}
+                            className="text-sm font-medium whitespace-nowrap text-orange-300 transition hover:text-orange-200"
+                          >
+                            Apri prodotto
+                          </Link>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </>
         )}
 
         {result.totalPages > 1 ? (
-          <div className="flex items-center justify-between border-t border-white/10 px-5 py-4">
+          <div className="grid grid-cols-2 gap-3 border-t border-white/10 px-4 py-4 sm:grid-cols-[1fr_auto_1fr] sm:items-center sm:px-5">
             {result.page > 1 ? (
               <Link
                 href={buildPageHref(currentParams, result.page - 1)}
-                className="rounded-md border border-white/10 px-4 py-2 text-sm text-white/70 transition hover:bg-white/5 hover:text-white"
+                className="inline-flex min-h-10 w-full items-center justify-center rounded-md border border-white/10 px-4 py-2 text-sm text-white/70 transition hover:bg-white/5 hover:text-white sm:w-auto sm:justify-self-start"
               >
                 ← Precedente
               </Link>
@@ -585,14 +777,14 @@ export default async function AdminDiscountsPage({
               <span />
             )}
 
-            <span className="text-xs text-white/40">
+            <span className="col-span-2 row-start-1 text-center text-xs text-white/40 sm:col-span-1 sm:col-start-2">
               {result.page} / {result.totalPages}
             </span>
 
             {result.page < result.totalPages ? (
               <Link
                 href={buildPageHref(currentParams, result.page + 1)}
-                className="rounded-md border border-white/10 px-4 py-2 text-sm text-white/70 transition hover:bg-white/5 hover:text-white"
+                className="inline-flex min-h-10 w-full items-center justify-center rounded-md border border-white/10 px-4 py-2 text-sm text-white/70 transition hover:bg-white/5 hover:text-white sm:w-auto sm:justify-self-end"
               >
                 Successiva →
               </Link>
@@ -619,8 +811,8 @@ function SummaryCard({
     <div
       className={
         emphasis
-          ? "rounded-lg border border-orange-400/20 bg-orange-400/5 p-4"
-          : "rounded-lg border border-white/10 bg-[#171717] p-4"
+          ? "min-w-0 overflow-hidden rounded-lg border border-orange-400/20 bg-orange-400/5 p-4"
+          : "min-w-0 overflow-hidden rounded-lg border border-white/10 bg-[#171717] p-4"
       }
     >
       <p
@@ -634,8 +826,8 @@ function SummaryCard({
       <p
         className={
           emphasis
-            ? "mt-2 text-2xl font-semibold text-orange-300"
-            : "mt-2 text-2xl font-semibold text-white"
+            ? "mt-2 max-w-full text-xl leading-tight font-semibold break-words text-orange-300 tabular-nums sm:text-2xl"
+            : "mt-2 max-w-full text-xl leading-tight font-semibold break-words text-white tabular-nums sm:text-2xl"
         }
       >
         {typeof value === "number" ? value.toLocaleString("it-IT") : value}

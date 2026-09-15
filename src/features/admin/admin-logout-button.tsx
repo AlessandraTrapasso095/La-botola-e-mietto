@@ -9,9 +9,7 @@ type AdminLogoutButtonProps = {
   compact?: boolean;
 };
 
-export function AdminLogoutButton({
-  compact = false,
-}: AdminLogoutButtonProps) {
+export function AdminLogoutButton({ compact = false }: AdminLogoutButtonProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
@@ -29,9 +27,7 @@ export function AdminLogoutButton({
         cache: "no-store",
       });
     } finally {
-      window.localStorage.removeItem(
-        ADMIN_ACTIVITY_STORAGE_KEY,
-      );
+      window.localStorage.removeItem(ADMIN_ACTIVITY_STORAGE_KEY);
 
       router.replace("/admin/login");
       router.refresh();

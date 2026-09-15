@@ -231,13 +231,13 @@ export default async function AdminOrderDetailPage({
         ← Torna agli ordini
       </Link>
 
-      <div className="mt-6 flex flex-wrap items-start justify-between gap-5">
+      <div className="mt-5 flex min-w-0 flex-col gap-4 sm:mt-6 sm:flex-row sm:items-start sm:justify-between sm:gap-5">
         <div>
           <p className="text-xs font-semibold tracking-[0.16em] text-orange-400 uppercase">
             Dettaglio ordine
           </p>
 
-          <h1 className="mt-2 text-3xl font-semibold tracking-tight">
+          <h1 className="mt-2 max-w-full text-2xl font-semibold tracking-tight break-all text-white sm:text-3xl sm:break-words">
             {order.orderNumber}
           </h1>
 
@@ -276,7 +276,7 @@ export default async function AdminOrderDetailPage({
         </section>
       )}
 
-      <div className="mt-7 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="mt-6 grid gap-3 sm:grid-cols-2 sm:gap-4 xl:grid-cols-4">
         <div className="rounded-lg border border-white/10 bg-[#171717] p-5">
           <p className="text-xs text-white/40">Totale</p>
           <p className="mt-2 text-2xl font-semibold">
@@ -319,15 +319,15 @@ export default async function AdminOrderDetailPage({
         </div>
       </div>
 
-      <div className="mt-6 grid items-start gap-5 xl:grid-cols-[minmax(0,1.55fr)_minmax(340px,0.75fr)]">
-        <div className="grid content-start gap-5">
+      <div className="mt-5 grid min-w-0 items-start gap-4 sm:gap-5 xl:grid-cols-[minmax(0,1.55fr)_minmax(340px,0.75fr)]">
+        <div className="grid min-w-0 content-start gap-4 sm:gap-5">
           <section className="overflow-hidden rounded-lg border border-white/10 bg-[#171717]">
             <div className="border-b border-white/10 px-5 py-4">
               <h2 className="font-semibold">Prodotti</h2>
             </div>
 
-            <div className="overflow-x-auto">
-              <table className="w-full min-w-[720px] text-left text-sm">
+            <div className="hidden lg:block">
+              <table className="w-full text-left text-sm">
                 <thead className="border-b border-white/10 bg-white/[0.025] text-xs text-white/40 uppercase">
                   <tr>
                     <th className="px-5 py-4 font-medium">Prodotto</th>
@@ -373,9 +373,56 @@ export default async function AdminOrderDetailPage({
                 </tbody>
               </table>
             </div>
+
+            <div className="divide-y divide-white/5 lg:hidden">
+              {order.products.map((product) => (
+                <article key={product.id} className="px-4 py-4">
+                  <div className="min-w-0">
+                    <p className="font-medium break-words text-white">
+                      {product.name}
+                    </p>
+
+                    <p className="mt-1 text-xs break-all text-white/40">
+                      {product.code}
+                    </p>
+                  </div>
+
+                  <dl className="mt-4 grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
+                    <div>
+                      <dt className="text-xs text-white/40">Quantità</dt>
+                      <dd className="mt-1 text-white/75">{product.quantity}</dd>
+                    </div>
+
+                    <div>
+                      <dt className="text-xs text-white/40">IVA</dt>
+                      <dd className="mt-1 text-white/75">
+                        {(product.vatRateBasisPoints / 100).toLocaleString(
+                          "it-IT",
+                        )}
+                        %
+                      </dd>
+                    </div>
+
+                    <div>
+                      <dt className="text-xs text-white/40">Unitario</dt>
+                      <dd className="mt-1 text-white/75">
+                        {formatMoney(product.unitGrossAmountMinor)}
+                      </dd>
+                    </div>
+
+                    <div>
+                      <dt className="text-xs text-white/40">Totale</dt>
+                      <dd className="mt-1 font-semibold text-orange-300">
+                        {formatMoney(product.lineGrossAmountMinor)}
+                      </dd>
+                    </div>
+                  </dl>
+                </article>
+              ))}
+            </div>
           </section>
 
-          <section className="rounded-lg border border-white/10 bg-[#171717] p-5">
+          <section className="min-w-0 rounded-lg border border-white/10 bg-[#171717] p-4 sm:p-5">
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
                 <h2 className="font-semibold">Stato amministrativo</h2>
@@ -391,7 +438,7 @@ export default async function AdminOrderDetailPage({
               </span>
             </div>
 
-            <dl className="mt-5 grid gap-4 text-sm sm:grid-cols-2 lg:grid-cols-3">
+            <dl className="mt-5 grid gap-3 text-sm sm:grid-cols-2 lg:grid-cols-3">
               <div className="rounded-md border border-white/[0.07] bg-[#111111] p-4">
                 <dt className="text-xs text-white/40">Ordine</dt>
                 <dd className="mt-1 font-medium">
@@ -499,7 +546,7 @@ export default async function AdminOrderDetailPage({
           {(order.paymentProviderReference ||
             order.stripePaymentIntentId ||
             order.stripeCheckoutSessionId) && (
-            <section className="rounded-lg border border-white/10 bg-[#171717] p-5">
+            <section className="min-w-0 rounded-lg border border-white/10 bg-[#171717] p-4 sm:p-5">
               <h2 className="font-semibold">Riferimenti pagamento</h2>
 
               <dl className="mt-4 grid gap-4 text-sm md:grid-cols-2">
@@ -537,7 +584,7 @@ export default async function AdminOrderDetailPage({
         </div>
 
         <div className="grid content-start gap-5">
-          <section className="rounded-lg border border-white/10 bg-[#171717] p-5">
+          <section className="min-w-0 rounded-lg border border-white/10 bg-[#171717] p-4 sm:p-5">
             <h2 className="font-semibold">Cliente</h2>
 
             <dl className="mt-4 grid gap-4 text-sm">
@@ -565,13 +612,13 @@ export default async function AdminOrderDetailPage({
 
             <Link
               href={`/admin/clienti/${order.customer.id}`}
-              className="mt-4 inline-flex min-h-9 items-center rounded-md border border-white/10 px-3 text-xs font-semibold text-white/65 transition hover:border-orange-400/30 hover:text-orange-300"
+              className="mt-4 inline-flex min-h-10 w-full items-center justify-center rounded-md border border-white/10 px-3 text-xs font-semibold text-white/65 transition hover:border-orange-400/30 hover:text-orange-300 sm:w-auto"
             >
               Apri cliente
             </Link>
           </section>
 
-          <section className="rounded-lg border border-white/10 bg-[#171717] p-5">
+          <section className="min-w-0 rounded-lg border border-white/10 bg-[#171717] p-4 sm:p-5">
             <h2 className="font-semibold">Riepilogo economico</h2>
 
             <dl className="mt-4 grid gap-3 text-sm">
@@ -597,7 +644,7 @@ export default async function AdminOrderDetailPage({
             </dl>
           </section>
 
-          <section className="rounded-lg border border-white/10 bg-[#171717] p-5">
+          <section className="min-w-0 rounded-lg border border-white/10 bg-[#171717] p-4 sm:p-5">
             <h2 className="font-semibold">Gestione ordine</h2>
 
             <div className="mt-4">

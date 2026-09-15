@@ -47,7 +47,7 @@ export default async function AdminCancellationRequestsPage() {
 
   return (
     <div className="min-w-0">
-      <div className="flex flex-wrap items-start justify-between gap-5">
+      <div className="flex min-w-0 flex-col items-start gap-4 sm:flex-row sm:justify-between sm:gap-5">
         <div className="min-w-0">
           <p className="text-xs font-semibold tracking-[0.16em] text-orange-400 uppercase">
             Gestione ordini
@@ -63,7 +63,7 @@ export default async function AdminCancellationRequestsPage() {
           </p>
         </div>
 
-        <div className="shrink-0 rounded-lg border border-orange-400/20 bg-orange-400/5 px-4 py-3 text-right">
+        <div className="w-full rounded-lg border border-orange-400/20 bg-orange-400/5 px-4 py-3 text-left sm:w-auto sm:min-w-32 sm:shrink-0 sm:text-right">
           <p className="text-xs text-orange-300/70">Da gestire</p>
           <p className="mt-1 text-2xl font-semibold text-orange-300">
             {requests.length}
@@ -118,17 +118,17 @@ export default async function AdminCancellationRequestsPage() {
                   </p>
                 </div>
 
-                <dl className="grid min-w-0 gap-4 text-sm sm:grid-cols-3 lg:min-w-[420px]">
+                <dl className="grid min-w-0 gap-3 text-sm md:min-w-[420px] md:grid-cols-3 md:gap-4">
                   <div>
                     <dt className="text-xs text-white/40">Totale</dt>
-                    <dd className="mt-1 font-semibold">
+                    <dd className="mt-1 max-w-full font-semibold break-words tabular-nums">
                       {formatMoney(order.totalGrossAmountMinor)}
                     </dd>
                   </div>
 
                   <div>
                     <dt className="text-xs text-white/40">Pagamento</dt>
-                    <dd className="mt-1">
+                    <dd className="mt-1 break-words">
                       {paymentMethodLabel(order.paymentMethod)}
                     </dd>
                   </div>

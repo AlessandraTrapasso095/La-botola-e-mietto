@@ -175,7 +175,7 @@ export default async function AdminOrdersPage({
 
   return (
     <div>
-      <div className="flex flex-wrap items-start justify-between gap-5">
+      <div className="flex min-w-0 flex-col items-start gap-4 sm:flex-row sm:justify-between sm:gap-5">
         <div>
           <p className="text-xs font-semibold tracking-[0.16em] text-orange-400 uppercase">
             Gestione ordini
@@ -188,13 +188,13 @@ export default async function AdminOrdersPage({
           </p>
         </div>
 
-        <div className="rounded-lg border border-white/10 bg-[#171717] px-4 py-3 text-right">
+        <div className="w-full rounded-lg border border-white/10 bg-[#171717] px-4 py-3 text-left sm:w-auto sm:min-w-36 sm:text-right">
           <p className="text-xs text-white/40">Ordini visualizzati</p>
           <p className="mt-1 text-2xl font-semibold">{filteredOrders.length}</p>
         </div>
       </div>
 
-      <div className="mt-8 grid gap-3 sm:grid-cols-3">
+      <div className="mt-6 grid min-w-0 gap-3 md:grid-cols-3">
         <div className="rounded-lg border border-white/10 bg-[#171717] p-4">
           <p className="text-xs text-white/40">Nuovi / ricevuti</p>
           <p className="mt-2 text-2xl font-semibold">{receivedCount}</p>
@@ -217,7 +217,7 @@ export default async function AdminOrdersPage({
 
       <form
         method="GET"
-        className="mt-6 grid gap-3 rounded-lg border border-white/10 bg-[#171717] p-4 md:grid-cols-2 xl:grid-cols-6"
+        className="mt-6 grid min-w-0 gap-3 rounded-lg border border-white/10 bg-[#171717] p-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6"
       >
         <input
           type="search"
@@ -271,17 +271,17 @@ export default async function AdminOrdersPage({
           Filtra
         </button>
 
-        <div className="flex flex-wrap gap-2 md:col-span-2 xl:col-span-6">
+        <div className="grid gap-2 sm:col-span-2 sm:grid-cols-2 lg:col-span-3 xl:col-span-6 xl:flex xl:flex-wrap">
           <Link
             href="/admin/ordini"
-            className="inline-flex min-h-9 items-center rounded-md border border-white/10 px-3 text-xs font-medium text-white/60 transition hover:bg-white/5 hover:text-white"
+            className="inline-flex min-h-10 w-full items-center justify-center rounded-md border border-white/10 px-3 text-center text-xs font-medium text-white/60 transition hover:bg-white/5 hover:text-white xl:w-auto"
           >
             Azzera filtri
           </Link>
 
           <Link
             href="/admin/ordini?cancellation=pending"
-            className="inline-flex min-h-9 items-center rounded-md border border-orange-400/20 bg-orange-400/5 px-3 text-xs font-medium text-orange-300 transition hover:bg-orange-400/10"
+            className="inline-flex min-h-10 w-full items-center justify-center rounded-md border border-orange-400/20 bg-orange-400/5 px-3 text-center text-xs font-medium text-orange-300 transition hover:bg-orange-400/10 xl:w-auto"
           >
             Solo annullamenti richiesti
           </Link>
@@ -297,124 +297,229 @@ export default async function AdminOrdersPage({
             </p>
           </div>
         ) : (
-          <div className="w-full overflow-hidden">
-            <table className="w-full table-fixed border-collapse text-left text-[13px]">
-              <colgroup>
-                <col className="w-[16%]" />
-                <col className="w-[13%]" />
-                <col className="w-[20%]" />
-                <col className="w-[6%]" />
-                <col className="w-[9%]" />
-                <col className="w-[11%]" />
-                <col className="w-[10%]" />
-                <col className="w-[7%]" />
-                <col className="w-[8%]" />
-              </colgroup>
-              <thead className="border-b border-white/10 bg-white/[0.025] text-xs text-white/40 uppercase">
-                <tr>
-                  <th className="px-3 py-4 font-medium">Ordine</th>
-                  <th className="px-3 py-4 font-medium">Data</th>
-                  <th className="px-3 py-4 font-medium">Cliente</th>
-                  <th className="px-3 py-4 font-medium">Articoli</th>
-                  <th className="px-3 py-4 font-medium">Totale</th>
-                  <th className="px-3 py-4 font-medium">Pagamento</th>
-                  <th className="px-3 py-4 font-medium">Stato</th>
-                  <th className="px-3 py-4 font-medium">Consegna</th>
-                  <th className="px-3 py-4 font-medium">Azioni</th>
-                </tr>
-              </thead>
+          <>
+            <div className="divide-y divide-white/10 lg:hidden">
+              {filteredOrders.map((order) => {
+                const customerName = [
+                  order.customer.firstName,
+                  order.customer.lastName,
+                ]
+                  .filter(Boolean)
+                  .join(" ");
 
-              <tbody className="divide-y divide-white/5">
-                {filteredOrders.map((order) => {
-                  const customerName = [
-                    order.customer.firstName,
-                    order.customer.lastName,
-                  ]
-                    .filter(Boolean)
-                    .join(" ");
+                return (
+                  <article key={order.id} className="min-w-0 p-4 sm:p-5">
+                    <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                      <div className="min-w-0">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <p className="max-w-full font-semibold break-all text-white">
+                            {order.orderNumber}
+                          </p>
 
-                  return (
-                    <tr
-                      key={order.id}
-                      className="transition hover:bg-white/[0.025]"
-                    >
-                      <td className="px-3 py-4">
-                        <p className="truncate font-semibold text-white">
-                          {order.orderNumber}
-                        </p>
+                          {order.cancellationRequestStatus === "pending" ? (
+                            <span className="inline-flex rounded-full border border-orange-400/20 bg-orange-400/10 px-2 py-1 text-[11px] font-semibold text-orange-300">
+                              Annullamento richiesto
+                            </span>
+                          ) : null}
+                        </div>
 
-                        {order.cancellationRequestStatus === "pending" && (
-                          <span className="mt-2 inline-flex rounded-full border border-orange-400/20 bg-orange-400/10 px-2 py-1 text-[11px] font-semibold text-orange-300">
-                            Annullamento richiesto
-                          </span>
-                        )}
-                      </td>
-
-                      <td className="px-3 py-4 text-white/60">
-                        {formatDate(order.createdAt)}
-                      </td>
-
-                      <td className="px-3 py-4">
-                        <p className="font-medium text-white">
+                        <p className="mt-2 font-medium break-words text-white/85">
                           {customerName || "Cliente"}
                         </p>
-                        <p className="mt-1 truncate text-xs text-white/40">
+
+                        <p className="mt-1 text-xs break-all text-white/40">
                           {order.customer.email}
                         </p>
-                      </td>
 
-                      <td className="px-3 py-4 text-white/70">
-                        {order.itemCount}
-                      </td>
+                        <p className="mt-1 text-xs text-white/35">
+                          {formatDate(order.createdAt)}
+                        </p>
+                      </div>
 
-                      <td className="px-3 py-4 font-semibold text-white">
-                        {formatMoney(order.totalGrossAmountMinor)}
-                      </td>
+                      <div className="shrink-0 sm:text-right">
+                        <p className="text-lg font-semibold text-white">
+                          {formatMoney(order.totalGrossAmountMinor)}
+                        </p>
 
-                      <td className="px-3 py-4">
+                        <p className="mt-1 text-xs text-white/40">
+                          {order.itemCount}{" "}
+                          {order.itemCount === 1 ? "articolo" : "articoli"}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="mt-4 grid grid-cols-2 gap-3">
+                      <div className="min-w-0 rounded-md border border-white/[0.07] bg-[#111111] p-3">
+                        <p className="text-[11px] text-white/35">Stato</p>
+
+                        <span
+                          className={`mt-2 inline-flex max-w-full rounded-full border px-2.5 py-1 text-xs font-medium ${statusClasses(
+                            order.status,
+                          )}`}
+                        >
+                          {orderStatusLabel(order.status)}
+                        </span>
+                      </div>
+
+                      <div className="min-w-0 rounded-md border border-white/[0.07] bg-[#111111] p-3">
+                        <p className="text-[11px] text-white/35">Pagamento</p>
+
                         <p
-                          className={`font-medium ${paymentClasses(
+                          className={`mt-2 text-sm font-medium break-words ${paymentClasses(
                             order.paymentStatus,
                           )}`}
                         >
                           {paymentStatusLabel(order.paymentStatus)}
                         </p>
 
-                        <p className="mt-1 truncate text-xs text-white/40">
+                        <p className="mt-1 text-xs break-words text-white/40">
                           {paymentMethodLabel(order.paymentMethod)}
                         </p>
-                      </td>
+                      </div>
 
-                      <td className="px-3 py-4">
-                        <span
-                          className={`inline-flex rounded-full border px-2.5 py-1 text-xs font-medium ${statusClasses(
-                            order.status,
-                          )}`}
-                        >
-                          {orderStatusLabel(order.status)}
-                        </span>
-                      </td>
+                      <div className="col-span-2 min-w-0 rounded-md border border-white/[0.07] bg-[#111111] p-3 sm:col-span-1">
+                        <p className="text-[11px] text-white/35">Consegna</p>
 
-                      <td className="px-3 py-4 text-white/60">
-                        {shippingMethodLabel(order.shippingMethod)}
-                      </td>
+                        <p className="mt-2 text-sm font-medium text-white/70">
+                          {shippingMethodLabel(order.shippingMethod)}
+                        </p>
+                      </div>
 
-                      <td className="px-3 py-4">
+                      <div className="col-span-2 sm:col-span-1">
                         <Link
                           href={`/admin/ordini/${encodeURIComponent(
                             order.orderNumber,
                           )}`}
-                          className="inline-flex min-h-9 items-center rounded-md border border-white/10 px-3 text-xs font-semibold text-white/70 transition hover:border-orange-400/40 hover:text-orange-300"
+                          className="inline-flex min-h-12 w-full items-center justify-center rounded-md bg-orange-400 px-4 text-sm font-semibold text-black transition hover:bg-orange-300"
                         >
-                          Apri
+                          Apri ordine
                         </Link>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+                      </div>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+
+            <div className="hidden w-full overflow-hidden lg:block">
+              <table className="w-full table-fixed border-collapse text-left text-[13px]">
+                <colgroup>
+                  <col className="w-[16%]" />
+                  <col className="w-[13%]" />
+                  <col className="w-[20%]" />
+                  <col className="w-[6%]" />
+                  <col className="w-[9%]" />
+                  <col className="w-[11%]" />
+                  <col className="w-[10%]" />
+                  <col className="w-[7%]" />
+                  <col className="w-[8%]" />
+                </colgroup>
+                <thead className="border-b border-white/10 bg-white/[0.025] text-xs text-white/40 uppercase">
+                  <tr>
+                    <th className="px-3 py-4 font-medium">Ordine</th>
+                    <th className="px-3 py-4 font-medium">Data</th>
+                    <th className="px-3 py-4 font-medium">Cliente</th>
+                    <th className="px-3 py-4 font-medium">Articoli</th>
+                    <th className="px-3 py-4 font-medium">Totale</th>
+                    <th className="px-3 py-4 font-medium">Pagamento</th>
+                    <th className="px-3 py-4 font-medium">Stato</th>
+                    <th className="px-3 py-4 font-medium">Consegna</th>
+                    <th className="px-3 py-4 font-medium">Azioni</th>
+                  </tr>
+                </thead>
+
+                <tbody className="divide-y divide-white/5">
+                  {filteredOrders.map((order) => {
+                    const customerName = [
+                      order.customer.firstName,
+                      order.customer.lastName,
+                    ]
+                      .filter(Boolean)
+                      .join(" ");
+
+                    return (
+                      <tr
+                        key={order.id}
+                        className="transition hover:bg-white/[0.025]"
+                      >
+                        <td className="px-3 py-4">
+                          <p className="truncate font-semibold text-white">
+                            {order.orderNumber}
+                          </p>
+
+                          {order.cancellationRequestStatus === "pending" && (
+                            <span className="mt-2 inline-flex rounded-full border border-orange-400/20 bg-orange-400/10 px-2 py-1 text-[11px] font-semibold text-orange-300">
+                              Annullamento richiesto
+                            </span>
+                          )}
+                        </td>
+
+                        <td className="px-3 py-4 text-white/60">
+                          {formatDate(order.createdAt)}
+                        </td>
+
+                        <td className="px-3 py-4">
+                          <p className="font-medium text-white">
+                            {customerName || "Cliente"}
+                          </p>
+                          <p className="mt-1 truncate text-xs text-white/40">
+                            {order.customer.email}
+                          </p>
+                        </td>
+
+                        <td className="px-3 py-4 text-white/70">
+                          {order.itemCount}
+                        </td>
+
+                        <td className="px-3 py-4 font-semibold text-white">
+                          {formatMoney(order.totalGrossAmountMinor)}
+                        </td>
+
+                        <td className="px-3 py-4">
+                          <p
+                            className={`font-medium ${paymentClasses(
+                              order.paymentStatus,
+                            )}`}
+                          >
+                            {paymentStatusLabel(order.paymentStatus)}
+                          </p>
+
+                          <p className="mt-1 truncate text-xs text-white/40">
+                            {paymentMethodLabel(order.paymentMethod)}
+                          </p>
+                        </td>
+
+                        <td className="px-3 py-4">
+                          <span
+                            className={`inline-flex rounded-full border px-2.5 py-1 text-xs font-medium ${statusClasses(
+                              order.status,
+                            )}`}
+                          >
+                            {orderStatusLabel(order.status)}
+                          </span>
+                        </td>
+
+                        <td className="px-3 py-4 text-white/60">
+                          {shippingMethodLabel(order.shippingMethod)}
+                        </td>
+
+                        <td className="px-3 py-4">
+                          <Link
+                            href={`/admin/ordini/${encodeURIComponent(
+                              order.orderNumber,
+                            )}`}
+                            className="inline-flex min-h-9 items-center rounded-md border border-white/10 px-3 text-xs font-semibold text-white/70 transition hover:border-orange-400/40 hover:text-orange-300"
+                          >
+                            Apri
+                          </Link>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </>
         )}
       </div>
     </div>

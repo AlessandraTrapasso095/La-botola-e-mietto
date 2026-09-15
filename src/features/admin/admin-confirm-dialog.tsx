@@ -82,7 +82,7 @@ export function AdminConfirmDialog({
 
   return (
     <div
-      className="fixed inset-0 z-[120] flex items-center justify-center bg-black/75 p-4 backdrop-blur-sm"
+      className="fixed inset-0 z-[120] flex items-center justify-center bg-black/75 p-2 backdrop-blur-sm sm:p-4"
       role="presentation"
       onMouseDown={(event) => {
         if (event.target === event.currentTarget && !pending) {
@@ -94,7 +94,7 @@ export function AdminConfirmDialog({
         role="dialog"
         aria-modal="true"
         aria-labelledby="admin-confirm-dialog-title"
-        className="w-full max-w-md rounded-xl border border-white/10 bg-[#171717] p-6 shadow-2xl sm:p-7"
+        className="max-h-[calc(100dvh-1rem)] w-full max-w-md overflow-y-auto rounded-xl border border-white/10 bg-[#171717] p-4 shadow-2xl sm:max-h-[calc(100dvh-2rem)] sm:p-7"
       >
         <div className="flex items-start justify-between gap-4">
           <div>
@@ -144,7 +144,7 @@ export function AdminConfirmDialog({
             type="button"
             onClick={onCancel}
             disabled={pending}
-            className="inline-flex min-h-11 items-center justify-center rounded-md border border-white/15 px-5 text-sm font-semibold text-white/70 transition hover:border-white/30 hover:text-white disabled:opacity-50"
+            className="inline-flex min-h-11 w-full items-center justify-center rounded-md border border-white/15 px-5 text-sm font-semibold text-white/70 transition hover:border-white/30 hover:text-white disabled:opacity-50 sm:w-auto"
           >
             {cancelLabel}
           </button>
@@ -154,7 +154,7 @@ export function AdminConfirmDialog({
             onClick={onConfirm}
             disabled={pending}
             className={[
-              "inline-flex min-h-11 items-center justify-center rounded-md px-5 text-sm font-semibold text-black transition disabled:cursor-wait disabled:opacity-60",
+              "inline-flex min-h-11 w-full items-center justify-center rounded-md px-5 text-sm font-semibold text-black transition disabled:cursor-wait disabled:opacity-60 sm:w-auto",
               confirmClass,
             ].join(" ")}
           >

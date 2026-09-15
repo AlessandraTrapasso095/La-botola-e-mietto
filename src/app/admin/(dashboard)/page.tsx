@@ -23,26 +23,26 @@ function moneyKpiClass(amountMinor: number) {
   const length = formatted.length;
 
   if (length <= 8) {
-    return "text-[2.5rem] xl:text-[2.75rem]";
+    return "text-[2.25rem] sm:text-[2.5rem] xl:text-[2.75rem]";
   }
 
   if (length <= 10) {
-    return "text-[2.15rem] xl:text-[2.35rem]";
+    return "text-[2rem] sm:text-[2.2rem] xl:text-[2.4rem]";
   }
 
   if (length <= 12) {
-    return "text-[1.8rem] xl:text-[2rem]";
+    return "text-[1.7rem] sm:text-[1.9rem] xl:text-[2.1rem]";
   }
 
   if (length <= 14) {
-    return "text-[1.55rem] xl:text-[1.75rem]";
+    return "text-[1.45rem] sm:text-[1.65rem] xl:text-[1.8rem]";
   }
 
   if (length <= 17) {
-    return "text-[1.3rem] xl:text-[1.5rem]";
+    return "text-[1.2rem] sm:text-[1.35rem] xl:text-[1.5rem]";
   }
 
-  return "text-[1.05rem] xl:text-[1.2rem]";
+  return "text-base sm:text-lg xl:text-xl";
 }
 
 function formatDate(value: string) {
@@ -90,7 +90,7 @@ export default async function AdminDashboardPage() {
 
   return (
     <div className="min-w-0">
-      <div className="flex flex-wrap items-start justify-between gap-5">
+      <div className="flex min-w-0 flex-col items-start gap-5 sm:flex-row sm:justify-between">
         <div className="min-w-0">
           <p className="text-xs font-semibold tracking-[0.16em] text-orange-400 uppercase">
             Panoramica
@@ -108,13 +108,13 @@ export default async function AdminDashboardPage() {
 
         <Link
           href="/admin/ordini"
-          className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-md border border-white/10 px-4 text-sm font-semibold text-white/70 transition hover:bg-white/5 hover:text-white"
+          className="inline-flex min-h-11 w-full items-center justify-center rounded-md border border-white/10 px-4 text-sm font-semibold text-white/70 transition hover:bg-white/5 hover:text-white sm:w-auto sm:shrink-0"
         >
           Tutti gli ordini
         </Link>
       </div>
 
-      <section className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <section className="mt-7 grid min-w-0 gap-4 md:grid-cols-2 xl:grid-cols-4">
         <Link
           href="/admin/ordini"
           className="rounded-lg border border-white/10 bg-[#171717] p-5 transition hover:border-orange-400/40"
@@ -130,11 +130,11 @@ export default async function AdminDashboardPage() {
           </p>
         </Link>
 
-        <div className="rounded-lg border border-white/10 bg-[#171717] p-5">
+        <div className="min-w-0 overflow-hidden rounded-lg border border-white/10 bg-[#171717] p-5">
           <p className="text-sm text-white/50">Incassato</p>
 
           <p
-            className={`mt-3 max-w-full min-w-0 leading-none font-semibold tracking-[-0.03em] whitespace-nowrap tabular-nums ${moneyKpiClass(
+            className={`mt-3 max-w-full min-w-0 leading-tight font-semibold tracking-[-0.03em] [overflow-wrap:anywhere] tabular-nums ${moneyKpiClass(
               dashboard.paidRevenueMinor,
             )}`}
           >
@@ -174,7 +174,7 @@ export default async function AdminDashboardPage() {
         </div>
       </section>
 
-      <section className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <section className="mt-6 grid min-w-0 grid-cols-2 gap-3 md:gap-4 xl:grid-cols-4">
         <div className="rounded-lg border border-white/10 bg-[#171717] p-4">
           <p className="text-xs text-white/40">Ricevuti</p>
           <p className="mt-2 text-2xl font-semibold">
@@ -353,7 +353,7 @@ export default async function AdminDashboardPage() {
           </p>
         </div>
 
-        <div className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="mt-4 grid min-w-0 gap-4 md:grid-cols-2 xl:grid-cols-4">
           <Link
             href="/admin/ordini?payment=pending"
             className="rounded-lg border border-white/10 bg-[#171717] p-4 transition hover:border-orange-400/40"
@@ -384,7 +384,7 @@ export default async function AdminDashboardPage() {
           <div className="rounded-lg border border-white/10 bg-[#171717] p-4">
             <p className="text-xs text-white/40">Totale rimborsato</p>
 
-            <p className="mt-2 text-2xl font-semibold">
+            <p className="mt-2 max-w-full text-xl leading-tight font-semibold break-words tabular-nums sm:text-2xl">
               {formatMoney(dashboard.refundedAmountMinor)}
             </p>
           </div>
@@ -394,7 +394,7 @@ export default async function AdminDashboardPage() {
       <section className="mt-8">
         <h2 className="font-semibold">Azioni rapide</h2>
 
-        <div className="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <div className="mt-4 grid min-w-0 gap-4 md:grid-cols-2 xl:grid-cols-3">
           <Link
             href="/admin/ordini"
             className="rounded-lg border border-white/10 bg-[#171717] p-5 transition hover:border-orange-400/50"

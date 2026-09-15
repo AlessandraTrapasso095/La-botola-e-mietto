@@ -361,7 +361,7 @@ export function AdminPromotionCodeManager({
 
   return (
     <>
-      <div className="flex flex-col gap-4 rounded-lg border border-white/10 bg-[#171717] p-5 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex min-w-0 flex-col gap-4 rounded-lg border border-white/10 bg-[#171717] p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
         <div>
           <p className="text-sm font-semibold text-white">
             Gestione codici promozionali
@@ -376,18 +376,18 @@ export function AdminPromotionCodeManager({
           type="button"
           onClick={openCreate}
           disabled={isPending}
-          className="inline-flex min-h-11 items-center justify-center rounded-md bg-orange-500 px-5 text-sm font-semibold text-black transition hover:bg-orange-400 disabled:cursor-wait disabled:opacity-50"
+          className="inline-flex min-h-11 w-full items-center justify-center rounded-md bg-orange-500 px-5 text-sm font-semibold text-black transition hover:bg-orange-400 disabled:cursor-wait disabled:opacity-50 sm:w-auto"
         >
           Nuovo codice
         </button>
       </div>
 
       {promotionCodes.length > 0 ? (
-        <div className="grid gap-3 lg:grid-cols-2">
+        <div className="grid min-w-0 gap-3 lg:grid-cols-2">
           {promotionCodes.map((promotionCode) => (
             <div
               key={promotionCode.id}
-              className="flex flex-col gap-3 rounded-md border border-white/10 bg-[#171717] p-4 sm:flex-row sm:items-center sm:justify-between"
+              className="flex min-w-0 flex-col gap-3 rounded-md border border-white/10 bg-[#171717] p-4 sm:flex-row sm:items-center sm:justify-between"
             >
               <div className="min-w-0">
                 <div className="flex flex-wrap items-center gap-2">
@@ -412,12 +412,12 @@ export function AdminPromotionCodeManager({
                 </p>
               </div>
 
-              <div className="flex shrink-0 flex-wrap gap-2">
+              <div className="grid w-full grid-cols-2 gap-2 sm:flex sm:w-auto sm:shrink-0 sm:flex-wrap">
                 <button
                   type="button"
                   onClick={() => openEdit(promotionCode)}
                   disabled={isPending}
-                  className="inline-flex min-h-10 items-center justify-center rounded-md border border-white/10 px-4 text-sm font-medium text-white/70 transition hover:border-orange-400/30 hover:text-white disabled:opacity-50"
+                  className="inline-flex min-h-10 w-full items-center justify-center rounded-md border border-white/10 px-4 text-sm font-medium text-white/70 transition hover:border-orange-400/30 hover:text-white disabled:opacity-50 sm:w-auto"
                 >
                   Modifica
                 </button>
@@ -432,7 +432,7 @@ export function AdminPromotionCodeManager({
                   }
                   disabled={isPending}
                   className={[
-                    "inline-flex min-h-10 items-center justify-center rounded-md border px-4 text-sm font-semibold transition disabled:opacity-50",
+                    "inline-flex min-h-10 w-full items-center justify-center rounded-md border px-4 text-sm font-semibold transition disabled:opacity-50 sm:w-auto",
                     promotionCode.isActive
                       ? "border-red-400/20 bg-red-400/10 text-red-300 hover:bg-red-400/15"
                       : "border-emerald-400/20 bg-emerald-400/10 text-emerald-300 hover:bg-emerald-400/15",
@@ -448,7 +448,7 @@ export function AdminPromotionCodeManager({
 
       {editorMode ? (
         <div
-          className="fixed inset-0 z-[110] flex items-center justify-center overflow-y-auto bg-black/75 p-4 backdrop-blur-sm"
+          className="fixed inset-0 z-[110] flex items-center justify-center overflow-y-auto bg-black/75 p-2 backdrop-blur-sm sm:p-4"
           role="presentation"
           onMouseDown={(event) => {
             if (event.target === event.currentTarget && !isPending) {
@@ -460,7 +460,7 @@ export function AdminPromotionCodeManager({
             role="dialog"
             aria-modal="true"
             aria-labelledby="promotion-code-editor-title"
-            className="my-auto w-full max-w-3xl rounded-xl border border-white/10 bg-[#171717] p-6 shadow-2xl sm:p-7"
+            className="my-auto max-h-[calc(100dvh-1rem)] w-full max-w-3xl overflow-y-auto rounded-xl border border-white/10 bg-[#171717] p-4 shadow-2xl sm:max-h-[calc(100dvh-2rem)] sm:p-7"
           >
             <div className="flex items-start justify-between gap-4">
               <div>
@@ -489,7 +489,7 @@ export function AdminPromotionCodeManager({
               </button>
             </div>
 
-            <div className="mt-7 grid gap-5 md:grid-cols-2">
+            <div className="mt-6 grid min-w-0 gap-4 md:grid-cols-2 md:gap-5">
               <label className="space-y-2">
                 <span className="text-xs font-medium text-white/50">
                   Codice
@@ -726,7 +726,7 @@ export function AdminPromotionCodeManager({
                 type="button"
                 onClick={closeEditor}
                 disabled={isPending}
-                className="inline-flex min-h-11 items-center justify-center rounded-md border border-white/15 px-5 text-sm font-semibold text-white/70 transition hover:border-white/30 hover:text-white disabled:opacity-50"
+                className="inline-flex min-h-11 w-full items-center justify-center rounded-md border border-white/15 px-5 text-sm font-semibold text-white/70 transition hover:border-white/30 hover:text-white disabled:opacity-50 sm:w-auto"
               >
                 Annulla
               </button>
@@ -735,7 +735,7 @@ export function AdminPromotionCodeManager({
                 type="button"
                 onClick={requestSave}
                 disabled={isPending}
-                className="inline-flex min-h-11 items-center justify-center rounded-md bg-orange-500 px-5 text-sm font-semibold text-black transition hover:bg-orange-400 disabled:cursor-wait disabled:opacity-50"
+                className="inline-flex min-h-11 w-full items-center justify-center rounded-md bg-orange-500 px-5 text-sm font-semibold text-black transition hover:bg-orange-400 disabled:cursor-wait disabled:opacity-50 sm:w-auto"
               >
                 {editingPromotionCode ? "Salva modifiche" : "Crea codice"}
               </button>

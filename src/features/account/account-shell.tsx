@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, type ReactNode } from "react";
 
-import { ArrowRightIcon } from "@/components/icons";
+import { ArrowRightIcon, ChevronDownIcon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 import { accountNavigation, accountRoutes } from "@/config/account";
@@ -40,33 +40,75 @@ export function AccountShell({ children }: { children: ReactNode }) {
     router.replace(accountRoutes.signIn);
   };
 
+  const activeMobileLink =
+    accountNavigation.find((link) => link.href === pathname) ??
+    accountNavigation[0];
+
   return (
     <main id="main-content" className="min-h-[70vh]">
-      <Container className="py-10 sm:py-14 lg:py-20">
-        <div className="border-border-subtle mb-8 border-b pb-7 lg:hidden">
-          <label className="grid gap-2" htmlFor="account-mobile-navigation">
+      <Container className="min-w-0 py-8 sm:py-14 lg:py-20">
+        <div className="border-border-subtle mb-8 min-w-0 border-b pb-6 lg:hidden">
+          <div className="grid min-w-0 gap-2">
             <span className="text-accent text-xs font-semibold tracking-[var(--letter-spacing-label)] uppercase">
               Area personale
             </span>
-            <select
-              id="account-mobile-navigation"
-              value={pathname}
-              onChange={(event) => router.push(event.target.value)}
-              className="border-border-subtle bg-surface min-h-12 w-full border px-4"
-            >
-              {accountNavigation.map((link) => (
-                <option key={link.href} value={link.href}>
-                  {link.label}
-                </option>
-              ))}
-            </select>
-          </label>
+
+            <details className="group relative min-w-0">
+              <summary className="border-border-subtle bg-surface text-text-strong flex min-h-12 cursor-pointer list-none items-center justify-between border px-4 font-medium [&::-webkit-details-marker]:hidden">
+                <span className="min-w-0 truncate">
+                  {activeMobileLink?.label ?? "Panoramica"}
+                </span>
+
+                <ChevronDownIcon className="text-text-muted ml-3 size-4 shrink-0 transition-transform group-open:rotate-180" />
+              </summary>
+
+              <div className="border-border-subtle bg-surface-elevated absolute inset-x-0 top-[calc(100%+0.4rem)] z-30 overflow-hidden border shadow-[var(--shadow-ambient)]">
+                <nav aria-label="Navigazione account mobile">
+                  <ul className="grid">
+                    {accountNavigation.map((link) => {
+                      const active = pathname === link.href;
+
+                      return (
+                        <li
+                          key={link.href}
+                          className="border-border-subtle border-b last:border-b-0"
+                        >
+                          <Link
+                            href={link.href}
+                            aria-current={active ? "page" : undefined}
+                            className={cn(
+                              "flex min-h-11 items-center justify-between px-4 text-sm transition-colors",
+                              active
+                                ? "bg-accent/10 text-accent-soft"
+                                : "text-text-muted hover:text-text-strong hover:bg-white/[0.03]",
+                            )}
+                          >
+                            {link.label}
+
+                            {active ? (
+                              <span
+                                aria-hidden="true"
+                                className="bg-accent size-1.5 rounded-full"
+                              />
+                            ) : (
+                              <ArrowRightIcon className="size-3.5 opacity-50" />
+                            )}
+                          </Link>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </nav>
+              </div>
+            </details>
+          </div>
+
           <Button variant="quiet" fullWidth className="mt-3" onClick={logout}>
             Esci
           </Button>
         </div>
 
-        <div className="grid gap-12 lg:grid-cols-[14rem_minmax(0,1fr)] lg:gap-16">
+        <div className="grid min-w-0 gap-10 lg:grid-cols-[14rem_minmax(0,1fr)] lg:gap-16">
           <aside className="hidden lg:block">
             <div className="sticky top-32">
               <p className="text-accent text-xs font-semibold tracking-[var(--letter-spacing-label)] uppercase">

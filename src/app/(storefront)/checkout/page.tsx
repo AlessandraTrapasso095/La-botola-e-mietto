@@ -53,7 +53,7 @@ export default async function CheckoutPage() {
       />
 
       <Section spacing="standard">
-        <Container>
+        <Container className="min-w-0">
           <CheckoutContent addresses={addresses} loadError={loadError} />
         </Container>
       </Section>

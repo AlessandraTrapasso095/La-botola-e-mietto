@@ -128,7 +128,7 @@ export function AdminEmailMarketingRecipientSelector({
   }
 
   return (
-    <section className="overflow-hidden rounded-lg border border-white/10 bg-[#171717]">
+    <section className="min-w-0 overflow-hidden rounded-lg border border-white/10 bg-[#171717]">
       <div className="border-b border-white/10 p-5 sm:p-6">
         <div>
           <p className="text-xs font-semibold tracking-[0.16em] text-orange-400 uppercase">
@@ -145,12 +145,12 @@ export function AdminEmailMarketingRecipientSelector({
           </p>
         </div>
 
-        <div className="mt-6 grid gap-3 lg:grid-cols-2">
+        <div className="mt-6 grid min-w-0 gap-3 lg:grid-cols-2">
           <button
             type="button"
             onClick={() => changeMode("all")}
             className={[
-              "rounded-lg border p-4 text-left transition",
+              "min-w-0 rounded-lg border p-4 text-left transition",
               mode === "all"
                 ? "border-orange-400/40 bg-orange-500/10"
                 : "border-white/10 bg-[#111111] hover:border-white/20",
@@ -189,7 +189,7 @@ export function AdminEmailMarketingRecipientSelector({
             type="button"
             onClick={() => changeMode("selected")}
             className={[
-              "rounded-lg border p-4 text-left transition",
+              "min-w-0 rounded-lg border p-4 text-left transition",
               mode === "selected"
                 ? "border-orange-400/40 bg-orange-500/10"
                 : "border-white/10 bg-[#111111] hover:border-white/20",
@@ -265,97 +265,190 @@ export function AdminEmailMarketingRecipientSelector({
             </div>
           </div>
 
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[760px] divide-y divide-white/10 text-sm">
-              <thead className="bg-white/[0.03]">
-                <tr className="text-left text-xs font-semibold tracking-wide text-white/40 uppercase">
-                  <th className="w-14 px-5 py-4">
-                    <input
-                      type="checkbox"
-                      aria-label="Seleziona tutti i risultati idonei"
-                      checked={allFilteredSelected}
-                      disabled={filteredEligibleRecipients.length === 0}
-                      onChange={toggleAllFiltered}
-                      className="size-4 accent-orange-500"
-                    />
-                  </th>
-                  <th className="px-5 py-4">Cliente</th>
-                  <th className="px-5 py-4">Email</th>
-                  <th className="px-5 py-4">Telefono</th>
-                  <th className="px-5 py-4">Marketing</th>
-                </tr>
-              </thead>
+          <>
+            <div className="border-b border-white/10 px-4 py-3 lg:hidden">
+              <label className="flex min-w-0 items-center gap-3 text-sm text-white/60">
+                <input
+                  type="checkbox"
+                  aria-label="Seleziona tutti i risultati idonei"
+                  checked={allFilteredSelected}
+                  disabled={filteredEligibleRecipients.length === 0}
+                  onChange={toggleAllFiltered}
+                  className="size-4 shrink-0 accent-orange-500"
+                />
 
-              <tbody className="divide-y divide-white/5">
-                {filteredRecipients.length === 0 ? (
-                  <tr>
-                    <td
-                      colSpan={5}
-                      className="px-6 py-14 text-center text-white/40"
+                <span className="min-w-0 break-words">
+                  Seleziona tutti i risultati idonei
+                </span>
+              </label>
+            </div>
+
+            <div className="divide-y divide-white/10 lg:hidden">
+              {filteredRecipients.length === 0 ? (
+                <div className="px-5 py-12 text-center text-sm text-white/40">
+                  Nessun utente corrisponde alla ricerca.
+                </div>
+              ) : (
+                filteredRecipients.map((recipient) => {
+                  const checked = selectedIds.has(recipient.id);
+                  const eligible = recipient.marketingConsent;
+
+                  return (
+                    <article
+                      key={recipient.id}
+                      className={[
+                        "min-w-0 p-4 sm:p-5",
+                        checked ? "bg-orange-500/[0.06]" : "",
+                      ].join(" ")}
                     >
-                      Nessun utente corrisponde alla ricerca.
-                    </td>
+                      <div className="flex min-w-0 items-start gap-3">
+                        <input
+                          type="checkbox"
+                          aria-label={`Seleziona ${recipient.firstName} ${recipient.lastName}`}
+                          checked={checked}
+                          disabled={!eligible}
+                          onChange={() => toggleRecipient(recipient.id)}
+                          className="mt-1 size-4 shrink-0 accent-orange-500 disabled:cursor-not-allowed disabled:opacity-35"
+                        />
+
+                        <div className="min-w-0 flex-1">
+                          <div className="flex min-w-0 flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                            <p className="font-medium break-words text-white">
+                              {[recipient.firstName, recipient.lastName]
+                                .filter(Boolean)
+                                .join(" ") || "Cliente"}
+                            </p>
+
+                            {eligible ? (
+                              <span className="inline-flex w-fit shrink-0 rounded-full border border-emerald-400/20 bg-emerald-400/10 px-2.5 py-1 text-xs font-semibold text-emerald-300">
+                                Consenso attivo
+                              </span>
+                            ) : (
+                              <span className="inline-flex w-fit shrink-0 rounded-full border border-white/10 bg-white/[0.03] px-2.5 py-1 text-xs font-semibold text-white/40">
+                                Consenso assente
+                              </span>
+                            )}
+                          </div>
+
+                          <dl className="mt-3 grid min-w-0 gap-2 sm:grid-cols-2">
+                            <div className="min-w-0">
+                              <dt className="text-[11px] text-white/30">
+                                Email
+                              </dt>
+                              <dd className="mt-1 text-sm break-all text-white/65">
+                                {recipient.email}
+                              </dd>
+                            </div>
+
+                            <div className="min-w-0">
+                              <dt className="text-[11px] text-white/30">
+                                Telefono
+                              </dt>
+                              <dd className="mt-1 text-sm break-words text-white/55">
+                                {recipient.phone || "—"}
+                              </dd>
+                            </div>
+                          </dl>
+                        </div>
+                      </div>
+                    </article>
+                  );
+                })
+              )}
+            </div>
+
+            <div className="hidden lg:block">
+              <table className="w-full divide-y divide-white/10 text-sm">
+                <thead className="bg-white/[0.03]">
+                  <tr className="text-left text-xs font-semibold tracking-wide text-white/40 uppercase">
+                    <th className="w-14 px-5 py-4">
+                      <input
+                        type="checkbox"
+                        aria-label="Seleziona tutti i risultati idonei"
+                        checked={allFilteredSelected}
+                        disabled={filteredEligibleRecipients.length === 0}
+                        onChange={toggleAllFiltered}
+                        className="size-4 accent-orange-500"
+                      />
+                    </th>
+                    <th className="px-5 py-4">Cliente</th>
+                    <th className="px-5 py-4">Email</th>
+                    <th className="px-5 py-4">Telefono</th>
+                    <th className="px-5 py-4">Marketing</th>
                   </tr>
-                ) : (
-                  filteredRecipients.map((recipient) => {
-                    const checked = selectedIds.has(recipient.id);
-                    const eligible = recipient.marketingConsent;
+                </thead>
 
-                    return (
-                      <tr
-                        key={recipient.id}
-                        className={[
-                          "transition",
-                          checked
-                            ? "bg-orange-500/[0.06]"
-                            : "hover:bg-white/[0.025]",
-                        ].join(" ")}
+                <tbody className="divide-y divide-white/5">
+                  {filteredRecipients.length === 0 ? (
+                    <tr>
+                      <td
+                        colSpan={5}
+                        className="px-6 py-14 text-center text-white/40"
                       >
-                        <td className="px-5 py-4">
-                          <input
-                            type="checkbox"
-                            aria-label={`Seleziona ${recipient.firstName} ${recipient.lastName}`}
-                            checked={checked}
-                            disabled={!eligible}
-                            onChange={() => toggleRecipient(recipient.id)}
-                            className="size-4 accent-orange-500 disabled:cursor-not-allowed disabled:opacity-35"
-                          />
-                        </td>
+                        Nessun utente corrisponde alla ricerca.
+                      </td>
+                    </tr>
+                  ) : (
+                    filteredRecipients.map((recipient) => {
+                      const checked = selectedIds.has(recipient.id);
+                      const eligible = recipient.marketingConsent;
 
-                        <td className="px-5 py-4">
-                          <p className="font-medium text-white">
-                            {[recipient.firstName, recipient.lastName]
-                              .filter(Boolean)
-                              .join(" ") || "Cliente"}
-                          </p>
-                        </td>
+                      return (
+                        <tr
+                          key={recipient.id}
+                          className={[
+                            "transition",
+                            checked
+                              ? "bg-orange-500/[0.06]"
+                              : "hover:bg-white/[0.025]",
+                          ].join(" ")}
+                        >
+                          <td className="px-5 py-4">
+                            <input
+                              type="checkbox"
+                              aria-label={`Seleziona ${recipient.firstName} ${recipient.lastName}`}
+                              checked={checked}
+                              disabled={!eligible}
+                              onChange={() => toggleRecipient(recipient.id)}
+                              className="size-4 accent-orange-500 disabled:cursor-not-allowed disabled:opacity-35"
+                            />
+                          </td>
 
-                        <td className="px-5 py-4 text-white/65">
-                          {recipient.email}
-                        </td>
+                          <td className="px-5 py-4">
+                            <p className="font-medium text-white">
+                              {[recipient.firstName, recipient.lastName]
+                                .filter(Boolean)
+                                .join(" ") || "Cliente"}
+                            </p>
+                          </td>
 
-                        <td className="px-5 py-4 text-white/55">
-                          {recipient.phone || "—"}
-                        </td>
+                          <td className="px-5 py-4 text-white/65">
+                            {recipient.email}
+                          </td>
 
-                        <td className="px-5 py-4">
-                          {eligible ? (
-                            <span className="inline-flex rounded-full border border-emerald-400/20 bg-emerald-400/10 px-2.5 py-1 text-xs font-semibold text-emerald-300">
-                              Consenso attivo
-                            </span>
-                          ) : (
-                            <span className="inline-flex rounded-full border border-white/10 bg-white/[0.03] px-2.5 py-1 text-xs font-semibold text-white/40">
-                              Consenso assente
-                            </span>
-                          )}
-                        </td>
-                      </tr>
-                    );
-                  })
-                )}
-              </tbody>
-            </table>
-          </div>
+                          <td className="px-5 py-4 text-white/55">
+                            {recipient.phone || "—"}
+                          </td>
+
+                          <td className="px-5 py-4">
+                            {eligible ? (
+                              <span className="inline-flex rounded-full border border-emerald-400/20 bg-emerald-400/10 px-2.5 py-1 text-xs font-semibold text-emerald-300">
+                                Consenso attivo
+                              </span>
+                            ) : (
+                              <span className="inline-flex rounded-full border border-white/10 bg-white/[0.03] px-2.5 py-1 text-xs font-semibold text-white/40">
+                                Consenso assente
+                              </span>
+                            )}
+                          </td>
+                        </tr>
+                      );
+                    })
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </>
         </>
       ) : (
         <div className="px-5 py-5 text-sm text-white/45 sm:px-6">

@@ -205,8 +205,8 @@ export function AdminSettingsPanel({
   }
 
   return (
-    <div className="mt-8 grid gap-6">
-      <section className="rounded-lg border border-white/10 bg-[#171717] p-4 sm:p-6">
+    <div className="mt-8 grid min-w-0 gap-6">
+      <section className="min-w-0 overflow-hidden rounded-lg border border-white/10 bg-[#171717] p-4 sm:p-6">
         <div>
           <h2 className="text-lg font-semibold">Profilo</h2>
 
@@ -215,46 +215,46 @@ export function AdminSettingsPanel({
           </p>
         </div>
 
-        <div className="mt-6 grid gap-4 sm:grid-cols-2">
-          <label className="grid gap-2 text-sm">
+        <div className="mt-6 grid min-w-0 gap-4 sm:grid-cols-2">
+          <label className="grid min-w-0 gap-2 text-sm">
             <span className="text-xs text-white/50">Nome</span>
 
             <input
               value={firstName}
               onChange={(event) => setFirstName(event.target.value)}
-              className="min-h-11 rounded-md border border-white/10 bg-[#111111] px-3 outline-none focus:border-orange-400"
+              className="min-h-11 w-full min-w-0 rounded-md border border-white/10 bg-[#111111] px-3 outline-none focus:border-orange-400"
             />
           </label>
 
-          <label className="grid gap-2 text-sm">
+          <label className="grid min-w-0 gap-2 text-sm">
             <span className="text-xs text-white/50">Cognome</span>
 
             <input
               value={lastName}
               onChange={(event) => setLastName(event.target.value)}
-              className="min-h-11 rounded-md border border-white/10 bg-[#111111] px-3 outline-none focus:border-orange-400"
+              className="min-h-11 w-full min-w-0 rounded-md border border-white/10 bg-[#111111] px-3 outline-none focus:border-orange-400"
             />
           </label>
 
-          <label className="grid gap-2 text-sm">
+          <label className="grid min-w-0 gap-2 text-sm">
             <span className="text-xs text-white/50">Telefono</span>
 
             <input
               type="tel"
               value={phone}
               onChange={(event) => setPhone(event.target.value)}
-              className="min-h-11 rounded-md border border-white/10 bg-[#111111] px-3 outline-none focus:border-orange-400"
+              className="min-h-11 w-full min-w-0 rounded-md border border-white/10 bg-[#111111] px-3 outline-none focus:border-orange-400"
             />
           </label>
 
-          <label className="grid gap-2 text-sm">
+          <label className="grid min-w-0 gap-2 text-sm">
             <span className="text-xs text-white/50">Data di nascita</span>
 
             <input
               type="date"
               value={birthDate}
               onChange={(event) => setBirthDate(event.target.value)}
-              className="min-h-11 rounded-md border border-white/10 bg-[#111111] px-3 outline-none focus:border-orange-400"
+              className="min-h-11 w-full min-w-0 rounded-md border border-white/10 bg-[#111111] px-3 outline-none focus:border-orange-400"
             />
           </label>
         </div>
@@ -263,7 +263,7 @@ export function AdminSettingsPanel({
           type="button"
           disabled={profileLoading}
           onClick={saveProfile}
-          className="mt-6 min-h-11 rounded-md bg-orange-400 px-5 text-sm font-semibold text-black transition hover:bg-orange-300 disabled:opacity-40"
+          className="mt-6 min-h-11 w-full rounded-md bg-orange-400 px-5 text-sm font-semibold text-black transition hover:bg-orange-300 disabled:opacity-40 sm:w-auto"
         >
           {profileLoading ? "Salvataggio..." : "Salva profilo"}
         </button>
@@ -273,22 +273,22 @@ export function AdminSettingsPanel({
         )}
       </section>
 
-      <section className="rounded-lg border border-white/10 bg-[#171717] p-4 sm:p-6">
+      <section className="min-w-0 overflow-hidden rounded-lg border border-white/10 bg-[#171717] p-4 sm:p-6">
         <h2 className="text-lg font-semibold">Email</h2>
 
         <p className="mt-1 text-sm leading-6 text-white/45">
           La modifica dell’email richiede la verifica del nuovo indirizzo.
         </p>
 
-        <div className="mt-5 max-w-xl">
-          <label className="grid gap-2 text-sm">
+        <div className="mt-5 w-full max-w-xl min-w-0">
+          <label className="grid min-w-0 gap-2 text-sm">
             <span className="text-xs text-white/50">Indirizzo email</span>
 
             <input
               type="email"
               value={email}
               onChange={(event) => setEmail(event.target.value)}
-              className="min-h-11 rounded-md border border-white/10 bg-[#111111] px-3 outline-none focus:border-orange-400"
+              className="min-h-11 w-full min-w-0 rounded-md border border-white/10 bg-[#111111] px-3 outline-none focus:border-orange-400"
             />
           </label>
 
@@ -296,28 +296,28 @@ export function AdminSettingsPanel({
             type="button"
             disabled={emailLoading}
             onClick={updateEmail}
-            className="mt-4 min-h-11 rounded-md border border-orange-400/40 px-5 text-sm font-semibold text-orange-300 transition hover:bg-orange-400/10 disabled:opacity-40"
+            className="mt-4 min-h-11 w-full rounded-md border border-orange-400/40 px-5 text-sm font-semibold text-orange-300 transition hover:bg-orange-400/10 disabled:opacity-40 sm:w-auto"
           >
             {emailLoading ? "Invio..." : "Modifica email"}
           </button>
 
           {emailFeedback && (
-            <p className="mt-3 text-sm leading-6 text-white/55">
+            <p className="mt-3 max-w-full text-sm leading-6 [overflow-wrap:anywhere] break-words text-white/55">
               {emailFeedback}
             </p>
           )}
         </div>
       </section>
 
-      <section className="rounded-lg border border-white/10 bg-[#171717] p-4 sm:p-6">
+      <section className="min-w-0 overflow-hidden rounded-lg border border-white/10 bg-[#171717] p-4 sm:p-6">
         <h2 className="text-lg font-semibold">Sicurezza</h2>
 
         <p className="mt-1 text-sm text-white/45">
           Modifica la password dell’account amministratore.
         </p>
 
-        <div className="mt-5 grid max-w-xl gap-4">
-          <label className="grid gap-2 text-sm">
+        <div className="mt-5 grid w-full max-w-xl min-w-0 gap-4">
+          <label className="grid min-w-0 gap-2 text-sm">
             <span className="text-xs text-white/50">Nuova password</span>
 
             <input
@@ -325,11 +325,11 @@ export function AdminSettingsPanel({
               autoComplete="new-password"
               value={newPassword}
               onChange={(event) => setNewPassword(event.target.value)}
-              className="min-h-11 rounded-md border border-white/10 bg-[#111111] px-3 outline-none focus:border-orange-400"
+              className="min-h-11 w-full min-w-0 rounded-md border border-white/10 bg-[#111111] px-3 outline-none focus:border-orange-400"
             />
           </label>
 
-          <label className="grid gap-2 text-sm">
+          <label className="grid min-w-0 gap-2 text-sm">
             <span className="text-xs text-white/50">
               Conferma nuova password
             </span>
@@ -339,7 +339,7 @@ export function AdminSettingsPanel({
               autoComplete="new-password"
               value={passwordConfirmation}
               onChange={(event) => setPasswordConfirmation(event.target.value)}
-              className="min-h-11 rounded-md border border-white/10 bg-[#111111] px-3 outline-none focus:border-orange-400"
+              className="min-h-11 w-full min-w-0 rounded-md border border-white/10 bg-[#111111] px-3 outline-none focus:border-orange-400"
             />
           </label>
 
@@ -347,7 +347,7 @@ export function AdminSettingsPanel({
             type="button"
             disabled={passwordLoading}
             onClick={updatePassword}
-            className="min-h-11 w-fit rounded-md border border-white/10 px-5 text-sm font-semibold text-white/75 transition hover:bg-white/5 disabled:opacity-40"
+            className="min-h-11 w-full rounded-md border border-white/10 px-5 text-sm font-semibold text-white/75 transition hover:bg-white/5 disabled:opacity-40 sm:w-fit"
           >
             {passwordLoading ? "Aggiornamento..." : "Aggiorna password"}
           </button>
@@ -358,7 +358,7 @@ export function AdminSettingsPanel({
         </div>
       </section>
 
-      <section className="rounded-lg border border-white/10 bg-[#171717] p-4 sm:p-6">
+      <section className="min-w-0 overflow-hidden rounded-lg border border-white/10 bg-[#171717] p-4 sm:p-6">
         <h2 className="text-lg font-semibold">Notifiche</h2>
 
         <p className="mt-1 text-sm leading-6 text-white/45">
@@ -366,7 +366,7 @@ export function AdminSettingsPanel({
           verrà collegato nello Step 32.
         </p>
 
-        <div className="mt-6 grid gap-3">
+        <div className="mt-6 grid min-w-0 gap-3">
           {[
             {
               label: "Nuovi ordini",
@@ -396,14 +396,14 @@ export function AdminSettingsPanel({
           ].map((preference) => (
             <label
               key={preference.label}
-              className="flex cursor-pointer items-start justify-between gap-5 rounded-md border border-white/10 bg-black/10 p-4"
+              className="flex min-w-0 cursor-pointer items-start justify-between gap-3 rounded-md border border-white/10 bg-black/10 p-4 sm:gap-5"
             >
-              <span>
-                <span className="block text-sm font-semibold">
+              <span className="min-w-0 flex-1">
+                <span className="block text-sm font-semibold break-words">
                   {preference.label}
                 </span>
 
-                <span className="mt-1 block text-xs leading-5 text-white/40">
+                <span className="mt-1 block max-w-full text-xs leading-5 break-words text-white/40">
                   {preference.description}
                 </span>
               </span>
@@ -424,7 +424,7 @@ export function AdminSettingsPanel({
           type="button"
           disabled={profileLoading}
           onClick={saveProfile}
-          className="mt-6 min-h-11 rounded-md bg-orange-400 px-5 text-sm font-semibold text-black transition hover:bg-orange-300 disabled:opacity-40"
+          className="mt-6 min-h-11 w-full rounded-md bg-orange-400 px-5 text-sm font-semibold text-black transition hover:bg-orange-300 disabled:opacity-40 sm:w-auto"
         >
           {profileLoading ? "Salvataggio..." : "Salva preferenze"}
         </button>

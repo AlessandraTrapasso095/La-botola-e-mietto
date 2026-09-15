@@ -28,19 +28,19 @@ export function AccountDashboard({
   if (!user) return null;
 
   return (
-    <div>
+    <div className="max-w-full min-w-0">
       <p className="text-accent text-xs font-semibold tracking-[var(--letter-spacing-label)] uppercase">
         Bentornata
       </p>
       <Heading as="h1" size="xl" className="mt-4">
         Ciao, {user.firstName}.
       </Heading>
-      <p className="text-text-muted mt-4 max-w-2xl">
+      <p className="text-text-muted mt-4 max-w-2xl break-words">
         Qui trovi le tue selezioni, gli aggiornamenti più recenti e gli accessi
         rapidi al profilo.
       </p>
 
-      <div className="mt-10 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="mt-8 grid min-w-0 grid-cols-1 gap-3 md:grid-cols-2 xl:mt-10 xl:grid-cols-4 xl:gap-4">
         <SummaryCard
           label="Ordini recenti"
           value={String(orders.length)}
@@ -59,11 +59,11 @@ export function AccountDashboard({
         <SummaryCard label="Profilo" value="Aggiorna" href="/account/profilo" />
       </div>
 
-      <div className="mt-14 grid gap-8 xl:grid-cols-2">
-        <section className="border-border-subtle border p-6 sm:p-8">
+      <div className="mt-12 grid min-w-0 gap-5 xl:mt-14 xl:grid-cols-2 xl:gap-8">
+        <section className="border-border-subtle min-w-0 overflow-hidden border p-4 sm:p-8">
           {orders[0] ? (
             <>
-              <div className="flex items-end justify-between gap-4">
+              <div className="flex min-w-0 flex-col items-start gap-3 sm:flex-row sm:items-end sm:justify-between sm:gap-4">
                 <div>
                   <p className="text-accent text-xs font-semibold tracking-[var(--letter-spacing-label)] uppercase">
                     Ultimo ordine
@@ -79,7 +79,7 @@ export function AccountDashboard({
                   Tutti gli ordini
                 </Link>
               </div>
-              <dl className="border-border-subtle mt-6 grid grid-cols-2 gap-5 border-t pt-6 text-sm">
+              <dl className="border-border-subtle mt-6 grid min-w-0 grid-cols-1 gap-4 border-t pt-6 text-sm sm:grid-cols-2 sm:gap-5">
                 <div>
                   <dt className="text-text-muted">Data</dt>
                   <dd className="text-text-strong mt-1">
@@ -115,7 +115,7 @@ export function AccountDashboard({
             </>
           )}
         </section>
-        <section className="border-border-subtle border p-6 sm:p-8">
+        <section className="border-border-subtle min-w-0 overflow-hidden border p-4 sm:p-8">
           <p className="text-accent text-xs font-semibold tracking-[var(--letter-spacing-label)] uppercase">
             Indirizzo principale
           </p>
@@ -123,7 +123,7 @@ export function AccountDashboard({
             {primaryAddress?.label ?? "Nessun indirizzo"}
           </h2>
           {primaryAddress ? (
-            <address className="text-text-muted mt-5 text-sm leading-relaxed not-italic">
+            <address className="text-text-muted mt-5 max-w-full text-sm leading-relaxed [overflow-wrap:anywhere] break-words not-italic">
               {primaryAddress.firstName} {primaryAddress.lastName}
               <br />
               {primaryAddress.street} {primaryAddress.streetNumber}
@@ -186,12 +186,12 @@ function SummaryCard({
   return (
     <Link
       href={href}
-      className="border-border-subtle hover:border-accent bg-surface group border p-5 transition-colors"
+      className="border-border-subtle hover:border-accent bg-surface group min-w-0 overflow-hidden border p-4 transition-colors sm:p-5"
     >
-      <span className="text-text-muted block text-xs tracking-wide uppercase">
+      <span className="text-text-muted block text-xs tracking-wide break-words uppercase">
         {label}
       </span>
-      <span className="text-text-strong group-hover:text-accent-soft mt-3 block font-serif text-2xl transition-colors">
+      <span className="text-text-strong group-hover:text-accent-soft mt-3 block max-w-full font-serif text-2xl break-words transition-colors">
         {value}
       </span>
     </Link>

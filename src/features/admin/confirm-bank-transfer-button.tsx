@@ -77,7 +77,7 @@ export function ConfirmBankTransferButton({ orderId }: { orderId: string }) {
           setError("");
           setOpen(true);
         }}
-        className="mt-4 inline-flex min-h-11 items-center justify-center rounded-md bg-emerald-500 px-4 text-sm font-semibold text-black transition hover:bg-emerald-400"
+        className="mt-4 inline-flex min-h-11 w-full items-center justify-center rounded-md bg-emerald-500 px-4 text-center text-sm leading-5 font-semibold text-black transition hover:bg-emerald-400"
       >
         Conferma bonifico ricevuto
       </button>
@@ -96,7 +96,7 @@ export function ConfirmBankTransferButton({ orderId }: { orderId: string }) {
             role="dialog"
             aria-modal="true"
             aria-labelledby="confirm-bank-transfer-title"
-            className="w-full max-w-md rounded-xl border border-white/10 bg-[#171717] p-6 shadow-2xl sm:p-7"
+            className="max-h-[calc(100dvh-2rem)] w-full max-w-md overflow-y-auto rounded-xl border border-white/10 bg-[#171717] p-4 shadow-2xl sm:p-6 md:p-7"
           >
             <div className="flex items-start justify-between gap-4">
               <div>

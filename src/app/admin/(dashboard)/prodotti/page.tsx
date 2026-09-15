@@ -94,8 +94,8 @@ export default async function AdminProductsPage({
     availability !== "all";
 
   return (
-    <div className="space-y-8">
-      <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+    <div className="min-w-0 space-y-6 sm:space-y-8">
+      <div className="flex min-w-0 flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="text-xs font-semibold tracking-[0.18em] text-orange-400 uppercase">
             Catalogo
@@ -112,13 +112,13 @@ export default async function AdminProductsPage({
         <div className="flex flex-col gap-3 sm:items-end">
           <Link
             href="/admin/prodotti/nuovo"
-            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-md bg-orange-500 px-5 text-sm font-semibold text-black transition hover:bg-orange-400"
+            className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-md bg-orange-500 px-5 text-sm font-semibold text-black transition hover:bg-orange-400 sm:w-auto"
           >
             <span className="text-xl leading-none">+</span>
             Nuovo prodotto
           </Link>
 
-          <div className="rounded-md border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-white/60">
+          <div className="w-full rounded-md border border-white/10 bg-white/[0.03] px-4 py-3 text-center text-sm text-white/60 sm:w-auto sm:text-right">
             {result.totalCount.toLocaleString("it-IT")}{" "}
             {result.totalCount === 1 ? "prodotto" : "prodotti"}
           </div>
@@ -127,9 +127,9 @@ export default async function AdminProductsPage({
 
       <form
         method="get"
-        className="grid gap-4 rounded-lg border border-white/10 bg-[#171717] p-5 md:grid-cols-2 xl:grid-cols-6"
+        className="grid min-w-0 gap-4 rounded-lg border border-white/10 bg-[#171717] p-4 sm:grid-cols-2 sm:p-5 lg:grid-cols-3 xl:grid-cols-6"
       >
-        <label className="space-y-2 md:col-span-2">
+        <label className="min-w-0 space-y-2 sm:col-span-2">
           <span className="text-xs font-medium text-white/50">
             Cerca prodotto
           </span>
@@ -210,10 +210,10 @@ export default async function AdminProductsPage({
           </select>
         </label>
 
-        <div className="flex gap-3 md:col-span-2 xl:col-span-6">
+        <div className="grid gap-3 sm:col-span-2 sm:grid-cols-2 lg:col-span-3 xl:col-span-6 xl:flex">
           <button
             type="submit"
-            className="inline-flex h-11 items-center justify-center rounded-md bg-orange-500 px-5 text-sm font-semibold text-black transition hover:bg-orange-400"
+            className="inline-flex h-11 w-full items-center justify-center rounded-md bg-orange-500 px-5 text-sm font-semibold text-black transition hover:bg-orange-400 xl:w-auto"
           >
             Applica filtri
           </button>
@@ -221,7 +221,7 @@ export default async function AdminProductsPage({
           {hasFilters ? (
             <Link
               href="/admin/prodotti"
-              className="inline-flex h-11 items-center justify-center rounded-md border border-white/10 px-5 text-sm font-medium text-white/70 transition hover:bg-white/5 hover:text-white"
+              className="inline-flex h-11 w-full items-center justify-center rounded-md border border-white/10 px-5 text-sm font-medium text-white/70 transition hover:bg-white/5 hover:text-white xl:w-auto"
             >
               Azzera filtri
             </Link>
@@ -230,7 +230,7 @@ export default async function AdminProductsPage({
       </form>
 
       <div className="overflow-hidden rounded-lg border border-white/10 bg-[#171717]">
-        <div className="flex flex-col gap-2 border-b border-white/10 px-5 py-4 text-sm text-white/45 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex min-w-0 flex-col gap-2 border-b border-white/10 px-4 py-4 text-sm text-white/45 sm:flex-row sm:items-center sm:justify-between sm:px-5">
           <span>
             {result.totalCount === 0
               ? "Nessun risultato"
@@ -244,7 +244,79 @@ export default async function AdminProductsPage({
           </span>
         </div>
 
-        <div className="overflow-x-auto">
+        <div className="divide-y divide-white/10 lg:hidden">
+          {result.products.map((product) => (
+            <article key={product.id} className="min-w-0 p-4 sm:p-5">
+              <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                <div className="min-w-0">
+                  <p className="font-mono text-xs break-all text-white/40">
+                    {product.code}
+                  </p>
+
+                  <h2 className="mt-2 font-semibold break-words text-white">
+                    {product.name}
+                  </h2>
+
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    <StatusBadge status={product.status} />
+
+                    <span
+                      className={[
+                        "inline-flex rounded-full px-2.5 py-1 text-xs font-medium",
+                        product.availableQuantity > 0
+                          ? "bg-emerald-500/10 text-emerald-300"
+                          : "bg-red-500/10 text-red-300",
+                      ].join(" ")}
+                    >
+                      {product.availableQuantity > 0
+                        ? `${product.availableQuantity} disponibili`
+                        : "Esaurito"}
+                    </span>
+                  </div>
+                </div>
+
+                <Link
+                  href={`/admin/prodotti/${product.id}`}
+                  className="inline-flex min-h-11 w-full shrink-0 items-center justify-center rounded-md bg-orange-500 px-4 text-sm font-semibold text-black transition hover:bg-orange-400 sm:w-auto"
+                >
+                  Apri
+                </Link>
+              </div>
+
+              <dl className="mt-4 grid min-w-0 grid-cols-2 gap-3">
+                <div className="min-w-0 rounded-md border border-white/[0.07] bg-[#111111] p-3">
+                  <dt className="text-[11px] text-white/35">Marchio</dt>
+
+                  <dd className="mt-1 text-sm break-words text-white/70">
+                    {product.brandName ?? "—"}
+                  </dd>
+                </div>
+
+                <div className="min-w-0 rounded-md border border-white/[0.07] bg-[#111111] p-3">
+                  <dt className="text-[11px] text-white/35">Categoria</dt>
+
+                  <dd className="mt-1 text-sm break-words text-white/70">
+                    {product.categoryName ?? "—"}
+                  </dd>
+                </div>
+
+                {product.reservedQuantity > 0 ? (
+                  <div className="col-span-2 min-w-0 rounded-md border border-white/[0.07] bg-[#111111] p-3">
+                    <dt className="text-[11px] text-white/35">
+                      Quantità riservata
+                    </dt>
+
+                    <dd className="mt-1 text-sm font-medium text-white/70">
+                      {product.reservedQuantity}
+                    </dd>
+                  </div>
+                ) : null}
+              </dl>
+            </article>
+          ))}
+        </div>
+
+        <div className="hidden lg:block">
           <table className="min-w-full divide-y divide-white/10 text-sm">
             <thead className="bg-white/[0.03]">
               <tr className="text-left text-xs font-semibold tracking-wide text-white/40 uppercase">
@@ -334,11 +406,11 @@ export default async function AdminProductsPage({
         ) : null}
 
         {result.totalPages > 1 ? (
-          <div className="flex items-center justify-between border-t border-white/10 px-5 py-4">
+          <div className="grid grid-cols-2 gap-3 border-t border-white/10 px-4 py-4 sm:grid-cols-[1fr_auto_1fr] sm:items-center sm:px-5">
             {result.page > 1 ? (
               <Link
                 href={buildPageHref(currentParams, result.page - 1)}
-                className="rounded-md border border-white/10 px-4 py-2 text-sm text-white/70 transition hover:bg-white/5 hover:text-white"
+                className="inline-flex min-h-10 w-full items-center justify-center rounded-md border border-white/10 px-4 py-2 text-sm text-white/70 transition hover:bg-white/5 hover:text-white sm:w-auto sm:justify-self-start"
               >
                 ← Precedente
               </Link>
@@ -346,14 +418,14 @@ export default async function AdminProductsPage({
               <span />
             )}
 
-            <span className="text-xs text-white/40">
+            <span className="col-span-2 row-start-1 text-center text-xs text-white/40 sm:col-span-1 sm:col-start-2">
               {result.page} / {result.totalPages}
             </span>
 
             {result.page < result.totalPages ? (
               <Link
                 href={buildPageHref(currentParams, result.page + 1)}
-                className="rounded-md border border-white/10 px-4 py-2 text-sm text-white/70 transition hover:bg-white/5 hover:text-white"
+                className="inline-flex min-h-10 w-full items-center justify-center rounded-md border border-white/10 px-4 py-2 text-sm text-white/70 transition hover:bg-white/5 hover:text-white sm:w-auto sm:justify-self-end"
               >
                 Successiva →
               </Link>

@@ -354,7 +354,7 @@ export function CheckoutContent({
   return (
     <form
       onSubmit={submitCheckout}
-      className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_24rem] xl:gap-20"
+      className="grid min-w-0 gap-8 sm:gap-10 lg:grid-cols-[minmax(0,1fr)_24rem] lg:gap-12 xl:gap-20"
     >
       <div>
         <p className="text-accent text-xs font-semibold tracking-[var(--letter-spacing-label)] uppercase">
@@ -374,13 +374,13 @@ export function CheckoutContent({
           </p>
         ) : null}
 
-        <section className="border-border-subtle mt-10 border p-5 sm:p-7">
+        <section className="border-border-subtle mt-8 min-w-0 overflow-hidden border p-4 sm:mt-10 sm:p-7">
           <h2 className="text-text-strong font-serif text-2xl">
             Metodo di consegna
           </h2>
 
           <div className="mt-6 grid gap-3">
-            <label className="border-border-subtle has-checked:border-accent flex cursor-pointer items-start gap-4 border p-4">
+            <label className="border-border-subtle has-checked:border-accent grid min-w-0 cursor-pointer grid-cols-[auto_minmax(0,1fr)] items-start gap-x-3 gap-y-2 border p-4 sm:grid-cols-[auto_minmax(0,1fr)_auto] sm:gap-4">
               <input
                 type="radio"
                 name="shippingMethod"
@@ -409,7 +409,7 @@ export function CheckoutContent({
               </strong>
             </label>
 
-            <label className="border-border-subtle has-checked:border-accent flex cursor-pointer items-start gap-4 border p-4">
+            <label className="border-border-subtle has-checked:border-accent grid min-w-0 cursor-pointer grid-cols-[auto_minmax(0,1fr)] items-start gap-x-3 gap-y-2 border p-4 sm:grid-cols-[auto_minmax(0,1fr)_auto] sm:gap-4">
               <input
                 type="radio"
                 name="shippingMethod"
@@ -435,7 +435,7 @@ export function CheckoutContent({
         </section>
 
         {shippingMethod !== "store_pickup" ? (
-          <section className="border-border-subtle mt-6 border p-5 sm:p-7">
+          <section className="border-border-subtle mt-6 min-w-0 overflow-hidden border p-4 sm:p-7">
             <div className="flex flex-wrap items-center justify-between gap-4">
               <h2 className="text-text-strong font-serif text-2xl">
                 Indirizzo di spedizione
@@ -491,7 +491,7 @@ export function CheckoutContent({
           </section>
         ) : null}
 
-        <section className="border-border-subtle mt-6 border p-5 sm:p-7">
+        <section className="border-border-subtle mt-6 min-w-0 overflow-hidden border p-4 sm:p-7">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <h2 className="text-text-strong font-serif text-2xl">
               Indirizzo di fatturazione
@@ -578,7 +578,7 @@ export function CheckoutContent({
           )}
         </section>
 
-        <section className="border-border-subtle mt-6 border p-5 sm:p-7">
+        <section className="border-border-subtle mt-6 min-w-0 overflow-hidden border p-4 sm:p-7">
           <h2 className="text-text-strong font-serif text-2xl">
             Metodo di pagamento
           </h2>
@@ -628,8 +628,8 @@ export function CheckoutContent({
         </section>
       </div>
 
-      <aside aria-label="Riepilogo ordine">
-        <div className="border-border-subtle bg-surface sticky top-28 border p-6">
+      <aside className="min-w-0" aria-label="Riepilogo ordine">
+        <div className="border-border-subtle bg-surface min-w-0 border p-4 sm:p-6 lg:sticky lg:top-28">
           <h2 className="text-text-strong font-serif text-2xl">
             Il tuo ordine
           </h2>
@@ -638,7 +638,7 @@ export function CheckoutContent({
             {cart.lines.map((line) => (
               <li
                 key={line.product.slug}
-                className="flex justify-between gap-4 text-sm"
+                className="grid min-w-0 grid-cols-[minmax(0,1fr)_auto] gap-3 text-sm"
               >
                 <span className="text-text-muted">
                   {line.quantity} × {line.product.name}
@@ -661,7 +661,7 @@ export function CheckoutContent({
               Codice promozionale
             </label>
 
-            <div className="mt-2 flex gap-2">
+            <div className="mt-2 grid min-w-0 gap-2 sm:grid-cols-[minmax(0,1fr)_auto]">
               <input
                 id="promotionCode"
                 type="text"

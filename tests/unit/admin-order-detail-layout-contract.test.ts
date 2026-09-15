@@ -30,7 +30,7 @@ describe("admin order detail layout contract", () => {
 
   it("compatta lo stato amministrativo su più colonne", () => {
     expect(source).toContain(
-      'className="mt-5 grid gap-4 text-sm sm:grid-cols-2 lg:grid-cols-3"',
+      'className="mt-5 grid gap-3 text-sm sm:grid-cols-2 lg:grid-cols-3"',
     );
   });
 

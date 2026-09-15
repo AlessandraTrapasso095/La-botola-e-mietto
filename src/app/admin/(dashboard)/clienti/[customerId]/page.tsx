@@ -111,7 +111,7 @@ export default async function AdminCustomerDetailPage({
     .join(" ");
 
   return (
-    <div className="space-y-8">
+    <div className="min-w-0 space-y-6 sm:space-y-8">
       <Link
         href="/admin/clienti"
         className="inline-flex text-sm font-medium text-white/50 transition hover:text-orange-300"
@@ -119,17 +119,19 @@ export default async function AdminCustomerDetailPage({
         ← Torna ai clienti
       </Link>
 
-      <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
-        <div>
+      <div className="flex min-w-0 flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
+        <div className="min-w-0">
           <p className="text-xs font-semibold tracking-[0.18em] text-orange-400 uppercase">
             Dettaglio cliente
           </p>
 
-          <h1 className="mt-2 text-3xl font-semibold text-white">
+          <h1 className="mt-2 max-w-full text-3xl font-semibold break-words text-white">
             {customerName || "Cliente"}
           </h1>
 
-          <p className="mt-2 text-sm text-white/50">{customer.email}</p>
+          <p className="mt-2 max-w-full text-sm break-all text-white/50">
+            {customer.email}
+          </p>
         </div>
 
         {customer.marketingConsent ? (
@@ -143,7 +145,7 @@ export default async function AdminCustomerDetailPage({
         )}
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid min-w-0 gap-3 sm:grid-cols-2 xl:grid-cols-4">
         <SummaryCard label="Ordini" value={customer.orderCount} />
         <SummaryCard
           label="Ordini pagati"
@@ -160,11 +162,11 @@ export default async function AdminCustomerDetailPage({
         />
       </div>
 
-      <div className="grid gap-5 xl:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]">
-        <section className="rounded-lg border border-white/10 bg-[#171717] p-5">
+      <div className="grid min-w-0 gap-5 xl:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]">
+        <section className="min-w-0 overflow-hidden rounded-lg border border-white/10 bg-[#171717] p-4 sm:p-5">
           <h2 className="font-semibold text-white">Anagrafica</h2>
 
-          <dl className="mt-5 grid gap-4 text-sm sm:grid-cols-2 xl:grid-cols-1">
+          <dl className="mt-5 grid min-w-0 gap-4 text-sm sm:grid-cols-2 xl:grid-cols-1">
             <InfoRow label="Nome" value={customer.firstName || "—"} />
             <InfoRow label="Cognome" value={customer.lastName || "—"} />
             <InfoRow label="Email" value={customer.email} />
@@ -185,7 +187,7 @@ export default async function AdminCustomerDetailPage({
           </dl>
         </section>
 
-        <section className="rounded-lg border border-white/10 bg-[#171717] p-5">
+        <section className="min-w-0 overflow-hidden rounded-lg border border-white/10 bg-[#171717] p-4 sm:p-5">
           <h2 className="font-semibold text-white">Indirizzi salvati</h2>
 
           {customer.addresses.length === 0 ? (
@@ -193,11 +195,11 @@ export default async function AdminCustomerDetailPage({
               Nessun indirizzo salvato.
             </p>
           ) : (
-            <div className="mt-5 grid gap-4 md:grid-cols-2">
+            <div className="mt-5 grid min-w-0 gap-4 md:grid-cols-2">
               {customer.addresses.map((address) => (
                 <article
                   key={address.id}
-                  className="rounded-md border border-white/10 bg-[#111111] p-4"
+                  className="min-w-0 overflow-hidden rounded-md border border-white/10 bg-[#111111] p-4"
                 >
                   <div className="flex flex-wrap items-center gap-2">
                     <span className="text-xs font-semibold tracking-wide text-orange-300 uppercase">
@@ -219,7 +221,7 @@ export default async function AdminCustomerDetailPage({
                     ) : null}
                   </div>
 
-                  <div className="mt-4 grid gap-1 text-sm text-white/60">
+                  <div className="mt-4 grid min-w-0 gap-1 text-sm text-white/60 [&_p]:break-words">
                     <p className="text-xs font-medium text-white/35">
                       {address.label}
                     </p>
@@ -270,65 +272,121 @@ export default async function AdminCustomerDetailPage({
             Nessun ordine registrato.
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[900px] divide-y divide-white/10 text-sm">
-              <thead className="bg-white/[0.03]">
-                <tr className="text-left text-xs font-semibold tracking-wide text-white/40 uppercase">
-                  <th className="px-5 py-4">Ordine</th>
-                  <th className="px-5 py-4">Data</th>
-                  <th className="px-5 py-4">Stato</th>
-                  <th className="px-5 py-4">Pagamento</th>
-                  <th className="px-5 py-4">Metodo</th>
-                  <th className="px-5 py-4">Totale</th>
-                  <th className="px-5 py-4" />
-                </tr>
-              </thead>
+          <>
+            <div className="divide-y divide-white/10 xl:hidden">
+              {customer.orders.map((order) => (
+                <article key={order.id} className="min-w-0 p-4 sm:p-5">
+                  <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                    <div className="min-w-0">
+                      <p className="font-semibold break-all text-white">
+                        Ordine {order.orderNumber}
+                      </p>
 
-              <tbody className="divide-y divide-white/5">
-                {customer.orders.map((order) => (
-                  <tr
-                    key={order.id}
-                    className="transition hover:bg-white/[0.025]"
-                  >
-                    <td className="px-5 py-4 font-semibold text-white">
-                      {order.orderNumber}
-                    </td>
+                      <p className="mt-1 text-xs break-words text-white/40">
+                        {formatDate(order.createdAt)}
+                      </p>
+                    </div>
 
-                    <td className="px-5 py-4 text-white/55">
-                      {formatDate(order.createdAt)}
-                    </td>
-
-                    <td className="px-5 py-4 text-white/70">
+                    <span className="inline-flex w-fit shrink-0 rounded-full border border-white/10 bg-white/[0.03] px-2.5 py-1 text-xs font-semibold text-white/65">
                       {orderStatusLabel(order.status)}
-                    </td>
+                    </span>
+                  </div>
 
-                    <td className="px-5 py-4 text-white/70">
-                      {paymentStatusLabel(order.paymentStatus)}
-                    </td>
+                  <dl className="mt-4 grid min-w-0 grid-cols-2 gap-3">
+                    <div className="min-w-0 rounded-md border border-white/[0.07] bg-[#111111] p-3">
+                      <dt className="text-[11px] text-white/30">Pagamento</dt>
+                      <dd className="mt-1 text-sm break-words text-white/70">
+                        {paymentStatusLabel(order.paymentStatus)}
+                      </dd>
+                    </div>
 
-                    <td className="px-5 py-4 text-white/55">
-                      {paymentMethodLabel(order.paymentMethod)}
-                    </td>
+                    <div className="min-w-0 rounded-md border border-white/[0.07] bg-[#111111] p-3">
+                      <dt className="text-[11px] text-white/30">Metodo</dt>
+                      <dd className="mt-1 text-sm break-words text-white/60">
+                        {paymentMethodLabel(order.paymentMethod)}
+                      </dd>
+                    </div>
 
-                    <td className="px-5 py-4 font-semibold text-orange-300">
-                      {formatMoney(order.totalGrossAmountMinor)}
-                    </td>
+                    <div className="col-span-2 min-w-0 rounded-md border border-white/[0.07] bg-[#111111] p-3">
+                      <dt className="text-[11px] text-white/30">Totale</dt>
+                      <dd className="mt-1 text-lg font-semibold break-words text-orange-300">
+                        {formatMoney(order.totalGrossAmountMinor)}
+                      </dd>
+                    </div>
+                  </dl>
 
-                    <td className="px-5 py-4 text-right">
-                      <Link
-                        href={`/admin/ordini/${encodeURIComponent(
-                          order.orderNumber,
-                        )}`}
-                        className="inline-flex min-h-10 items-center justify-center rounded-md border border-white/10 px-4 text-sm font-medium text-white/70 transition hover:border-orange-400/30 hover:text-white"
-                      >
-                        Apri ordine
-                      </Link>
-                    </td>
+                  <Link
+                    href={`/admin/ordini/${encodeURIComponent(
+                      order.orderNumber,
+                    )}`}
+                    className="mt-4 inline-flex min-h-11 w-full items-center justify-center rounded-md bg-orange-500 px-4 text-sm font-semibold text-black transition hover:bg-orange-400 sm:w-auto"
+                  >
+                    Apri ordine
+                  </Link>
+                </article>
+              ))}
+            </div>
+
+            <div className="hidden xl:block">
+              <table className="w-full min-w-[900px] divide-y divide-white/10 text-sm">
+                <thead className="bg-white/[0.03]">
+                  <tr className="text-left text-xs font-semibold tracking-wide text-white/40 uppercase">
+                    <th className="px-5 py-4">Ordine</th>
+                    <th className="px-5 py-4">Data</th>
+                    <th className="px-5 py-4">Stato</th>
+                    <th className="px-5 py-4">Pagamento</th>
+                    <th className="px-5 py-4">Metodo</th>
+                    <th className="px-5 py-4">Totale</th>
+                    <th className="px-5 py-4" />
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+
+                <tbody className="divide-y divide-white/5">
+                  {customer.orders.map((order) => (
+                    <tr
+                      key={order.id}
+                      className="transition hover:bg-white/[0.025]"
+                    >
+                      <td className="px-5 py-4 font-semibold text-white">
+                        {order.orderNumber}
+                      </td>
+
+                      <td className="px-5 py-4 text-white/55">
+                        {formatDate(order.createdAt)}
+                      </td>
+
+                      <td className="px-5 py-4 text-white/70">
+                        {orderStatusLabel(order.status)}
+                      </td>
+
+                      <td className="px-5 py-4 text-white/70">
+                        {paymentStatusLabel(order.paymentStatus)}
+                      </td>
+
+                      <td className="px-5 py-4 text-white/55">
+                        {paymentMethodLabel(order.paymentMethod)}
+                      </td>
+
+                      <td className="px-5 py-4 font-semibold text-orange-300">
+                        {formatMoney(order.totalGrossAmountMinor)}
+                      </td>
+
+                      <td className="px-5 py-4 text-right">
+                        <Link
+                          href={`/admin/ordini/${encodeURIComponent(
+                            order.orderNumber,
+                          )}`}
+                          className="inline-flex min-h-10 items-center justify-center rounded-md border border-white/10 px-4 text-sm font-medium text-white/70 transition hover:border-orange-400/30 hover:text-white"
+                        >
+                          Apri ordine
+                        </Link>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </>
         )}
       </section>
     </div>
@@ -345,7 +403,7 @@ function SummaryCard({
   emphasis?: boolean;
 }) {
   return (
-    <div className="rounded-lg border border-white/10 bg-[#171717] p-5">
+    <div className="min-w-0 overflow-hidden rounded-lg border border-white/10 bg-[#171717] p-4 sm:p-5">
       <p className="text-xs font-medium tracking-wide text-white/40 uppercase">
         {label}
       </p>
@@ -353,8 +411,8 @@ function SummaryCard({
       <p
         className={
           emphasis
-            ? "mt-2 text-2xl font-semibold text-orange-300"
-            : "mt-2 text-2xl font-semibold text-white"
+            ? "mt-2 max-w-full text-xl leading-tight font-semibold break-words text-orange-300 tabular-nums sm:text-2xl"
+            : "mt-2 max-w-full text-xl leading-tight font-semibold break-words text-white tabular-nums sm:text-2xl"
         }
       >
         {typeof value === "number" ? value.toLocaleString("it-IT") : value}
@@ -373,11 +431,11 @@ function InfoRow({
   mono?: boolean;
 }) {
   return (
-    <div>
+    <div className="min-w-0">
       <dt className="text-xs text-white/40">{label}</dt>
       <dd
         className={[
-          "mt-1 break-words text-white/75",
+          "mt-1 max-w-full [overflow-wrap:anywhere] break-words text-white/75",
           mono ? "font-mono text-xs" : "",
         ].join(" ")}
       >

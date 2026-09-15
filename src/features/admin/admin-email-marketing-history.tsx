@@ -49,7 +49,7 @@ export function AdminEmailMarketingHistory({
   campaigns: AdminMarketingCampaignHistoryItem[];
 }) {
   return (
-    <section className="rounded-lg border border-white/10 bg-[#171717]">
+    <section className="min-w-0 overflow-hidden rounded-lg border border-white/10 bg-[#171717]">
       <div className="border-b border-white/10 p-5 sm:p-6">
         <p className="text-xs font-semibold tracking-[0.16em] text-orange-400 uppercase">
           Storico
@@ -77,75 +77,152 @@ export function AdminEmailMarketingHistory({
           </div>
         </div>
       ) : (
-        <div className="overflow-x-auto">
-          <table className="min-w-full text-left text-sm">
-            <thead className="border-b border-white/10 text-xs text-white/35">
-              <tr>
-                <th className="px-5 py-4 font-medium">Data</th>
-                <th className="px-5 py-4 font-medium">Oggetto</th>
-                <th className="px-5 py-4 font-medium">Pubblico</th>
-                <th className="px-5 py-4 font-medium">Stato</th>
-                <th className="px-5 py-4 text-right font-medium">Idonei</th>
-                <th className="px-5 py-4 text-right font-medium">Inviate</th>
-                <th className="px-5 py-4 text-right font-medium">Duplicate</th>
-                <th className="px-5 py-4 text-right font-medium">Fallite</th>
-              </tr>
-            </thead>
-
-            <tbody className="divide-y divide-white/10">
-              {campaigns.map((campaign) => (
-                <tr key={campaign.id} className="align-top">
-                  <td className="px-5 py-4 whitespace-nowrap text-white/45">
-                    {formatDate(campaign.createdAt)}
-                  </td>
-
-                  <td className="max-w-sm px-5 py-4">
-                    <p className="font-medium text-white/80">
+        <>
+          <div className="divide-y divide-white/10 lg:hidden">
+            {campaigns.map((campaign) => (
+              <article key={campaign.id} className="min-w-0 p-4 sm:p-5">
+                <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                  <div className="min-w-0">
+                    <p className="font-medium break-words text-white/80">
                       {campaign.subject}
                     </p>
 
-                    <p className="mt-1 truncate text-xs text-white/25">
+                    <p className="mt-1 font-mono text-xs break-all text-white/25">
                       {campaign.campaignId}
                     </p>
-                  </td>
+                  </div>
 
-                  <td className="px-5 py-4 whitespace-nowrap text-white/55">
-                    {campaign.audienceMode === "all"
-                      ? "Tutti gli idonei"
-                      : "Selezione manuale"}
-                  </td>
+                  <span
+                    className={[
+                      "inline-flex w-fit shrink-0 rounded-full border px-2.5 py-1 text-xs font-semibold",
+                      statusClass(campaign.status),
+                    ].join(" ")}
+                  >
+                    {statusLabel(campaign.status)}
+                  </span>
+                </div>
 
-                  <td className="px-5 py-4 whitespace-nowrap">
-                    <span
-                      className={[
-                        "inline-flex rounded-full border px-2.5 py-1 text-xs font-semibold",
-                        statusClass(campaign.status),
-                      ].join(" ")}
-                    >
-                      {statusLabel(campaign.status)}
-                    </span>
-                  </td>
+                <dl className="mt-4 grid min-w-0 grid-cols-2 gap-3">
+                  <div className="col-span-2 min-w-0 rounded-md border border-white/[0.07] bg-[#111111] p-3 sm:col-span-1">
+                    <dt className="text-[11px] text-white/30">Data</dt>
+                    <dd className="mt-1 text-sm break-words text-white/55">
+                      {formatDate(campaign.createdAt)}
+                    </dd>
+                  </div>
 
-                  <td className="px-5 py-4 text-right text-white/60">
-                    {campaign.eligibleCount}
-                  </td>
+                  <div className="col-span-2 min-w-0 rounded-md border border-white/[0.07] bg-[#111111] p-3 sm:col-span-1">
+                    <dt className="text-[11px] text-white/30">Pubblico</dt>
+                    <dd className="mt-1 text-sm break-words text-white/55">
+                      {campaign.audienceMode === "all"
+                        ? "Tutti gli idonei"
+                        : "Selezione manuale"}
+                    </dd>
+                  </div>
 
-                  <td className="px-5 py-4 text-right font-semibold text-emerald-300">
-                    {campaign.sentCount}
-                  </td>
+                  <div className="min-w-0 rounded-md border border-white/[0.07] bg-[#111111] p-3">
+                    <dt className="text-[11px] text-white/30">Idonei</dt>
+                    <dd className="mt-1 text-sm font-semibold text-white/70">
+                      {campaign.eligibleCount}
+                    </dd>
+                  </div>
 
-                  <td className="px-5 py-4 text-right text-white/45">
-                    {campaign.duplicateCount}
-                  </td>
+                  <div className="min-w-0 rounded-md border border-white/[0.07] bg-[#111111] p-3">
+                    <dt className="text-[11px] text-white/30">Inviate</dt>
+                    <dd className="mt-1 text-sm font-semibold text-emerald-300">
+                      {campaign.sentCount}
+                    </dd>
+                  </div>
 
-                  <td className="px-5 py-4 text-right text-red-300">
-                    {campaign.failedCount}
-                  </td>
+                  <div className="min-w-0 rounded-md border border-white/[0.07] bg-[#111111] p-3">
+                    <dt className="text-[11px] text-white/30">Duplicate</dt>
+                    <dd className="mt-1 text-sm font-semibold text-white/55">
+                      {campaign.duplicateCount}
+                    </dd>
+                  </div>
+
+                  <div className="min-w-0 rounded-md border border-white/[0.07] bg-[#111111] p-3">
+                    <dt className="text-[11px] text-white/30">Fallite</dt>
+                    <dd className="mt-1 text-sm font-semibold text-red-300">
+                      {campaign.failedCount}
+                    </dd>
+                  </div>
+                </dl>
+              </article>
+            ))}
+          </div>
+
+          <div className="hidden lg:block">
+            <table className="min-w-full text-left text-sm">
+              <thead className="border-b border-white/10 text-xs text-white/35">
+                <tr>
+                  <th className="px-5 py-4 font-medium">Data</th>
+                  <th className="px-5 py-4 font-medium">Oggetto</th>
+                  <th className="px-5 py-4 font-medium">Pubblico</th>
+                  <th className="px-5 py-4 font-medium">Stato</th>
+                  <th className="px-5 py-4 text-right font-medium">Idonei</th>
+                  <th className="px-5 py-4 text-right font-medium">Inviate</th>
+                  <th className="px-5 py-4 text-right font-medium">
+                    Duplicate
+                  </th>
+                  <th className="px-5 py-4 text-right font-medium">Fallite</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+
+              <tbody className="divide-y divide-white/10">
+                {campaigns.map((campaign) => (
+                  <tr key={campaign.id} className="align-top">
+                    <td className="px-5 py-4 whitespace-nowrap text-white/45">
+                      {formatDate(campaign.createdAt)}
+                    </td>
+
+                    <td className="max-w-sm px-5 py-4">
+                      <p className="font-medium text-white/80">
+                        {campaign.subject}
+                      </p>
+
+                      <p className="mt-1 truncate text-xs text-white/25">
+                        {campaign.campaignId}
+                      </p>
+                    </td>
+
+                    <td className="px-5 py-4 whitespace-nowrap text-white/55">
+                      {campaign.audienceMode === "all"
+                        ? "Tutti gli idonei"
+                        : "Selezione manuale"}
+                    </td>
+
+                    <td className="px-5 py-4 whitespace-nowrap">
+                      <span
+                        className={[
+                          "inline-flex rounded-full border px-2.5 py-1 text-xs font-semibold",
+                          statusClass(campaign.status),
+                        ].join(" ")}
+                      >
+                        {statusLabel(campaign.status)}
+                      </span>
+                    </td>
+
+                    <td className="px-5 py-4 text-right text-white/60">
+                      {campaign.eligibleCount}
+                    </td>
+
+                    <td className="px-5 py-4 text-right font-semibold text-emerald-300">
+                      {campaign.sentCount}
+                    </td>
+
+                    <td className="px-5 py-4 text-right text-white/45">
+                      {campaign.duplicateCount}
+                    </td>
+
+                    <td className="px-5 py-4 text-right text-red-300">
+                      {campaign.failedCount}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </>
       )}
     </section>
   );

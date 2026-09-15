@@ -183,7 +183,7 @@ export function AdminOrderStatusActions({
             role="dialog"
             aria-modal="true"
             aria-labelledby="take-order-confirm-title"
-            className="w-full max-w-md rounded-xl border border-white/10 bg-[#171717] p-6 shadow-2xl sm:p-7"
+            className="max-h-[calc(100dvh-2rem)] w-full max-w-md overflow-y-auto rounded-xl border border-white/10 bg-[#171717] p-4 shadow-2xl sm:p-6 md:p-7"
           >
             <div className="flex items-start justify-between gap-4">
               <div>

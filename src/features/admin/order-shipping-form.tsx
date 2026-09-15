@@ -70,7 +70,7 @@ export function AdminOrderShippingForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="grid gap-4">
+    <form onSubmit={handleSubmit} className="grid min-w-0 gap-4">
       <div>
         <label
           htmlFor="shipping-carrier"

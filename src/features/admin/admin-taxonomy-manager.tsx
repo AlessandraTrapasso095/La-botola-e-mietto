@@ -388,13 +388,13 @@ function TaxonomyBrowser({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-stretch justify-center bg-black/75 p-2 backdrop-blur-sm sm:items-center sm:p-4"
       role="dialog"
       aria-modal="true"
     >
-      <div className="flex max-h-[90vh] w-full max-w-4xl flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#171717] shadow-2xl">
-        <div className="flex items-center justify-between border-b border-white/10 px-5 py-4 sm:px-6">
-          <div className="flex items-center gap-3">
+      <div className="flex h-[calc(100dvh-1rem)] w-full max-w-4xl min-w-0 flex-col overflow-hidden rounded-xl border border-white/10 bg-[#171717] shadow-2xl sm:h-auto sm:max-h-[90dvh] sm:rounded-2xl">
+        <div className="flex min-w-0 items-start justify-between gap-3 border-b border-white/10 px-4 py-4 sm:items-center sm:px-6">
+          <div className="flex min-w-0 items-center gap-3">
             {browser.mode === "edit" ? (
               <button
                 type="button"
@@ -411,7 +411,7 @@ function TaxonomyBrowser({
                 Catalogo
               </p>
 
-              <h2 className="mt-1 text-xl font-semibold text-white">
+              <h2 className="mt-1 max-w-full text-lg font-semibold break-words text-white sm:text-xl">
                 {browser.mode === "edit" ? "Modifica" : title}
               </h2>
             </div>
@@ -427,7 +427,7 @@ function TaxonomyBrowser({
           </button>
         </div>
 
-        <div className="overflow-y-auto p-5 sm:p-6">
+        <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-4 sm:p-6">
           {browser.mode === "list" ? (
             <>
               <div className="sticky top-0 z-10 bg-[#171717] pb-5">
@@ -477,13 +477,15 @@ function TaxonomyBrowser({
                           </p>
                         </div>
 
-                        <div className="flex shrink-0 items-center gap-3">
-                          <StatusBadge status={item.status} />
+                        <div className="grid w-full grid-cols-2 gap-2 sm:flex sm:w-auto sm:shrink-0 sm:items-center sm:gap-3">
+                          <div className="col-span-2 sm:col-span-1">
+                            <StatusBadge status={item.status} />
+                          </div>
 
                           <button
                             type="button"
                             onClick={() => onEdit(item.id)}
-                            className="rounded-md border border-orange-400/30 px-3 py-2 text-sm font-medium text-orange-300 transition hover:bg-orange-400/10 hover:text-orange-200"
+                            className="inline-flex min-h-10 w-full items-center justify-center rounded-md border border-orange-400/30 px-3 py-2 text-sm font-medium text-orange-300 transition hover:bg-orange-400/10 hover:text-orange-200 sm:w-auto"
                           >
                             Modifica
                           </button>
@@ -491,7 +493,7 @@ function TaxonomyBrowser({
                           <button
                             type="button"
                             onClick={() => onDelete(item.id, item.name)}
-                            className="rounded-md border border-red-400/30 px-3 py-2 text-sm font-medium text-red-300 transition hover:bg-red-400/10 hover:text-red-200"
+                            className="inline-flex min-h-10 w-full items-center justify-center rounded-md border border-red-400/30 px-3 py-2 text-sm font-medium text-red-300 transition hover:bg-red-400/10 hover:text-red-200 sm:w-auto"
                           >
                             Elimina
                           </button>
@@ -567,24 +569,28 @@ function ManagementCard({
   children: React.ReactNode;
 }) {
   return (
-    <section className="rounded-xl border border-white/10 bg-[#171717] p-5 sm:p-6">
-      <div className="flex flex-col gap-4 border-b border-white/10 pb-5 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h2 className="text-xl font-semibold text-white">{title}</h2>
+    <section className="min-w-0 overflow-hidden rounded-xl border border-white/10 bg-[#171717] p-4 sm:p-6">
+      <div className="grid min-w-0 gap-4 border-b border-white/10 pb-5 md:grid-cols-[minmax(0,1fr)_auto] md:items-center">
+        <div className="min-w-0">
+          <h2 className="text-xl font-semibold break-words text-white">
+            {title}
+          </h2>
 
-          <p className="mt-1 text-sm text-white/45">{description}</p>
+          <p className="mt-1 max-w-full text-sm leading-6 break-words text-white/45">
+            {description}
+          </p>
         </div>
 
         <button
           type="button"
           onClick={onBrowse}
-          className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-md border border-white/10 px-4 text-sm font-semibold text-white/80 transition hover:bg-white/5 hover:text-white"
+          className="inline-flex min-h-11 w-full min-w-0 items-center justify-center rounded-md border border-white/10 px-3 text-center text-sm leading-5 font-semibold break-words text-white/80 transition hover:bg-white/5 hover:text-white md:w-auto md:max-w-[320px] md:px-4"
         >
           {browserLabel}
         </button>
       </div>
 
-      <div className="pt-5">{children}</div>
+      <div className="min-w-0 pt-5">{children}</div>
     </section>
   );
 }
@@ -607,7 +613,7 @@ function BrandForm({
   );
 
   return (
-    <div className="grid gap-4 md:grid-cols-2">
+    <div className="grid min-w-0 gap-4 md:grid-cols-2">
       <Field label="Nome">
         <input
           value={name}
@@ -691,7 +697,7 @@ function CategoryForm({
   );
 
   return (
-    <div className="grid gap-4 md:grid-cols-2">
+    <div className="grid min-w-0 gap-4 md:grid-cols-2">
       <Field label="Nome">
         <input
           value={name}
@@ -792,7 +798,7 @@ function SubcategoryForm({
   }
 
   return (
-    <div className="grid gap-4 md:grid-cols-2">
+    <div className="grid min-w-0 gap-4 md:grid-cols-2">
       <Field label="Categoria principale">
         <select
           value={parentId}
@@ -891,7 +897,7 @@ function FormSaveButton({
       <button
         type="button"
         onClick={onClick}
-        className="inline-flex min-h-11 items-center justify-center rounded-md bg-orange-500 px-5 text-sm font-semibold text-black transition hover:bg-orange-400"
+        className="inline-flex min-h-11 w-full items-center justify-center rounded-md bg-orange-500 px-5 text-sm font-semibold text-black transition hover:bg-orange-400 md:w-auto"
       >
         {editMode ? "Salva modifiche" : "Aggiungi"}
       </button>

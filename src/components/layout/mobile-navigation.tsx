@@ -53,7 +53,7 @@ export function MobileNavigation({
         }}
         className="bg-background inset-0 top-0 left-0 flex h-dvh max-h-none w-full max-w-none translate-x-0 translate-y-0 flex-col overflow-hidden rounded-none border-0 p-0"
       >
-        <div className="border-border-subtle flex min-h-[4.5rem] items-center justify-between border-b px-5">
+        <div className="border-border-subtle flex min-h-16 items-center justify-between border-b px-4 sm:px-5">
           <DialogTitle className="sr-only">Menu principale</DialogTitle>
           <DialogDescription className="sr-only">
             Esplora categorie, collezioni e servizi di La Botola e Mietto.
@@ -67,18 +67,18 @@ export function MobileNavigation({
           </IconButton>
         </div>
 
-        <div className="flex-1 overflow-y-auto px-5 py-6">
+        <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-4 sm:px-5 sm:py-5">
           <Button
             variant="secondary"
             fullWidth
-            className="justify-between"
+            className="min-h-11 justify-between px-4 text-sm"
             onClick={onSearch}
           >
             Cerca nel catalogo
             <SearchIcon />
           </Button>
 
-          <nav aria-label="Navigazione mobile" className="mt-7">
+          <nav aria-label="Navigazione mobile" className="mt-5">
             <ul className="grid">
               {primaryNavigation
                 .filter((link) => !("menu" in link && link.menu))
@@ -86,42 +86,42 @@ export function MobileNavigation({
                   <li key={link.label}>
                     <Link
                       href={link.href}
-                      className="border-border-subtle text-text-strong flex min-h-14 items-center justify-between border-b font-serif text-xl"
+                      className="border-border-subtle text-text-strong flex min-h-12 items-center justify-between border-b py-2 font-serif text-lg"
                       onClick={() => onOpenChange(false)}
                     >
                       {link.label}
-                      <ArrowRightIcon className="text-accent size-5" />
+                      <ArrowRightIcon className="text-accent size-4.5" />
                     </Link>
                   </li>
                 ))}
             </ul>
           </nav>
 
-          <div className="mt-9">
+          <div className="mt-7">
             <p className="text-accent text-[0.65rem] font-semibold tracking-[var(--letter-spacing-label)] uppercase">
               Esplora il catalogo
             </p>
-            <div className="mt-3 grid">
+            <div className="mt-2 grid">
               {menuGroups.map((group) => (
                 <details
                   key={group.title}
                   className="group border-border-subtle border-b"
                 >
-                  <summary className="text-text-strong flex min-h-14 cursor-pointer list-none items-center justify-between font-serif text-lg [&::-webkit-details-marker]:hidden">
+                  <summary className="text-text-strong flex min-h-12 cursor-pointer list-none items-center justify-between py-2 font-serif text-base [&::-webkit-details-marker]:hidden">
                     {group.title}
                     <span
                       aria-hidden="true"
-                      className="text-accent text-xl transition-transform group-open:rotate-45"
+                      className="text-accent text-lg transition-transform group-open:rotate-45"
                     >
                       +
                     </span>
                   </summary>
-                  <ul className="grid gap-1 pb-5">
+                  <ul className="grid gap-0.5 pb-4">
                     {group.links.map((link) => (
                       <li key={`${link.href}-${link.label}`}>
                         <Link
                           href={link.href}
-                          className="text-text-muted hover:text-accent-soft flex min-h-11 items-center text-sm"
+                          className="text-text-muted hover:text-accent-soft flex min-h-10 items-center py-1 text-sm transition-colors"
                           onClick={() => onOpenChange(false)}
                         >
                           {link.label}
@@ -134,11 +134,11 @@ export function MobileNavigation({
             </div>
           </div>
 
-          <nav aria-label="Informazioni" className="mt-9">
+          <nav aria-label="Informazioni" className="mt-7">
             <p className="text-accent text-[0.65rem] font-semibold tracking-[var(--letter-spacing-label)] uppercase">
               Boutique e assistenza
             </p>
-            <ul className="mt-3 grid grid-cols-2 gap-x-5">
+            <ul className="mt-2 grid grid-cols-2 gap-x-4">
               {[
                 { label: "Chi siamo", href: "/chi-siamo" },
                 { label: "Contatti", href: "/contatti" },
@@ -150,7 +150,7 @@ export function MobileNavigation({
                 <li key={link.href} className="border-border-subtle border-b">
                   <Link
                     href={link.href}
-                    className="text-text-muted hover:text-accent-soft flex min-h-12 items-center text-sm"
+                    className="text-text-muted hover:text-accent-soft flex min-h-10 items-center py-1 text-[0.82rem] transition-colors"
                     onClick={() => onOpenChange(false)}
                   >
                     {link.label}
@@ -160,7 +160,7 @@ export function MobileNavigation({
             </ul>
           </nav>
 
-          <div className="mt-9 grid gap-3">
+          <div className="mt-7 grid gap-2.5">
             {confirmedSocialLinks.map((socialLink) => {
               const SocialIcon =
                 socialLink.id === "instagram" ? InstagramIcon : FacebookIcon;
@@ -172,7 +172,7 @@ export function MobileNavigation({
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={socialLink.ariaLabel}
-                  className="border-border-subtle hover:border-accent flex min-h-12 items-center justify-between border px-4 text-sm transition-colors"
+                  className="border-border-subtle hover:border-accent flex min-h-11 items-center justify-between border px-3.5 text-sm transition-colors"
                 >
                   Seguici su {socialLink.label}
                   <SocialIcon className="size-5" />
@@ -181,7 +181,7 @@ export function MobileNavigation({
             })}
             <button
               type="button"
-              className="border-border-subtle hover:border-accent min-h-12 border px-4 text-left text-sm transition-colors"
+              className="border-border-subtle hover:border-accent min-h-11 border px-3.5 text-left text-sm transition-colors"
               onClick={() => {
                 onOpenChange(false);
                 requestAnimationFrame(() =>
@@ -193,17 +193,17 @@ export function MobileNavigation({
             >
               Modifica preferenze cookie
             </button>
-            <p className="text-text-muted border-border-subtle border-t pt-5 text-xs leading-relaxed">
+            <p className="text-text-muted border-border-subtle border-t pt-4 text-[0.7rem] leading-relaxed">
               Vendita responsabile: l’accesso e l’acquisto di bevande alcoliche
               sono riservati ai maggiori di 18 anni.
             </p>
           </div>
         </div>
 
-        <div className="border-border-subtle bg-surface grid grid-cols-2 border-t pb-[env(safe-area-inset-bottom)]">
+        <div className="border-border-subtle bg-surface/95 grid shrink-0 grid-cols-2 border-t pb-[env(safe-area-inset-bottom)] backdrop-blur">
           <button
             type="button"
-            className="border-border-subtle flex min-h-16 items-center justify-center gap-2 border-r text-xs font-semibold tracking-wide uppercase"
+            className="border-border-subtle flex min-h-14 items-center justify-center gap-2 border-r px-2 text-[0.68rem] font-semibold tracking-wide uppercase"
             onClick={() => onUtility("wishlist")}
           >
             <HeartIcon className="size-5" />
@@ -211,7 +211,7 @@ export function MobileNavigation({
           </button>
           <button
             type="button"
-            className="flex min-h-16 items-center justify-center gap-2 text-xs font-semibold tracking-wide uppercase disabled:cursor-wait disabled:opacity-60"
+            className="flex min-h-14 items-center justify-center gap-2 px-2 text-[0.68rem] font-semibold tracking-wide uppercase disabled:cursor-wait disabled:opacity-60"
             disabled={!accountReady}
             onClick={() => onUtility("account")}
           >

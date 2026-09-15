@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 
 import { AdminInactivityGuard } from "@/features/admin/admin-inactivity-guard";
 import { AdminLogoutButton } from "@/features/admin/admin-logout-button";
+import { AdminMobileNavigation } from "@/features/admin/admin-mobile-navigation";
 import { getServerAdminUser } from "@/server/admin/admin-user";
 
 export default async function AdminDashboardLayout({
@@ -18,7 +19,7 @@ export default async function AdminDashboardLayout({
   }
 
   return (
-    <div className="min-h-screen bg-[#111111] text-white">
+    <div className="min-h-screen overflow-x-hidden bg-[#111111] text-white">
       <AdminInactivityGuard />
 
       <aside className="fixed inset-y-0 left-0 hidden w-64 flex-col border-r border-white/10 bg-[#171717] lg:flex">
@@ -112,33 +113,34 @@ export default async function AdminDashboardLayout({
         </div>
       </aside>
 
-      <div className="lg:pl-64">
-        <header className="flex min-h-16 items-center justify-between border-b border-white/10 bg-[#171717] px-5 sm:px-8">
-          <div>
-            <p className="text-sm font-medium text-white/90">
+      <div className="min-w-0 lg:pl-64">
+        <header className="fixed inset-x-0 top-0 z-40 flex min-h-14 items-center justify-between border-b border-white/10 bg-[#171717]/95 px-3 backdrop-blur sm:min-h-16 sm:px-6 lg:left-64 lg:px-8">
+          <div className="flex min-w-0 items-center gap-3">
+            <AdminMobileNavigation
+              firstName={admin.firstName}
+              lastName={admin.lastName}
+            />
+
+            <p className="truncate text-sm font-medium text-white/90">
               Pannello amministrativo
             </p>
           </div>
 
-          <div className="flex items-center gap-4">
-            <Link
-              href="/admin/impostazioni"
-              className="rounded-md px-2 py-1 text-right transition hover:bg-white/5"
-            >
-              <p className="text-sm font-medium">
-                {admin.firstName} {admin.lastName}
-              </p>
+          <Link
+            href="/admin/impostazioni"
+            className="hidden rounded-md px-2 py-1 text-right transition hover:bg-white/5 sm:block"
+          >
+            <p className="text-sm font-medium">
+              {admin.firstName} {admin.lastName}
+            </p>
 
-              <p className="text-xs text-white/50">Amministratore</p>
-            </Link>
-
-            <div className="lg:hidden">
-              <AdminLogoutButton compact />
-            </div>
-          </div>
+            <p className="text-xs text-white/50">Amministratore</p>
+          </Link>
         </header>
 
-        <main className="p-5 sm:p-8">{children}</main>
+        <main className="w-full min-w-0 px-3 pt-[4.5rem] pb-4 sm:px-5 sm:pt-20 sm:pb-6 md:px-6 lg:px-8 lg:pt-24 lg:pb-8">
+          {children}
+        </main>
       </div>
     </div>
   );

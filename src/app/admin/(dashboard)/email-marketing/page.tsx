@@ -18,7 +18,7 @@ export default async function AdminEmailMarketingPage() {
   ]);
 
   return (
-    <div className="space-y-8">
+    <div className="min-w-0 space-y-6 sm:space-y-8">
       <div>
         <p className="text-xs font-semibold tracking-[0.18em] text-orange-400 uppercase">
           Comunicazioni
@@ -35,7 +35,7 @@ export default async function AdminEmailMarketingPage() {
         </p>
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid min-w-0 gap-3 sm:grid-cols-2 xl:grid-cols-4">
         <SummaryCard label="Clienti totali" value={result.totalCustomers} />
 
         <SummaryCard

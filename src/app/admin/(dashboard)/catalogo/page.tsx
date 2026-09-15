@@ -5,7 +5,7 @@ export default async function AdminCatalogPage() {
   const data = await getAdminTaxonomyData();
 
   return (
-    <div className="space-y-8">
+    <div className="min-w-0 space-y-6 sm:space-y-8">
       <div>
         <p className="text-xs font-semibold tracking-[0.18em] text-orange-400 uppercase">
           Catalogo

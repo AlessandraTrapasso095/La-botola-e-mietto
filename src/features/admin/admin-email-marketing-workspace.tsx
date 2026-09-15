@@ -212,13 +212,13 @@ export function AdminEmailMarketingWorkspace({
   }
 
   return (
-    <div className="space-y-8">
+    <div className="min-w-0 space-y-6 sm:space-y-8">
       <AdminEmailMarketingRecipientSelector
         recipients={recipients}
         onChange={setAudience}
       />
 
-      <section className="rounded-lg border border-white/10 bg-[#171717]">
+      <section className="min-w-0 overflow-hidden rounded-lg border border-white/10 bg-[#171717]">
         <div className="border-b border-white/10 p-5 sm:p-6">
           <p className="text-xs font-semibold tracking-[0.16em] text-orange-400 uppercase">
             Composizione
@@ -233,8 +233,8 @@ export function AdminEmailMarketingWorkspace({
           </p>
         </div>
 
-        <div className="grid gap-8 p-5 sm:p-6 xl:grid-cols-[minmax(0,1fr)_minmax(380px,0.85fr)]">
-          <div className="space-y-5">
+        <div className="grid min-w-0 gap-6 p-4 sm:p-6 xl:grid-cols-[minmax(0,1fr)_minmax(340px,0.85fr)] xl:gap-8">
+          <div className="min-w-0 space-y-5">
             <label className="block">
               <span className="text-xs font-medium text-white/50">
                 Oggetto email
@@ -305,7 +305,7 @@ export function AdminEmailMarketingWorkspace({
               />
             </label>
 
-            <div className="grid gap-4 md:grid-cols-2">
+            <div className="grid min-w-0 gap-4 md:grid-cols-2">
               <label className="block">
                 <span className="text-xs font-medium text-white/50">
                   Testo pulsante
@@ -414,12 +414,12 @@ export function AdminEmailMarketingWorkspace({
               </div>
             ) : null}
 
-            <div className="flex justify-end border-t border-white/10 pt-5">
+            <div className="flex min-w-0 justify-stretch border-t border-white/10 pt-5 sm:justify-end">
               <button
                 type="button"
                 onClick={requestSend}
                 disabled={isPending || selectedEligibleCount === 0}
-                className="inline-flex min-h-11 items-center justify-center rounded-md bg-orange-500 px-6 text-sm font-semibold text-black transition hover:bg-orange-400 disabled:cursor-not-allowed disabled:opacity-40"
+                className="inline-flex min-h-11 w-full items-center justify-center rounded-md bg-orange-500 px-6 text-sm font-semibold text-black transition hover:bg-orange-400 disabled:cursor-not-allowed disabled:opacity-40 sm:w-auto"
               >
                 {isPending ? "Invio in corso…" : "Invia campagna"}
               </button>
@@ -427,28 +427,28 @@ export function AdminEmailMarketingWorkspace({
           </div>
 
           <div>
-            <div className="sticky top-24">
+            <div className="min-w-0 xl:sticky xl:top-24">
               <p className="mb-3 text-xs font-semibold tracking-[0.16em] text-white/40 uppercase">
                 Anteprima
               </p>
 
-              <div className="overflow-hidden rounded-xl border border-white/10 bg-[#f5f1e8] shadow-2xl">
+              <div className="min-w-0 overflow-hidden rounded-xl border border-white/10 bg-[#f5f1e8] shadow-2xl">
                 <div className="border-b border-black/10 bg-[#171717] px-6 py-5 text-center">
                   <p className="text-xs font-semibold tracking-[0.18em] text-orange-400 uppercase">
                     La Botola e Mietto
                   </p>
                 </div>
 
-                <div className="px-6 py-8 sm:px-8">
-                  <p className="text-xs font-medium tracking-[0.12em] text-black/45 uppercase">
+                <div className="min-w-0 px-4 py-6 sm:px-8 sm:py-8">
+                  <p className="max-w-full text-xs font-medium tracking-[0.12em] break-words text-black/45 uppercase">
                     {composer.subject.trim() || "Oggetto della tua email"}
                   </p>
 
-                  <h3 className="mt-4 text-2xl leading-tight font-semibold text-[#171717]">
+                  <h3 className="mt-4 max-w-full text-xl leading-tight font-semibold break-words text-[#171717] sm:text-2xl">
                     {previewTitle}
                   </h3>
 
-                  <p className="mt-5 text-sm leading-6 text-black/65">
+                  <p className="mt-5 max-w-full text-sm leading-6 break-words text-black/65">
                     Ciao Cliente, {previewIntro}
                   </p>
 
@@ -457,13 +457,13 @@ export function AdminEmailMarketingWorkspace({
                       La Botola e Mietto
                     </p>
 
-                    <p className="mt-3 text-sm leading-6 whitespace-pre-wrap text-black/65">
+                    <p className="mt-3 max-w-full text-sm leading-6 [overflow-wrap:anywhere] break-words whitespace-pre-wrap text-black/65">
                       {previewContent}
                     </p>
                   </div>
 
                   <div className="mt-7">
-                    <span className="inline-flex min-h-11 items-center justify-center rounded-md bg-[#d97706] px-5 text-sm font-semibold text-black">
+                    <span className="inline-flex min-h-11 w-full max-w-full items-center justify-center rounded-md bg-[#d97706] px-5 text-center text-sm font-semibold break-words text-black sm:w-auto">
                       {previewCta}
                     </span>
                   </div>
