@@ -422,6 +422,72 @@ export type Database = {
         }
         Relationships: []
       }
+      email_marketing_campaigns: {
+        Row: {
+          audience_mode: string
+          campaign_key: string
+          completed_at: string | null
+          content: string
+          created_at: string
+          cta_href: string | null
+          cta_label: string | null
+          duplicate_count: number
+          eligible_count: number
+          failed_count: number
+          id: string
+          intro: string
+          selected_profile_ids: string[] | null
+          sent_count: number
+          started_at: string | null
+          status: string
+          subject: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          audience_mode: string
+          campaign_key: string
+          completed_at?: string | null
+          content: string
+          created_at?: string
+          cta_href?: string | null
+          cta_label?: string | null
+          duplicate_count?: number
+          eligible_count?: number
+          failed_count?: number
+          id?: string
+          intro: string
+          selected_profile_ids?: string[] | null
+          sent_count?: number
+          started_at?: string | null
+          status?: string
+          subject: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          audience_mode?: string
+          campaign_key?: string
+          completed_at?: string | null
+          content?: string
+          created_at?: string
+          cta_href?: string | null
+          cta_label?: string | null
+          duplicate_count?: number
+          eligible_count?: number
+          failed_count?: number
+          id?: string
+          intro?: string
+          selected_profile_ids?: string[] | null
+          sent_count?: number
+          started_at?: string | null
+          status?: string
+          subject?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       inventory: {
         Row: {
           available_quantity: number | null

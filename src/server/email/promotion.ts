@@ -5,6 +5,15 @@ import { createBrandedEmailMessage } from "@/server/email/message";
 import { sendTrackedEmail } from "@/server/email/send";
 import { createSupabaseAdminClient } from "@/server/supabase-admin";
 
+export type PromotionCampaignAudience =
+  | {
+      mode: "all";
+    }
+  | {
+      mode: "selected";
+      profileIds: string[];
+    };
+
 export type PromotionCampaignInput = {
   campaignId: string;
   subject: string;
@@ -13,6 +22,7 @@ export type PromotionCampaignInput = {
   content: string;
   ctaLabel?: string;
   ctaHref?: string;
+  audience?: PromotionCampaignAudience;
 };
 
 export type PromotionCampaignResult = {
@@ -32,15 +42,35 @@ function siteUrl() {
   return value.replace(/\/+$/, "");
 }
 
-async function getMarketingRecipients() {
+async function getMarketingRecipients(
+  audience: PromotionCampaignAudience = { mode: "all" },
+) {
   const admin = createSupabaseAdminClient();
 
-  const response = await admin
+  let query = admin
     .from("profiles")
     .select("id, email, first_name, last_name")
     .eq("role", "customer")
     .eq("marketing_consent", true)
     .is("deleted_at", null);
+
+  if (audience.mode === "selected") {
+    const uniqueProfileIds = [
+      ...new Set(
+        audience.profileIds
+          .map((profileId) => profileId.trim())
+          .filter(Boolean),
+      ),
+    ];
+
+    if (uniqueProfileIds.length === 0) {
+      throw new Error("Seleziona almeno un destinatario.");
+    }
+
+    query = query.in("id", uniqueProfileIds);
+  }
+
+  const response = await query;
 
   if (response.error) {
     throw new Error(
@@ -48,7 +78,7 @@ async function getMarketingRecipients() {
     );
   }
 
-  return response.data.filter(
+  const recipients = response.data.filter(
     (
       recipient,
     ): recipient is typeof recipient & {
@@ -56,6 +86,14 @@ async function getMarketingRecipients() {
     } =>
       typeof recipient.email === "string" && recipient.email.trim().length > 0,
   );
+
+  if (audience.mode === "selected" && recipients.length === 0) {
+    throw new Error(
+      "Nessuno dei destinatari selezionati può ricevere comunicazioni promozionali.",
+    );
+  }
+
+  return recipients;
 }
 
 function customerName(customer: {
@@ -79,7 +117,9 @@ export async function sendPromotionCampaign(
   input: PromotionCampaignInput,
 ): Promise<PromotionCampaignResult> {
   const campaignId = normalizeCampaignId(input.campaignId);
-  const recipients = await getMarketingRecipients();
+  const recipients = await getMarketingRecipients(
+    input.audience ?? { mode: "all" },
+  );
 
   const result: PromotionCampaignResult = {
     eligible: recipients.length,
