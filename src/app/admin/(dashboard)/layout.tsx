@@ -81,17 +81,17 @@ export default async function AdminDashboardLayout({
           </Link>
 
           <Link
-            href="/admin/impostazioni"
-            className="rounded-md px-4 py-3 text-white/80 transition hover:bg-white/5 hover:text-white"
-          >
-            Impostazioni
-          </Link>
-
-          <Link
             href="/admin/clienti"
             className="rounded-md px-4 py-3 text-white/80 transition hover:bg-white/5 hover:text-white"
           >
             Clienti
+          </Link>
+
+          <Link
+            href="/admin/impostazioni"
+            className="rounded-md px-4 py-3 text-white/80 transition hover:bg-white/5 hover:text-white"
+          >
+            Impostazioni
           </Link>
         </nav>
 
