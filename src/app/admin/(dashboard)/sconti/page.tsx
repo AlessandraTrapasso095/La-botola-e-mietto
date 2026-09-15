@@ -1,10 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { AdminPromotionCodeManager } from "@/features/admin/admin-promotion-code-manager";
 import {
   getAdminOffers,
   type AdminOfferStatus,
 } from "@/server/admin/admin-offers";
+import {
+  getAdminPromotionCodes,
+  type AdminPromotionCode,
+} from "@/server/admin/admin-promotion-codes";
 
 export const metadata: Metadata = {
   title: "Sconti",
@@ -78,6 +83,58 @@ function offerStatusClasses(isActive: boolean) {
     : "border-white/10 bg-white/[0.03] text-white/45";
 }
 
+function promotionCodeStatusClasses(isActive: boolean) {
+  return isActive
+    ? "border-emerald-400/20 bg-emerald-400/10 text-emerald-300"
+    : "border-white/10 bg-white/[0.03] text-white/45";
+}
+
+function formatPromotionDiscount(code: AdminPromotionCode) {
+  if (code.discountType === "percentage") {
+    return `−${code.discountValue}%`;
+  }
+
+  return `−${formatMoney(code.discountValue, code.currency)}`;
+}
+
+function formatPromotionWindow(code: AdminPromotionCode) {
+  if (!code.startsAt && !code.endsAt) {
+    return "Sempre valida";
+  }
+
+  if (code.startsAt && code.endsAt) {
+    return `${formatDate(code.startsAt)} → ${formatDate(code.endsAt)}`;
+  }
+
+  if (code.startsAt) {
+    return `Dal ${formatDate(code.startsAt)}`;
+  }
+
+  return `Fino al ${formatDate(code.endsAt!)}`;
+}
+
+function promotionCodeRuntimeStatus(code: AdminPromotionCode) {
+  if (!code.isActive) {
+    return "Disattivato";
+  }
+
+  const now = Date.now();
+
+  if (code.startsAt && new Date(code.startsAt).getTime() > now) {
+    return "Programmato";
+  }
+
+  if (code.endsAt && new Date(code.endsAt).getTime() <= now) {
+    return "Scaduto";
+  }
+
+  if (code.usageLimit !== null && code.usageCount >= code.usageLimit) {
+    return "Esaurito";
+  }
+
+  return "Attivo";
+}
+
 export default async function AdminDiscountsPage({
   searchParams,
 }: {
@@ -89,11 +146,24 @@ export default async function AdminDiscountsPage({
   const status = parseStatus(getSingleParam(params, "status"));
   const requestedPage = parsePage(getSingleParam(params, "page"));
 
-  const result = await getAdminOffers({
-    query,
-    status,
-    page: requestedPage,
-  });
+  const [result, promotionCodes] = await Promise.all([
+    getAdminOffers({
+      query,
+      status,
+      page: requestedPage,
+    }),
+    getAdminPromotionCodes(),
+  ]);
+
+  const promotionSummary = {
+    totalCount: promotionCodes.length,
+    activeCount: promotionCodes.filter((code) => code.isActive).length,
+    inactiveCount: promotionCodes.filter((code) => !code.isActive).length,
+    usageCount: promotionCodes.reduce(
+      (total, code) => total + code.usageCount,
+      0,
+    ),
+  };
 
   const currentParams = new URLSearchParams();
 
@@ -130,6 +200,142 @@ export default async function AdminDiscountsPage({
           Gestisci prodotti
         </Link>
       </div>
+
+      <section className="space-y-5">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p className="text-xs font-semibold tracking-[0.16em] text-orange-400 uppercase">
+              Codici promozionali
+            </p>
+
+            <h2 className="mt-2 text-2xl font-semibold text-white">
+              Coupon checkout
+            </h2>
+
+            <p className="mt-2 max-w-2xl text-sm text-white/45">
+              Controlla i codici applicabili al checkout, la loro validità e gli
+              utilizzi registrati.
+            </p>
+          </div>
+        </div>
+
+        <AdminPromotionCodeManager promotionCodes={promotionCodes} />
+
+        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+          <SummaryCard
+            label="Codici totali"
+            value={promotionSummary.totalCount}
+          />
+
+          <SummaryCard
+            label="Codici attivi"
+            value={promotionSummary.activeCount}
+            emphasis
+          />
+
+          <SummaryCard
+            label="Codici disattivati"
+            value={promotionSummary.inactiveCount}
+          />
+
+          <SummaryCard
+            label="Utilizzi registrati"
+            value={promotionSummary.usageCount}
+          />
+        </div>
+
+        <div className="overflow-hidden rounded-lg border border-white/10 bg-[#171717]">
+          {promotionCodes.length === 0 ? (
+            <div className="px-6 py-14 text-center">
+              <p className="font-medium text-white/80">
+                Nessun codice promozionale configurato.
+              </p>
+
+              <p className="mt-2 text-sm text-white/40">
+                I codici creati dall’amministrazione compariranno qui.
+              </p>
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[1050px] divide-y divide-white/10 text-sm">
+                <thead className="bg-white/[0.03]">
+                  <tr className="text-left text-xs font-semibold tracking-wide text-white/40 uppercase">
+                    <th className="px-5 py-4">Codice</th>
+                    <th className="px-5 py-4">Sconto</th>
+                    <th className="px-5 py-4">Ordine minimo</th>
+                    <th className="px-5 py-4">Utilizzi</th>
+                    <th className="px-5 py-4">Validità</th>
+                    <th className="px-5 py-4">Stato</th>
+                    <th className="px-5 py-4">Aggiornato</th>
+                  </tr>
+                </thead>
+
+                <tbody className="divide-y divide-white/5">
+                  {promotionCodes.map((code) => {
+                    const runtimeStatus = promotionCodeRuntimeStatus(code);
+
+                    return (
+                      <tr
+                        key={code.id}
+                        className="transition hover:bg-white/[0.025]"
+                      >
+                        <td className="px-5 py-4">
+                          <p className="font-mono font-semibold text-white">
+                            {code.code}
+                          </p>
+
+                          <p className="mt-1 max-w-xs text-xs text-white/35">
+                            {code.description || "Nessuna descrizione"}
+                          </p>
+                        </td>
+
+                        <td className="px-5 py-4 font-semibold text-orange-300">
+                          {formatPromotionDiscount(code)}
+                        </td>
+
+                        <td className="px-5 py-4 text-white/65">
+                          {code.minimumOrderGrossAmountMinor === 0
+                            ? "Nessun minimo"
+                            : formatMoney(
+                                code.minimumOrderGrossAmountMinor,
+                                code.currency,
+                              )}
+                        </td>
+
+                        <td className="px-5 py-4 text-white/65">
+                          {code.usageLimit === null
+                            ? `${code.usageCount} / ∞`
+                            : `${code.usageCount} / ${code.usageLimit}`}
+                        </td>
+
+                        <td className="px-5 py-4 text-xs leading-5 text-white/50">
+                          {formatPromotionWindow(code)}
+                        </td>
+
+                        <td className="px-5 py-4">
+                          <span
+                            className={`inline-flex rounded-full border px-2.5 py-1 text-xs font-semibold ${promotionCodeStatusClasses(
+                              code.isActive,
+                            )}`}
+                          >
+                            {runtimeStatus}
+                          </span>
+                        </td>
+
+                        <td className="px-5 py-4 text-white/55">
+                          {formatDate(code.updatedAt)}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      </section>
+
+      <div className="border-t border-white/10 pt-2" />
 
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         <SummaryCard
