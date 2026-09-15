@@ -319,7 +319,7 @@ export default async function AdminOrderDetailPage({
         </div>
       </div>
 
-      <div className="mt-7 grid gap-5 xl:grid-cols-[minmax(0,1.7fr)_minmax(320px,0.8fr)]">
+      <div className="mt-6 grid items-start gap-5 xl:grid-cols-[minmax(0,1.55fr)_minmax(340px,0.75fr)]">
         <div className="grid content-start gap-5">
           <section className="overflow-hidden rounded-lg border border-white/10 bg-[#171717]">
             <div className="border-b border-white/10 px-5 py-4">
@@ -374,6 +374,166 @@ export default async function AdminOrderDetailPage({
               </table>
             </div>
           </section>
+
+          <section className="rounded-lg border border-white/10 bg-[#171717] p-5">
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <h2 className="font-semibold">Stato amministrativo</h2>
+
+                <p className="mt-1 text-xs text-white/40">
+                  Stato operativo, pagamento e gestione amministrativa
+                  dell&apos;ordine.
+                </p>
+              </div>
+
+              <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-xs font-semibold text-white/65">
+                Aggiornato {formatDate(order.updatedAt)}
+              </span>
+            </div>
+
+            <dl className="mt-5 grid gap-4 text-sm sm:grid-cols-2 lg:grid-cols-3">
+              <div className="rounded-md border border-white/[0.07] bg-[#111111] p-4">
+                <dt className="text-xs text-white/40">Ordine</dt>
+                <dd className="mt-1 font-medium">
+                  {orderStatusLabel(order.status)}
+                </dd>
+              </div>
+
+              <div className="rounded-md border border-white/[0.07] bg-[#111111] p-4">
+                <dt className="text-xs text-white/40">Pagamento</dt>
+                <dd className="mt-1 font-medium">
+                  {paymentStatusLabel(order.paymentStatus)}
+                </dd>
+              </div>
+
+              <div className="rounded-md border border-white/[0.07] bg-[#111111] p-4">
+                <dt className="text-xs text-white/40">
+                  Richiesta annullamento
+                </dt>
+                <dd className="mt-1 font-medium">
+                  {cancellationLabel(order.cancellationRequestStatus)}
+                </dd>
+              </div>
+
+              {order.cancellationRequestedAt && (
+                <div>
+                  <dt className="text-xs text-white/40">Richiesta il</dt>
+                  <dd className="mt-1">
+                    {formatDate(order.cancellationRequestedAt)}
+                  </dd>
+                </div>
+              )}
+
+              {order.cancellationRequestResolvedAt && (
+                <div>
+                  <dt className="text-xs text-white/40">Risolta il</dt>
+                  <dd className="mt-1">
+                    {formatDate(order.cancellationRequestResolvedAt)}
+                  </dd>
+                </div>
+              )}
+
+              {order.cancelledAt && (
+                <div>
+                  <dt className="text-xs text-white/40">Annullato il</dt>
+                  <dd className="mt-1">{formatDate(order.cancelledAt)}</dd>
+                </div>
+              )}
+
+              {order.refundedAt && (
+                <div>
+                  <dt className="text-xs text-white/40">Rimborsato il</dt>
+                  <dd className="mt-1">{formatDate(order.refundedAt)}</dd>
+                </div>
+              )}
+
+              {order.refundAmountMinor !== null && (
+                <div>
+                  <dt className="text-xs text-white/40">Importo rimborsato</dt>
+                  <dd className="mt-1">
+                    {formatMoney(order.refundAmountMinor)}
+                  </dd>
+                </div>
+              )}
+
+              {order.refundProvider && (
+                <div>
+                  <dt className="text-xs text-white/40">Provider rimborso</dt>
+                  <dd className="mt-1">{order.refundProvider}</dd>
+                </div>
+              )}
+
+              {order.refundReference && (
+                <div className="sm:col-span-2 lg:col-span-3">
+                  <dt className="text-xs text-white/40">
+                    Riferimento rimborso
+                  </dt>
+                  <dd className="mt-1 font-mono text-xs break-all text-white/60">
+                    {order.refundReference}
+                  </dd>
+                </div>
+              )}
+
+              {order.customerCancellationNote && (
+                <div className="sm:col-span-2 lg:col-span-3">
+                  <dt className="text-xs text-white/40">
+                    Comunicazione al cliente
+                  </dt>
+                  <dd className="mt-1 whitespace-pre-wrap text-white/70">
+                    {order.customerCancellationNote}
+                  </dd>
+                </div>
+              )}
+
+              {order.cancellationResolutionNote && (
+                <div className="sm:col-span-2 lg:col-span-3">
+                  <dt className="text-xs text-white/40">Nota amministrativa</dt>
+                  <dd className="mt-1 whitespace-pre-wrap text-white/70">
+                    {order.cancellationResolutionNote}
+                  </dd>
+                </div>
+              )}
+            </dl>
+          </section>
+
+          {(order.paymentProviderReference ||
+            order.stripePaymentIntentId ||
+            order.stripeCheckoutSessionId) && (
+            <section className="rounded-lg border border-white/10 bg-[#171717] p-5">
+              <h2 className="font-semibold">Riferimenti pagamento</h2>
+
+              <dl className="mt-4 grid gap-4 text-sm md:grid-cols-2">
+                {order.paymentProviderReference && (
+                  <div>
+                    <dt className="text-xs text-white/40">
+                      Provider reference
+                    </dt>
+                    <dd className="mt-1 font-mono text-xs break-all text-white/60">
+                      {order.paymentProviderReference}
+                    </dd>
+                  </div>
+                )}
+
+                {order.stripeCheckoutSessionId && (
+                  <div>
+                    <dt className="text-xs text-white/40">Stripe Session</dt>
+                    <dd className="mt-1 font-mono text-xs break-all text-white/60">
+                      {order.stripeCheckoutSessionId}
+                    </dd>
+                  </div>
+                )}
+
+                {order.stripePaymentIntentId && (
+                  <div>
+                    <dt className="text-xs text-white/40">Payment Intent</dt>
+                    <dd className="mt-1 font-mono text-xs break-all text-white/60">
+                      {order.stripePaymentIntentId}
+                    </dd>
+                  </div>
+                )}
+              </dl>
+            </section>
+          )}
         </div>
 
         <div className="grid content-start gap-5">
@@ -402,6 +562,13 @@ export default async function AdminOrderDetailPage({
                 </dd>
               </div>
             </dl>
+
+            <Link
+              href={`/admin/clienti/${order.customer.id}`}
+              className="mt-4 inline-flex min-h-9 items-center rounded-md border border-white/10 px-3 text-xs font-semibold text-white/65 transition hover:border-orange-400/30 hover:text-orange-300"
+            >
+              Apri cliente
+            </Link>
           </section>
 
           <section className="rounded-lg border border-white/10 bg-[#171717] p-5">
@@ -522,6 +689,7 @@ export default async function AdminOrderDetailPage({
                 </div>
               )}
           </section>
+
           <AddressCard
             title="Indirizzo di spedizione"
             value={order.shippingAddress}
@@ -532,151 +700,6 @@ export default async function AdminOrderDetailPage({
             value={order.billingAddress}
           />
         </div>
-      </div>
-
-      <div className="mt-5 grid items-start gap-5 xl:grid-cols-2">
-        <section className="rounded-lg border border-white/10 bg-[#171717] p-5">
-          <h2 className="font-semibold">Stato amministrativo</h2>
-
-          <dl className="mt-4 grid gap-4 text-sm">
-            <div>
-              <dt className="text-xs text-white/40">Ordine</dt>
-              <dd className="mt-1">{orderStatusLabel(order.status)}</dd>
-            </div>
-
-            <div>
-              <dt className="text-xs text-white/40">Pagamento</dt>
-              <dd className="mt-1">
-                {paymentStatusLabel(order.paymentStatus)}
-              </dd>
-            </div>
-
-            <div>
-              <dt className="text-xs text-white/40">Richiesta annullamento</dt>
-              <dd className="mt-1">
-                {cancellationLabel(order.cancellationRequestStatus)}
-              </dd>
-            </div>
-
-            {order.cancellationRequestedAt && (
-              <div>
-                <dt className="text-xs text-white/40">Richiesta il</dt>
-                <dd className="mt-1">
-                  {formatDate(order.cancellationRequestedAt)}
-                </dd>
-              </div>
-            )}
-
-            {order.cancellationRequestResolvedAt && (
-              <div>
-                <dt className="text-xs text-white/40">Risolta il</dt>
-                <dd className="mt-1">
-                  {formatDate(order.cancellationRequestResolvedAt)}
-                </dd>
-              </div>
-            )}
-
-            {order.cancelledAt && (
-              <div>
-                <dt className="text-xs text-white/40">Annullato il</dt>
-                <dd className="mt-1">{formatDate(order.cancelledAt)}</dd>
-              </div>
-            )}
-
-            {order.refundedAt && (
-              <div>
-                <dt className="text-xs text-white/40">Rimborsato il</dt>
-                <dd className="mt-1">{formatDate(order.refundedAt)}</dd>
-              </div>
-            )}
-
-            {order.refundAmountMinor !== null && (
-              <div>
-                <dt className="text-xs text-white/40">Importo rimborsato</dt>
-                <dd className="mt-1">{formatMoney(order.refundAmountMinor)}</dd>
-              </div>
-            )}
-
-            {order.refundProvider && (
-              <div>
-                <dt className="text-xs text-white/40">Provider rimborso</dt>
-                <dd className="mt-1">{order.refundProvider}</dd>
-              </div>
-            )}
-
-            {order.refundReference && (
-              <div>
-                <dt className="text-xs text-white/40">Riferimento rimborso</dt>
-                <dd className="mt-1 font-mono text-xs break-all text-white/60">
-                  {order.refundReference}
-                </dd>
-              </div>
-            )}
-
-            {order.customerCancellationNote && (
-              <div>
-                <dt className="text-xs text-white/40">
-                  Comunicazione al cliente
-                </dt>
-
-                <dd className="mt-1 whitespace-pre-wrap text-white/70">
-                  {order.customerCancellationNote}
-                </dd>
-              </div>
-            )}
-
-            {order.cancellationResolutionNote && (
-              <div>
-                <dt className="text-xs text-white/40">Nota amministrativa</dt>
-                <dd className="mt-1 whitespace-pre-wrap text-white/70">
-                  {order.cancellationResolutionNote}
-                </dd>
-              </div>
-            )}
-
-            <div>
-              <dt className="text-xs text-white/40">Ultimo aggiornamento</dt>
-              <dd className="mt-1">{formatDate(order.updatedAt)}</dd>
-            </div>
-          </dl>
-        </section>
-
-        {(order.paymentProviderReference ||
-          order.stripePaymentIntentId ||
-          order.stripeCheckoutSessionId) && (
-          <section className="rounded-lg border border-white/10 bg-[#171717] p-5">
-            <h2 className="font-semibold">Riferimenti pagamento</h2>
-
-            <dl className="mt-4 grid gap-4 text-sm">
-              {order.paymentProviderReference && (
-                <div>
-                  <dt className="text-xs text-white/40">Provider reference</dt>
-                  <dd className="mt-1 font-mono text-xs break-all text-white/60">
-                    {order.paymentProviderReference}
-                  </dd>
-                </div>
-              )}
-
-              {order.stripeCheckoutSessionId && (
-                <div>
-                  <dt className="text-xs text-white/40">Stripe Session</dt>
-                  <dd className="mt-1 font-mono text-xs break-all text-white/60">
-                    {order.stripeCheckoutSessionId}
-                  </dd>
-                </div>
-              )}
-
-              {order.stripePaymentIntentId && (
-                <div>
-                  <dt className="text-xs text-white/40">Payment Intent</dt>
-                  <dd className="mt-1 font-mono text-xs break-all text-white/60">
-                    {order.stripePaymentIntentId}
-                  </dd>
-                </div>
-              )}
-            </dl>
-          </section>
-        )}
       </div>
     </div>
   );
