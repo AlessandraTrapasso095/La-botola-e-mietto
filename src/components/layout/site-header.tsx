@@ -7,6 +7,7 @@ import { catalogCollections } from "@/content/catalog/collections";
 import { emptyCatalogFilters } from "@/features/catalog/catalog-filter";
 import { formatEuroMinor } from "@/lib/money";
 import { getCatalogRepository } from "@/server/catalog/get-catalog-repository";
+import { getStorefrontPromotion } from "@/server/catalog/storefront-promotion";
 
 const suggestedCategorySlugs = [
   "whisky-whiskey",
@@ -24,14 +25,17 @@ export async function SiteHeader() {
       href: collection.href,
     }));
 
-  const featuredProducts = (
-    await getCatalogRepository().queryProducts({
+  const [featuredProductsResult, storefrontPromotion] = await Promise.all([
+    getCatalogRepository().queryProducts({
       page: 1,
       pageSize: 5,
       sort: "newest",
       filters: emptyCatalogFilters,
-    })
-  ).items;
+    }),
+    getStorefrontPromotion(),
+  ]);
+
+  const featuredProducts = featuredProductsResult.items;
 
   return (
     <SiteHeaderClient
@@ -46,6 +50,7 @@ export async function SiteHeader() {
       freeShippingThreshold={formatEuroMinor(
         businessInfo.freeShippingThresholdMinor,
       )}
+      storefrontPromotion={storefrontPromotion}
     />
   );
 }

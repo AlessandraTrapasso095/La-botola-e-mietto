@@ -22,10 +22,19 @@ import { useAccount } from "@/features/account/account-provider";
 import { useCommerce } from "@/features/commerce/commerce-provider";
 import { SearchDialog } from "@/features/search/search-dialog";
 import { cn } from "@/lib/cn";
+import type { StorefrontPromotion } from "@/server/catalog/storefront-promotion";
 import type { Brand, Category, ProductCardView } from "@/types/catalog";
+
+function formatPromotionMoney(amountMinor: number, currency: string) {
+  return new Intl.NumberFormat("it-IT", {
+    style: "currency",
+    currency,
+  }).format(amountMinor / 100);
+}
 
 type SiteHeaderClientProps = {
   freeShippingThreshold: string;
+  storefrontPromotion: StorefrontPromotion | null;
   menuGroups: readonly CatalogMenuGroup[];
   featuredSearchProducts: readonly ProductCardView[];
   featuredSearchBrands: readonly Brand[];
@@ -34,6 +43,7 @@ type SiteHeaderClientProps = {
 
 export function SiteHeaderClient({
   freeShippingThreshold,
+  storefrontPromotion,
   menuGroups,
   featuredSearchProducts,
   featuredSearchBrands,
@@ -49,6 +59,9 @@ export function SiteHeaderClient({
   const headerRef = useRef<HTMLElement>(null);
   const catalogButtonRef = useRef<HTMLButtonElement>(null);
   const mobileMenuButtonRef = useRef<HTMLButtonElement>(null);
+  const promotionDialogCloseRef = useRef<HTMLButtonElement>(null);
+  const [promotionDialogOpen, setPromotionDialogOpen] = useState(false);
+  const [copiedPromotionCode, setCopiedPromotionCode] = useState(false);
 
   useEffect(() => {
     const updateHeader = () => setIsScrolled(window.scrollY > 24);
@@ -56,6 +69,87 @@ export function SiteHeaderClient({
     window.addEventListener("scroll", updateHeader, { passive: true });
     return () => window.removeEventListener("scroll", updateHeader);
   }, []);
+
+  useEffect(() => {
+    if (!storefrontPromotion) {
+      return;
+    }
+
+    const storageKey = `storefront-promo-dismissed:${storefrontPromotion.code}`;
+
+    if (window.localStorage.getItem(storageKey) === "true") {
+      return;
+    }
+
+    const timer = window.setTimeout(() => {
+      setCopiedPromotionCode(false);
+      setPromotionDialogOpen(true);
+    }, 0);
+
+    return () => window.clearTimeout(timer);
+  }, [storefrontPromotion]);
+
+  useEffect(() => {
+    if (!promotionDialogOpen) {
+      return;
+    }
+
+    const previousOverflow = document.body.style.overflow;
+
+    document.body.style.overflow = "hidden";
+    promotionDialogCloseRef.current?.focus();
+
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") {
+        return;
+      }
+
+      if (storefrontPromotion) {
+        window.localStorage.setItem(
+          `storefront-promo-dismissed:${storefrontPromotion.code}`,
+          "true",
+        );
+      }
+
+      setPromotionDialogOpen(false);
+    };
+
+    document.addEventListener("keydown", closeOnEscape);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [promotionDialogOpen, storefrontPromotion]);
+
+  function closePromotionDialog() {
+    if (storefrontPromotion) {
+      window.localStorage.setItem(
+        `storefront-promo-dismissed:${storefrontPromotion.code}`,
+        "true",
+      );
+    }
+
+    setCopiedPromotionCode(false);
+    setPromotionDialogOpen(false);
+  }
+
+  async function copyPromotionCode() {
+    if (!storefrontPromotion) {
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(storefrontPromotion.code);
+      setCopiedPromotionCode(true);
+
+      window.setTimeout(() => {
+        setCopiedPromotionCode(false);
+      }, 2000);
+    } catch {
+      setCopiedPromotionCode(false);
+    }
+  }
 
   useEffect(() => {
     if (!megaMenuOpen) return;
@@ -81,16 +175,152 @@ export function SiteHeaderClient({
 
   return (
     <>
-      <div className="border-border-subtle bg-surface border-b">
-        <Container className="flex min-h-10 items-center justify-center text-center">
-          <p className="text-text-muted text-[0.6875rem] tracking-[0.08em] sm:text-xs">
-            Spedizione gratuita in Italia sopra{" "}
-            <span className="text-accent-soft font-semibold">
-              {freeShippingThreshold}
-            </span>
-          </p>
-        </Container>
+      <div
+        className={
+          storefrontPromotion
+            ? "border-b border-red-900/70 bg-red-950"
+            : "border-border-subtle bg-surface border-b"
+        }
+      >
+        {storefrontPromotion ? (
+          <Container className="flex min-h-11 flex-col items-center justify-center gap-2 py-2 text-center sm:flex-row sm:justify-between sm:gap-6 sm:py-0">
+            <p className="text-[0.6875rem] font-medium tracking-[0.08em] text-white sm:text-left sm:text-xs">
+              Ottieni{" "}
+              <span className="font-semibold">
+                {storefrontPromotion.discountType === "percentage"
+                  ? `${storefrontPromotion.discountValue}%`
+                  : formatPromotionMoney(
+                      storefrontPromotion.discountValue,
+                      storefrontPromotion.currency,
+                    )}
+              </span>{" "}
+              di sconto con il codice{" "}
+              <span className="ml-1 inline-flex rounded-full bg-emerald-400 px-2.5 py-1 font-bold tracking-[0.12em] text-emerald-950">
+                {storefrontPromotion.code}
+              </span>
+              {storefrontPromotion.minimumOrderGrossAmountMinor > 0 ? (
+                <>
+                  {" "}
+                  su ordini da{" "}
+                  {formatPromotionMoney(
+                    storefrontPromotion.minimumOrderGrossAmountMinor,
+                    storefrontPromotion.currency,
+                  )}
+                </>
+              ) : null}
+            </p>
+
+            <p className="text-[0.6875rem] tracking-[0.08em] text-white/85 sm:text-right sm:text-xs">
+              Spedizione gratuita in Italia sopra{" "}
+              <span className="font-semibold text-white">
+                {freeShippingThreshold}
+              </span>
+            </p>
+          </Container>
+        ) : (
+          <Container className="flex min-h-10 items-center justify-center text-center">
+            <p className="text-text-muted text-[0.6875rem] tracking-[0.08em] sm:text-xs">
+              Spedizione gratuita in Italia sopra{" "}
+              <span className="text-accent-soft font-semibold">
+                {freeShippingThreshold}
+              </span>
+            </p>
+          </Container>
+        )}
       </div>
+
+      {storefrontPromotion && promotionDialogOpen ? (
+        <div
+          className="fixed inset-0 z-[calc(var(--z-header)+20)] flex items-center justify-center bg-black/70 px-5 backdrop-blur-sm"
+          role="presentation"
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) {
+              closePromotionDialog();
+            }
+          }}
+        >
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="storefront-promotion-title"
+            className="relative w-full max-w-md rounded-2xl border border-white/10 bg-[#111111] p-7 text-center shadow-2xl sm:p-9"
+          >
+            <button
+              ref={promotionDialogCloseRef}
+              type="button"
+              aria-label="Chiudi promozione"
+              onClick={closePromotionDialog}
+              className="absolute top-4 right-4 flex size-10 items-center justify-center rounded-full border border-white/10 text-xl text-white/60 transition hover:border-white/25 hover:text-white"
+            >
+              ×
+            </button>
+
+            <p className="text-xs font-semibold tracking-[0.18em] text-red-400 uppercase">
+              Promozione esclusiva
+            </p>
+
+            <h2
+              id="storefront-promotion-title"
+              className="mt-3 text-2xl font-semibold text-white sm:text-3xl"
+            >
+              Ottieni il tuo sconto
+            </h2>
+
+            <p className="mt-4 text-sm leading-6 text-white/65">
+              Usa questo codice al checkout e ottieni{" "}
+              <span className="font-semibold text-white">
+                {storefrontPromotion.discountType === "percentage"
+                  ? `${storefrontPromotion.discountValue}%`
+                  : formatPromotionMoney(
+                      storefrontPromotion.discountValue,
+                      storefrontPromotion.currency,
+                    )}
+              </span>{" "}
+              di sconto
+              {storefrontPromotion.minimumOrderGrossAmountMinor > 0
+                ? ` su ordini da ${formatPromotionMoney(
+                    storefrontPromotion.minimumOrderGrossAmountMinor,
+                    storefrontPromotion.currency,
+                  )}`
+                : ""}
+              .
+            </p>
+
+            <div className="mt-6 rounded-xl border border-emerald-400/25 bg-emerald-400/10 px-5 py-4">
+              <p className="text-xs font-semibold tracking-[0.15em] text-emerald-300 uppercase">
+                Codice promozionale
+              </p>
+
+              <p className="mt-2 text-2xl font-bold tracking-[0.12em] text-emerald-300">
+                {storefrontPromotion.code}
+              </p>
+
+              <button
+                type="button"
+                onClick={copyPromotionCode}
+                className="mt-4 inline-flex min-h-10 items-center justify-center rounded-lg border border-emerald-400/30 bg-emerald-400/10 px-4 py-2 text-sm font-semibold text-emerald-300 transition hover:border-emerald-300/50 hover:bg-emerald-400/15"
+              >
+                {copiedPromotionCode ? "Copiato!" : "Copia codice"}
+              </button>
+
+              <p
+                aria-live="polite"
+                className="mt-2 min-h-4 text-xs text-emerald-300"
+              >
+                {copiedPromotionCode ? "Codice copiato negli appunti." : ""}
+              </p>
+            </div>
+
+            <button
+              type="button"
+              onClick={closePromotionDialog}
+              className="mt-6 min-h-11 w-full rounded-lg bg-red-700 px-5 py-3 text-sm font-semibold text-white transition hover:bg-red-600"
+            >
+              Continua lo shopping
+            </button>
+          </div>
+        </div>
+      ) : null}
 
       <header
         ref={headerRef}
