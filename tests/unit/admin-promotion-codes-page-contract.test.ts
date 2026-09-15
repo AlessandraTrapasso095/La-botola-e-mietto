@@ -14,20 +14,28 @@ describe("admin promotion codes page contract", () => {
     expect(source).toContain("Promise.all");
   });
 
-  it("mostra il riepilogo dei codici", () => {
+  it("mostra il riepilogo dei codici e delle performance", () => {
     expect(source).toContain('label="Codici totali"');
     expect(source).toContain('label="Codici attivi"');
     expect(source).toContain('label="Codici disattivati"');
     expect(source).toContain('label="Utilizzi registrati"');
+    expect(source).toContain('label="Ordini pagati"');
+    expect(source).toContain('label="Sconto generato"');
+    expect(source).toContain("promotionSummary.paidUsageCount");
+    expect(source).toContain("promotionSummary.paidDiscountGrossAmountMinor");
   });
 
-  it("mostra codice sconto minimo ordine utilizzi validità e stato", () => {
+  it("mostra utilizzi pagati e sconto generato per ogni codice", () => {
     expect(source).toContain(">Codice<");
     expect(source).toContain(">Sconto<");
     expect(source).toContain(">Ordine minimo<");
     expect(source).toContain(">Utilizzi<");
+    expect(source).toContain(">Pagati<");
+    expect(source).toContain(">Sconto generato<");
     expect(source).toContain(">Validità<");
     expect(source).toContain(">Stato<");
+    expect(source).toContain("code.paidUsageCount");
+    expect(source).toContain("code.paidDiscountGrossAmountMinor");
   });
 
   it("supporta percentuale e sconto fisso", () => {

@@ -163,6 +163,14 @@ export default async function AdminDiscountsPage({
       (total, code) => total + code.usageCount,
       0,
     ),
+    paidUsageCount: promotionCodes.reduce(
+      (total, code) => total + code.paidUsageCount,
+      0,
+    ),
+    paidDiscountGrossAmountMinor: promotionCodes.reduce(
+      (total, code) => total + code.paidDiscountGrossAmountMinor,
+      0,
+    ),
   };
 
   const currentParams = new URLSearchParams();
@@ -221,7 +229,7 @@ export default async function AdminDiscountsPage({
 
         <AdminPromotionCodeManager promotionCodes={promotionCodes} />
 
-        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-6">
           <SummaryCard
             label="Codici totali"
             value={promotionSummary.totalCount}
@@ -242,6 +250,16 @@ export default async function AdminDiscountsPage({
             label="Utilizzi registrati"
             value={promotionSummary.usageCount}
           />
+
+          <SummaryCard
+            label="Ordini pagati"
+            value={promotionSummary.paidUsageCount}
+          />
+
+          <SummaryCard
+            label="Sconto generato"
+            value={formatMoney(promotionSummary.paidDiscountGrossAmountMinor)}
+          />
         </div>
 
         <div className="overflow-hidden rounded-lg border border-white/10 bg-[#171717]">
@@ -257,13 +275,15 @@ export default async function AdminDiscountsPage({
             </div>
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full min-w-[1050px] divide-y divide-white/10 text-sm">
+              <table className="w-full min-w-[1320px] divide-y divide-white/10 text-sm">
                 <thead className="bg-white/[0.03]">
                   <tr className="text-left text-xs font-semibold tracking-wide text-white/40 uppercase">
                     <th className="px-5 py-4">Codice</th>
                     <th className="px-5 py-4">Sconto</th>
                     <th className="px-5 py-4">Ordine minimo</th>
                     <th className="px-5 py-4">Utilizzi</th>
+                    <th className="px-5 py-4">Pagati</th>
+                    <th className="px-5 py-4">Sconto generato</th>
                     <th className="px-5 py-4">Validità</th>
                     <th className="px-5 py-4">Stato</th>
                     <th className="px-5 py-4">Aggiornato</th>
@@ -306,6 +326,17 @@ export default async function AdminDiscountsPage({
                           {code.usageLimit === null
                             ? `${code.usageCount} / ∞`
                             : `${code.usageCount} / ${code.usageLimit}`}
+                        </td>
+
+                        <td className="px-5 py-4 font-semibold text-emerald-300">
+                          {code.paidUsageCount}
+                        </td>
+
+                        <td className="px-5 py-4 font-semibold text-orange-300">
+                          {formatMoney(
+                            code.paidDiscountGrossAmountMinor,
+                            code.currency,
+                          )}
                         </td>
 
                         <td className="px-5 py-4 text-xs leading-5 text-white/50">
@@ -581,7 +612,7 @@ function SummaryCard({
   emphasis = false,
 }: {
   label: string;
-  value: number;
+  value: number | string;
   emphasis?: boolean;
 }) {
   return (
@@ -607,7 +638,7 @@ function SummaryCard({
             : "mt-2 text-2xl font-semibold text-white"
         }
       >
-        {value.toLocaleString("it-IT")}
+        {typeof value === "number" ? value.toLocaleString("it-IT") : value}
       </p>
     </div>
   );

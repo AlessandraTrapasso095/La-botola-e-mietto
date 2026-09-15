@@ -19,6 +19,8 @@ export type AdminPromotionCode = {
   endsAt: string | null;
   usageLimit: number | null;
   usageCount: number;
+  paidUsageCount: number;
+  paidDiscountGrossAmountMinor: number;
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
@@ -193,11 +195,15 @@ export async function getAdminPromotionCodes(): Promise<AdminPromotionCode[]> {
   const ids = rows.map((row) => row.id);
 
   const usageCountByPromotionCode = new Map<string, number>();
+  const paidUsageCountByPromotionCode = new Map<string, number>();
+  const paidDiscountByPromotionCode = new Map<string, number>();
 
   if (ids.length > 0) {
     const usageResponse = await admin
       .from("orders")
-      .select("promotion_code_id,status,payment_status")
+      .select(
+        "promotion_code_id,status,payment_status,discount_gross_amount_minor",
+      )
       .in("promotion_code_id", ids)
       .neq("status", "cancelled")
       .in("payment_status", ["pending", "authorized", "paid"]);
@@ -217,6 +223,19 @@ export async function getAdminPromotionCodes(): Promise<AdminPromotionCode[]> {
         order.promotion_code_id,
         (usageCountByPromotionCode.get(order.promotion_code_id) ?? 0) + 1,
       );
+
+      if (order.payment_status === "paid") {
+        paidUsageCountByPromotionCode.set(
+          order.promotion_code_id,
+          (paidUsageCountByPromotionCode.get(order.promotion_code_id) ?? 0) + 1,
+        );
+
+        paidDiscountByPromotionCode.set(
+          order.promotion_code_id,
+          (paidDiscountByPromotionCode.get(order.promotion_code_id) ?? 0) +
+            Number(order.discount_gross_amount_minor ?? 0),
+        );
+      }
     }
   }
 
@@ -232,6 +251,8 @@ export async function getAdminPromotionCodes(): Promise<AdminPromotionCode[]> {
     endsAt: row.ends_at,
     usageLimit: row.usage_limit,
     usageCount: usageCountByPromotionCode.get(row.id) ?? 0,
+    paidUsageCount: paidUsageCountByPromotionCode.get(row.id) ?? 0,
+    paidDiscountGrossAmountMinor: paidDiscountByPromotionCode.get(row.id) ?? 0,
     isActive: row.is_active,
     createdAt: row.created_at,
     updatedAt: row.updated_at,

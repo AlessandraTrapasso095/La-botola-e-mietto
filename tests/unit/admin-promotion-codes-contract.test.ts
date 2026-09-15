@@ -31,6 +31,18 @@ describe("admin promotion codes server contract", () => {
     expect(source).toContain("usageCountByPromotionCode");
   });
 
+  it("distingue gli utilizzi totali dagli ordini effettivamente pagati", () => {
+    expect(source).toContain("paidUsageCountByPromotionCode");
+    expect(source).toContain('order.payment_status === "paid"');
+    expect(source).toContain("paidUsageCount:");
+  });
+
+  it("calcola lo sconto lordo realmente generato dagli ordini pagati", () => {
+    expect(source).toContain("discount_gross_amount_minor");
+    expect(source).toContain("paidDiscountByPromotionCode");
+    expect(source).toContain("paidDiscountGrossAmountMinor");
+  });
+
   it("normalizza il codice in uppercase e applica il formato consentito", () => {
     expect(source).toContain("value.trim().toUpperCase()");
     expect(source).toContain("/^[A-Z0-9_-]{3,32}$/");
