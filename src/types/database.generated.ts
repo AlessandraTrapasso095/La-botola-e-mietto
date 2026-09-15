@@ -12,31 +12,6 @@ export type Database = {
   __InternalSupabase: {
     PostgrestVersion: "14.5"
   }
-  graphql_public: {
-    Tables: {
-      [_ in never]: never
-    }
-    Views: {
-      [_ in never]: never
-    }
-    Functions: {
-      graphql: {
-        Args: {
-          extensions?: Json
-          operationName?: string
-          query?: string
-          variables?: Json
-        }
-        Returns: Json
-      }
-    }
-    Enums: {
-      [_ in never]: never
-    }
-    CompositeTypes: {
-      [_ in never]: never
-    }
-  }
   public: {
     Tables: {
       addresses: {
@@ -738,6 +713,9 @@ export type Database = {
           currency: string
           customer_cancellation_note: string | null
           delivered_at: string | null
+          discount_gross_amount_minor: number
+          discount_net_amount_minor: number
+          discount_vat_amount_minor: number
           hidden_from_customer_at: string | null
           id: string
           inventory_committed_at: string | null
@@ -747,6 +725,10 @@ export type Database = {
           payment_provider_reference: string | null
           payment_status: Database["public"]["Enums"]["payment_status"]
           profile_id: string
+          promotion_code: string | null
+          promotion_code_id: string | null
+          promotion_discount_type: string | null
+          promotion_discount_value: number | null
           refund_amount_minor: number | null
           refund_provider: string | null
           refund_reference: string | null
@@ -781,6 +763,9 @@ export type Database = {
           currency?: string
           customer_cancellation_note?: string | null
           delivered_at?: string | null
+          discount_gross_amount_minor?: number
+          discount_net_amount_minor?: number
+          discount_vat_amount_minor?: number
           hidden_from_customer_at?: string | null
           id?: string
           inventory_committed_at?: string | null
@@ -790,6 +775,10 @@ export type Database = {
           payment_provider_reference?: string | null
           payment_status?: Database["public"]["Enums"]["payment_status"]
           profile_id: string
+          promotion_code?: string | null
+          promotion_code_id?: string | null
+          promotion_discount_type?: string | null
+          promotion_discount_value?: number | null
           refund_amount_minor?: number | null
           refund_provider?: string | null
           refund_reference?: string | null
@@ -824,6 +813,9 @@ export type Database = {
           currency?: string
           customer_cancellation_note?: string | null
           delivered_at?: string | null
+          discount_gross_amount_minor?: number
+          discount_net_amount_minor?: number
+          discount_vat_amount_minor?: number
           hidden_from_customer_at?: string | null
           id?: string
           inventory_committed_at?: string | null
@@ -833,6 +825,10 @@ export type Database = {
           payment_provider_reference?: string | null
           payment_status?: Database["public"]["Enums"]["payment_status"]
           profile_id?: string
+          promotion_code?: string | null
+          promotion_code_id?: string | null
+          promotion_discount_type?: string | null
+          promotion_discount_value?: number | null
           refund_amount_minor?: number | null
           refund_provider?: string | null
           refund_reference?: string | null
@@ -860,6 +856,13 @@ export type Database = {
             columns: ["profile_id"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "orders_promotion_code_id_fkey"
+            columns: ["promotion_code_id"]
+            isOneToOne: false
+            referencedRelation: "promotion_codes"
             referencedColumns: ["id"]
           },
           {
@@ -1287,6 +1290,60 @@ export type Database = {
           phone?: string | null
           role?: Database["public"]["Enums"]["account_role"]
           updated_at?: string
+        }
+        Relationships: []
+      }
+      promotion_codes: {
+        Row: {
+          code: string
+          created_at: string
+          currency: string
+          description: string | null
+          discount_type: string
+          discount_value: number
+          ends_at: string | null
+          id: string
+          is_active: boolean
+          minimum_order_gross_amount_minor: number
+          starts_at: string | null
+          stripe_coupon_id: string | null
+          stripe_promotion_code_id: string | null
+          updated_at: string
+          usage_limit: number | null
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          currency?: string
+          description?: string | null
+          discount_type: string
+          discount_value: number
+          ends_at?: string | null
+          id?: string
+          is_active?: boolean
+          minimum_order_gross_amount_minor?: number
+          starts_at?: string | null
+          stripe_coupon_id?: string | null
+          stripe_promotion_code_id?: string | null
+          updated_at?: string
+          usage_limit?: number | null
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          currency?: string
+          description?: string | null
+          discount_type?: string
+          discount_value?: number
+          ends_at?: string | null
+          id?: string
+          is_active?: boolean
+          minimum_order_gross_amount_minor?: number
+          starts_at?: string | null
+          stripe_coupon_id?: string | null
+          stripe_promotion_code_id?: string | null
+          updated_at?: string
+          usage_limit?: number | null
         }
         Relationships: []
       }
@@ -1760,16 +1817,19 @@ export type Database = {
         Args: {
           p_billing_address_id: string
           p_payment_method: Database["public"]["Enums"]["payment_method"]
+          p_promotion_code?: string
           p_shipping_address_id: string
           p_shipping_method: Database["public"]["Enums"]["shipping_method"]
         }
         Returns: {
           created_at: string
+          discount_gross_amount_minor: number
           order_id: string
           order_number: string
           order_status: Database["public"]["Enums"]["order_status"]
           payment_method: Database["public"]["Enums"]["payment_method"]
           payment_status: Database["public"]["Enums"]["payment_status"]
+          promotion_code: string
           shipping_gross_amount_minor: number
           shipping_method: Database["public"]["Enums"]["shipping_method"]
           subtotal_net_amount_minor: number
@@ -1933,6 +1993,23 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      validate_promotion_code: {
+        Args: {
+          p_code: string
+          p_currency?: string
+          p_subtotal_gross_amount_minor: number
+        }
+        Returns: {
+          discount_gross_amount_minor: number
+          discount_type: string
+          discount_value: number
+          minimum_order_gross_amount_minor: number
+          promotion_code: string
+          promotion_code_id: string
+          usage_count: number
+          usage_limit: number
+        }[]
+      }
     }
     Enums: {
       account_role: "customer" | "admin"
@@ -2080,9 +2157,6 @@ export type CompositeTypes<
     : never
 
 export const Constants = {
-  graphql_public: {
-    Enums: {},
-  },
   public: {
     Enums: {
       account_role: ["customer", "admin"],

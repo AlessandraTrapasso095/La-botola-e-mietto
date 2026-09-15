@@ -123,13 +123,20 @@ export async function createOrderStripeCheckoutSession({
 
   const lineItems = createLineItems(order, itemsResponse.data);
 
-  const calculatedTotal = lineItems.reduce(
+  const calculatedPreDiscountTotal = lineItems.reduce(
     (total, line) =>
       total + (line.price_data?.unit_amount ?? 0) * (line.quantity ?? 1),
     0,
   );
 
-  if (calculatedTotal !== order.total_gross_amount_minor) {
+  const discountGrossAmountMinor = Number(
+    order.discount_gross_amount_minor ?? 0,
+  );
+
+  const expectedPreDiscountTotal =
+    order.total_gross_amount_minor + discountGrossAmountMinor;
+
+  if (calculatedPreDiscountTotal !== expectedPreDiscountTotal) {
     throw new AuthHttpError(
       500,
       "Il totale dell’ordine non coincide con il totale del pagamento.",
@@ -138,10 +145,49 @@ export async function createOrderStripeCheckoutSession({
 
   const stripe = getStripeClient();
 
+  let stripeCouponId: string | null = null;
+
+  if (discountGrossAmountMinor > 0) {
+    if (!order.promotion_code) {
+      throw new AuthHttpError(
+        500,
+        "Lo sconto dell’ordine non contiene un codice promozionale valido.",
+      );
+    }
+
+    const coupon = await stripe.coupons.create(
+      {
+        amount_off: discountGrossAmountMinor,
+        currency: order.currency.toLowerCase(),
+        duration: "once",
+        name: `Codice ${order.promotion_code}`,
+        metadata: {
+          order_id: order.id,
+          order_number: order.order_number,
+          promotion_code: order.promotion_code,
+        },
+      },
+      {
+        idempotencyKey: `checkout-coupon-${order.id}-${discountGrossAmountMinor}`,
+      },
+    );
+
+    stripeCouponId = coupon.id;
+  }
+
   const session = await stripe.checkout.sessions.create(
     {
       mode: "payment",
       line_items: lineItems,
+      ...(stripeCouponId
+        ? {
+            discounts: [
+              {
+                coupon: stripeCouponId,
+              },
+            ],
+          }
+        : {}),
       success_url: `${origin}/checkout/conferma?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/checkout/annullato?order_id=${encodeURIComponent(
         order.id,
@@ -151,12 +197,24 @@ export async function createOrderStripeCheckoutSession({
         order_id: order.id,
         order_number: order.order_number,
         profile_id: order.profile_id,
+        ...(order.promotion_code
+          ? {
+              promotion_code: order.promotion_code,
+              discount_gross_amount_minor: String(discountGrossAmountMinor),
+            }
+          : {}),
       },
       payment_intent_data: {
         metadata: {
           order_id: order.id,
           order_number: order.order_number,
           profile_id: order.profile_id,
+          ...(order.promotion_code
+            ? {
+                promotion_code: order.promotion_code,
+                discount_gross_amount_minor: String(discountGrossAmountMinor),
+              }
+            : {}),
         },
       },
       locale: "it",
@@ -172,6 +230,19 @@ export async function createOrderStripeCheckoutSession({
     throw new AuthHttpError(
       502,
       "Stripe non ha restituito una pagina di pagamento valida.",
+    );
+  }
+
+  if (session.amount_total !== order.total_gross_amount_minor) {
+    try {
+      await stripe.checkout.sessions.expire(session.id);
+    } catch {
+      // La sessione scadrà comunque automaticamente.
+    }
+
+    throw new AuthHttpError(
+      502,
+      "Il totale Stripe non coincide con il totale definitivo dell’ordine.",
     );
   }
 

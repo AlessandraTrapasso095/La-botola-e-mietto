@@ -43,6 +43,8 @@ function mapCheckoutResult(
     subtotalNetAmountMinor: row.subtotal_net_amount_minor,
     vatAmountMinor: row.vat_amount_minor,
     shippingGrossAmountMinor: row.shipping_gross_amount_minor,
+    promotionCode: row.promotion_code || null,
+    discountGrossAmountMinor: row.discount_gross_amount_minor,
     totalGrossAmountMinor: row.total_gross_amount_minor,
     createdAt: row.created_at,
   };
@@ -88,6 +90,13 @@ function checkoutError(error: { message: string }) {
     return new AuthHttpError(400, "Metodo di pagamento non valido.");
   }
 
+  if (
+    message.includes("Codice promozionale") ||
+    message.includes("Importo minimo ordine")
+  ) {
+    return new AuthHttpError(400, message);
+  }
+
   return new AuthHttpError(
     500,
     "Non è stato possibile completare il checkout.",
@@ -114,6 +123,9 @@ export async function checkoutAccountCart(
     p_billing_address_id: input.billingAddressId,
     p_shipping_method: input.shippingMethod,
     p_payment_method: input.paymentMethod,
+    p_promotion_code: input.promotionCode?.trim()
+      ? input.promotionCode.trim().toUpperCase()
+      : undefined,
   });
 
   if (error) {

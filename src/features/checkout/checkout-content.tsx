@@ -18,6 +18,7 @@ import {
   shippingMethodForCountry,
 } from "@/lib/shipping";
 import { checkoutService } from "@/services/checkout/checkout-service";
+import { promotionCodeService } from "@/services/checkout/promotion-code-service";
 import { stripeCheckoutService } from "@/services/checkout/stripe-checkout-service";
 import type { Address } from "@/types/customer";
 
@@ -87,6 +88,14 @@ export function CheckoutContent({
   const [submitting, setSubmitting] = useState(false);
   const [redirectingToPayment, setRedirectingToPayment] = useState(false);
   const [error, setError] = useState("");
+
+  const [promotionCodeInput, setPromotionCodeInput] = useState("");
+  const [promotionCodeLoading, setPromotionCodeLoading] = useState(false);
+  const [promotionCodeError, setPromotionCodeError] = useState("");
+  const [appliedPromotion, setAppliedPromotion] = useState<{
+    code: string;
+    discountGrossAmountMinor: number;
+  } | null>(null);
   const [completedOrder, setCompletedOrder] = useState<{
     number: string;
     totalMinor: number;
@@ -117,12 +126,56 @@ export function CheckoutContent({
 
   const shippingCarrier = shippingCarrierLabel(effectiveShippingMethod);
 
-  const estimatedTotalMinor = cart.subtotalMinor + shippingMinor;
+  const promotionDiscountMinor =
+    appliedPromotion?.discountGrossAmountMinor ?? 0;
+
+  const estimatedTotalMinor = Math.max(
+    0,
+    cart.subtotalMinor + shippingMinor - promotionDiscountMinor,
+  );
 
   const effectiveBillingAddressId =
     shippingMethod !== "store_pickup" && billingSameAsShipping
       ? shippingAddressId
       : billingAddressId;
+
+  async function applyPromotionCode() {
+    if (promotionCodeLoading || submitting) return;
+
+    const normalizedCode = promotionCodeInput.trim().toUpperCase();
+
+    if (!normalizedCode) {
+      setAppliedPromotion(null);
+      setPromotionCodeError("Inserisci un codice promozionale.");
+      return;
+    }
+
+    setPromotionCodeLoading(true);
+    setPromotionCodeError("");
+    setAppliedPromotion(null);
+
+    try {
+      const result = await promotionCodeService.validate({
+        code: normalizedCode,
+        subtotalGrossAmountMinor: cart.subtotalMinor,
+      });
+
+      setPromotionCodeInput(result.code);
+
+      setAppliedPromotion({
+        code: result.code,
+        discountGrossAmountMinor: result.discountGrossAmountMinor,
+      });
+    } catch (promotionError: unknown) {
+      setPromotionCodeError(
+        promotionError instanceof Error
+          ? promotionError.message
+          : "Non è stato possibile verificare il codice promozionale.",
+      );
+    } finally {
+      setPromotionCodeLoading(false);
+    }
+  }
 
   async function submitCheckout(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -154,6 +207,7 @@ export function CheckoutContent({
         billingAddressId: effectiveBillingAddressId,
         shippingMethod: effectiveShippingMethod,
         paymentMethod,
+        promotionCode: appliedPromotion?.code ?? null,
       });
 
       if (result.paymentMethod === "stripe") {
@@ -599,6 +653,66 @@ export function CheckoutContent({
 
           <Divider className="my-5" />
 
+          <div>
+            <label
+              htmlFor="promotionCode"
+              className="text-text-strong text-sm font-semibold"
+            >
+              Codice promozionale
+            </label>
+
+            <div className="mt-2 flex gap-2">
+              <input
+                id="promotionCode"
+                type="text"
+                value={promotionCodeInput}
+                maxLength={32}
+                autoComplete="off"
+                placeholder="Inserisci il codice"
+                onChange={(event) => {
+                  const nextValue = event.target.value;
+
+                  setPromotionCodeInput(nextValue);
+                  setPromotionCodeError("");
+
+                  if (
+                    appliedPromotion &&
+                    nextValue.trim().toUpperCase() !== appliedPromotion.code
+                  ) {
+                    setAppliedPromotion(null);
+                  }
+                }}
+                className="border-border bg-background text-text-strong placeholder:text-text-muted focus:border-accent min-h-11 min-w-0 flex-1 border px-3 text-sm uppercase transition-colors outline-none"
+              />
+
+              <Button
+                type="button"
+                onClick={applyPromotionCode}
+                disabled={
+                  promotionCodeLoading ||
+                  submitting ||
+                  !promotionCodeInput.trim()
+                }
+              >
+                {promotionCodeLoading ? "Verifica…" : "Applica"}
+              </Button>
+            </div>
+
+            {appliedPromotion ? (
+              <p className="mt-2 text-sm text-emerald-700">
+                Codice {appliedPromotion.code} applicato.
+              </p>
+            ) : null}
+
+            {promotionCodeError ? (
+              <p role="alert" className="text-danger mt-2 text-sm">
+                {promotionCodeError}
+              </p>
+            ) : null}
+          </div>
+
+          <Divider className="my-5" />
+
           <dl className="grid gap-3 text-sm">
             <div className="flex justify-between gap-4">
               <dt className="text-text-muted">Subtotale</dt>
@@ -615,6 +729,21 @@ export function CheckoutContent({
                   : formatEuroMinor(BigInt(shippingMinor))}
               </dd>
             </div>
+
+            {appliedPromotion ? (
+              <div className="flex justify-between gap-4">
+                <dt className="text-text-muted">
+                  Sconto ({appliedPromotion.code})
+                </dt>
+
+                <dd className="font-semibold text-emerald-700">
+                  −
+                  {formatEuroMinor(
+                    BigInt(appliedPromotion.discountGrossAmountMinor),
+                  )}
+                </dd>
+              </div>
+            ) : null}
           </dl>
 
           <Divider className="my-5" />

@@ -10,6 +10,14 @@ export const checkoutInputSchema = z
     billingAddressId: z.uuid(),
     shippingMethod: shippingMethodSchema,
     paymentMethod: paymentMethodSchema,
+    promotionCode: z
+      .string()
+      .trim()
+      .min(3)
+      .max(32)
+      .regex(/^[A-Za-z0-9_-]+$/)
+      .nullable()
+      .optional(),
   })
   .superRefine((input, context) => {
     if (input.shippingMethod !== "store_pickup" && !input.shippingAddressId) {
@@ -43,9 +51,34 @@ export const checkoutResultSchema = z.object({
   subtotalNetAmountMinor: z.number().int().nonnegative(),
   vatAmountMinor: z.number().int().nonnegative(),
   shippingGrossAmountMinor: z.number().int().nonnegative(),
+  promotionCode: z.string().nullable(),
+  discountGrossAmountMinor: z.number().int().nonnegative(),
   totalGrossAmountMinor: z.number().int().nonnegative(),
   createdAt: z.iso.datetime({ offset: true }),
 });
+
+export const promotionCodePreviewInputSchema = z.object({
+  code: z
+    .string()
+    .trim()
+    .min(3)
+    .max(32)
+    .regex(/^[A-Za-z0-9_-]+$/),
+  subtotalGrossAmountMinor: z.number().int().positive(),
+});
+
+export const promotionCodePreviewResultSchema = z.object({
+  code: z.string().min(1),
+  discountGrossAmountMinor: z.number().int().positive(),
+});
+
+export type PromotionCodePreviewInput = z.infer<
+  typeof promotionCodePreviewInputSchema
+>;
+
+export type PromotionCodePreviewResult = z.infer<
+  typeof promotionCodePreviewResultSchema
+>;
 
 export const stripeCheckoutSessionInputSchema = z.object({
   orderId: z.uuid(),
