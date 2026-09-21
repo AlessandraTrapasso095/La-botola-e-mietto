@@ -16,7 +16,10 @@ const catalogRepository = z.preprocess(
 
 const serverEnvironmentSchema = z.object({
   CATALOG_REPOSITORY: catalogRepository,
-  AUTH_SERVICE: z.preprocess(resolveAuthMode, z.enum(["demo", "supabase"])),
+  AUTH_SERVICE: z.preprocess(
+    (value) => resolveAuthMode(value),
+    z.enum(["demo", "supabase"]),
+  ),
   SUPABASE_SERVICE_ROLE_KEY: optionalSecret,
   STRIPE_SECRET_KEY: optionalSecret,
   STRIPE_WEBHOOK_SECRET: optionalSecret,
