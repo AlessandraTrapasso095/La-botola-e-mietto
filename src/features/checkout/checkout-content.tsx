@@ -640,9 +640,31 @@ export function CheckoutContent({
                 key={line.product.slug}
                 className="grid min-w-0 grid-cols-[minmax(0,1fr)_auto] gap-3 text-sm"
               >
-                <span className="text-text-muted">
-                  {line.quantity} × {line.product.name}
-                </span>
+                <div className="min-w-0">
+                  <span className="text-text-muted block">
+                    {line.quantity} × {line.product.name}
+                  </span>
+
+                  {line.product.offer?.previousGrossPriceMinor !== null &&
+                  line.product.offer?.previousGrossPriceMinor !== undefined ? (
+                    <span className="mt-1 flex flex-wrap items-center gap-2 text-xs">
+                      <del className="text-text-muted">
+                        {formatEuroMinor(
+                          BigInt(
+                            line.product.offer.previousGrossPriceMinor *
+                              line.quantity,
+                          ),
+                        )}
+                      </del>
+
+                      {line.product.offer.discountPercentage !== null ? (
+                        <span className="text-accent font-semibold">
+                          −{line.product.offer.discountPercentage}%
+                        </span>
+                      ) : null}
+                    </span>
+                  ) : null}
+                </div>
 
                 <strong className="text-text-strong whitespace-nowrap">
                   {formatEuroMinor(BigInt(line.lineTotalMinor))}

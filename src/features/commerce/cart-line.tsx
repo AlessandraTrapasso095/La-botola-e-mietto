@@ -80,13 +80,18 @@ export function CartLine({
             ))}
           </select>
           {!compact ? (
-            <span className="text-text-muted text-xs">
+            <span className="text-text-muted flex flex-wrap items-center gap-x-2 text-xs">
               {line.product.offer?.previousGrossPrice ? (
-                <del className="mr-2">
-                  {line.product.offer.previousGrossPrice}
-                </del>
+                <>
+                  <del>{line.product.offer.previousGrossPrice}</del>
+                  {line.product.offer.discountPercentage !== null ? (
+                    <span className="text-accent font-semibold">
+                      −{line.product.offer.discountPercentage}%
+                    </span>
+                  ) : null}
+                </>
               ) : null}
-              {line.product.grossPrice} cad.
+              <span>{line.product.grossPrice} cad.</span>
             </span>
           ) : null}
         </div>
