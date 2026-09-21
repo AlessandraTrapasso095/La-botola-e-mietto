@@ -1,8 +1,19 @@
 import "server-only";
 
+import { getServerAdminUser } from "@/server/admin/admin-user";
 import { createSupabaseAdminClient } from "@/server/supabase-admin";
 
 export const adminOffersPageSize = 50;
+
+async function requireAdmin() {
+  const adminUser = await getServerAdminUser();
+
+  if (!adminUser) {
+    throw new Error("Accesso amministratore richiesto.");
+  }
+
+  return adminUser;
+}
 
 export type AdminOfferStatus = "all" | "active" | "inactive";
 
@@ -88,6 +99,8 @@ function calculateDiscountPercentage(
 export async function getAdminOffers(
   filters: AdminOffersFilters = {},
 ): Promise<AdminOffersResult> {
+  await requireAdmin();
+
   const admin = createSupabaseAdminClient();
 
   const requestedPage = normalizePage(filters.page);

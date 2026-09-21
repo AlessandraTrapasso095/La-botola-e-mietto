@@ -1,8 +1,19 @@
 import "server-only";
 
+import { getServerAdminUser } from "@/server/admin/admin-user";
 import { createSupabaseAdminClient } from "@/server/supabase-admin";
 
 export const adminProductsPageSize = 50;
+
+async function requireAdmin() {
+  const adminUser = await getServerAdminUser();
+
+  if (!adminUser) {
+    throw new Error("Accesso amministratore richiesto.");
+  }
+
+  return adminUser;
+}
 
 export type AdminProductAvailability = "all" | "available" | "unavailable";
 
@@ -65,6 +76,8 @@ function escapePostgrestSearch(value: string) {
 export async function getAdminProducts(
   filters: AdminProductsFilters = {},
 ): Promise<AdminProductsResult> {
+  await requireAdmin();
+
   const admin = createSupabaseAdminClient();
 
   const requestedPage = normalizePage(filters.page);
@@ -317,6 +330,8 @@ export type AdminProductDetail = {
 export async function getAdminProductDetail(
   productId: string,
 ): Promise<AdminProductDetail | null> {
+  await requireAdmin();
+
   const admin = createSupabaseAdminClient();
 
   const [productResponse, inventoryResponse, priceResponse] = await Promise.all(
@@ -514,6 +529,8 @@ export type AdminProductEditOptions = {
 };
 
 export async function getAdminProductEditOptions(): Promise<AdminProductEditOptions> {
+  await requireAdmin();
+
   const admin = createSupabaseAdminClient();
 
   const [brandsResponse, categoriesResponse, subcategoriesResponse] =
@@ -597,6 +614,8 @@ export type AdminTaxonomyData = {
 };
 
 export async function getAdminTaxonomyData(): Promise<AdminTaxonomyData> {
+  await requireAdmin();
+
   const admin = createSupabaseAdminClient();
 
   const [brandsResponse, categoriesResponse] = await Promise.all([
@@ -664,6 +683,8 @@ export async function getAdminProductInventoryMovements(
   productId: string,
   limit = 25,
 ): Promise<AdminProductInventoryMovement[]> {
+  await requireAdmin();
+
   const admin = createSupabaseAdminClient();
 
   const normalizedLimit = Math.min(Math.max(Math.trunc(limit), 1), 100);
@@ -773,6 +794,8 @@ export type AdminProductOffer = {
 export async function getAdminProductOffer(
   productId: string,
 ): Promise<AdminProductOffer | null> {
+  await requireAdmin();
+
   const admin = createSupabaseAdminClient();
 
   const offerResponse = await admin
