@@ -1079,6 +1079,7 @@ export type Database = {
           brand_id: string | null
           capacity_label: string
           capacity_ml: number | null
+          characteristics: string | null
           category_id: string
           code: string
           country: string | null
@@ -1105,6 +1106,7 @@ export type Database = {
           brand_id?: string | null
           capacity_label: string
           capacity_ml?: number | null
+          characteristics?: string | null
           category_id: string
           code: string
           country?: string | null
@@ -1131,6 +1133,7 @@ export type Database = {
           brand_id?: string | null
           capacity_label?: string
           capacity_ml?: number | null
+          characteristics?: string | null
           category_id?: string
           code?: string
           country?: string | null

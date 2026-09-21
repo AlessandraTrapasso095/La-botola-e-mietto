@@ -21,6 +21,7 @@ type FormState = {
   categoryId: string;
   subcategoryId: string;
   description: string;
+  characteristics: string;
   tastingNotes: string;
   serviceNotes: string;
   origin: string;
@@ -113,6 +114,7 @@ export function AdminProductEditForm({
     categoryId: product.categoryId,
     subcategoryId: product.subcategoryId ?? "",
     description: product.description ?? "",
+    characteristics: product.characteristics ?? "",
     tastingNotes: product.tastingNotes ?? "",
     serviceNotes: product.serviceNotes ?? "",
     origin: product.origin ?? "",
@@ -192,6 +194,7 @@ export function AdminProductEditForm({
       categoryId: form.categoryId,
       subcategoryId: form.subcategoryId || null,
       description: form.description,
+      characteristics: form.characteristics,
       tastingNotes: form.tastingNotes,
       serviceNotes: form.serviceNotes,
       origin: form.origin,
@@ -473,6 +476,18 @@ export function AdminProductEditForm({
                   setField("description", event.target.value)
                 }
                 className={textareaClass}
+              />
+            </Field>
+
+            <Field label="Caratteristiche aggiuntive">
+              <textarea
+                rows={4}
+                value={form.characteristics}
+                onChange={(event) =>
+                  setField("characteristics", event.target.value)
+                }
+                className={textareaClass}
+                placeholder="Caratteristiche specifiche del prodotto"
               />
             </Field>
 

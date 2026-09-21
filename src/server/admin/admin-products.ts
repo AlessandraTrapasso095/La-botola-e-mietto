@@ -280,6 +280,7 @@ export type AdminProductDetail = {
   slug: string;
   status: string;
   description: string | null;
+  characteristics: string | null;
   tastingNotes: string | null;
   serviceNotes: string | null;
   origin: string | null;
@@ -330,6 +331,7 @@ export async function getAdminProductDetail(
         slug,
         status,
         description,
+        characteristics,
         tasting_notes,
         service_notes,
         origin,
@@ -461,6 +463,7 @@ export async function getAdminProductDetail(
     slug: product.slug,
     status: product.status,
     description: product.description,
+    characteristics: product.characteristics,
     tastingNotes: product.tasting_notes,
     serviceNotes: product.service_notes,
     origin: product.origin,

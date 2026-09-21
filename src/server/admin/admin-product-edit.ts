@@ -27,6 +27,7 @@ const adminProductEditSchema = z.object({
   categoryId: z.string().uuid(),
   subcategoryId: z.string().uuid().nullable(),
   description: z.string().max(10000),
+  characteristics: z.string().max(10000),
   tastingNotes: z.string().max(10000),
   serviceNotes: z.string().max(10000),
   origin: z.string().max(500),
@@ -90,6 +91,20 @@ export async function updateAdminProduct(input: AdminProductEditInput) {
     }
 
     throw new Error(`Impossibile aggiornare il prodotto: ${error.message}`);
+  }
+
+  const { error: characteristicsError } = await admin
+    .from("products")
+    .update({
+      characteristics: data.characteristics.trim() || null,
+    })
+    .eq("id", data.productId)
+    .is("deleted_at", null);
+
+  if (characteristicsError) {
+    throw new Error(
+      `Impossibile aggiornare le caratteristiche: ${characteristicsError.message}`,
+    );
   }
 
   revalidatePath("/admin/prodotti");
