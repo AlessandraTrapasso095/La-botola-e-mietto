@@ -414,6 +414,66 @@ describe("checkout Supabase locale e RLS", () => {
     });
   });
 
+  it("serializza due checkout Stripe concorrenti sullo stesso carrello", async () => {
+    await prepareCart(1);
+
+    const [first, second] = await Promise.all([
+      primary.rpc("checkout_account_cart", {
+        p_shipping_address_id: shippingAddressId,
+        p_billing_address_id: billingAddressId,
+        p_shipping_method: "tnt",
+        p_payment_method: "stripe",
+      }),
+      primary.rpc("checkout_account_cart", {
+        p_shipping_address_id: shippingAddressId,
+        p_billing_address_id: billingAddressId,
+        p_shipping_method: "tnt",
+        p_payment_method: "stripe",
+      }),
+    ]);
+
+    expect(first.error).toBeNull();
+    expect(second.error).toBeNull();
+
+    expect(first.data).toHaveLength(1);
+    expect(second.data).toHaveLength(1);
+
+    const firstOrder = first.data?.[0];
+    const secondOrder = second.data?.[0];
+
+    if (!firstOrder || !secondOrder) {
+      throw new Error("Checkout concorrente non ha restituito entrambi gli ordini.");
+    }
+
+    expect(secondOrder.order_id).toBe(firstOrder.order_id);
+    expect(secondOrder.order_number).toBe(firstOrder.order_number);
+
+    const cartId = await getOrderSourceCart(firstOrder.order_id);
+
+    const orderCount = await service
+      .from("orders")
+      .select("id", { count: "exact", head: true })
+      .eq("source_cart_id", cartId);
+
+    expect(orderCount.error).toBeNull();
+    expect(orderCount.count).toBe(1);
+
+    expect(await getInventory()).toMatchObject({
+      stock_quantity: 10,
+      reserved_quantity: 1,
+      available_quantity: 9,
+    });
+
+    expect((await getCart(cartId))?.status).toBe("active");
+
+    expect(await getCartItems(cartId)).toEqual([
+      {
+        product_id: productId,
+        quantity: 1,
+      },
+    ]);
+  });
+
   it("un secondo tentativo Stripe riutilizza lo stesso ordine", async () => {
     const first = await createStripeOrder(1);
 
