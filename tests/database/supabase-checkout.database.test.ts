@@ -35,11 +35,14 @@ describe("checkout Supabase locale e RLS", () => {
   const secondaryEmail = `phase2-checkout-secondary-${testRunId}@example.test`;
   const password = "LocalCheckout42!Secure";
 
+  const categoryName = `Categoria tecnica checkout ${testRunId}`;
+  const categorySlug = `categoria-tecnica-checkout-${testRunId}`;
   const productCode = `CHECKOUT-TECHNICAL-${testRunId}`;
   const productSlug = `prodotto-tecnico-checkout-${testRunId}`;
 
   let primaryId = "";
   let secondaryId = "";
+  let categoryId = "";
   let productId = "";
   let shippingAddressId = "";
   let billingAddressId = "";
@@ -89,13 +92,20 @@ describe("checkout Supabase locale e RLS", () => {
 
     const category = await service
       .from("categories")
+      .insert({
+        parent_id: null,
+        name: categoryName,
+        slug: categorySlug,
+        description: null,
+        sort_order: 0,
+        status: "active",
+      })
       .select("id")
-      .is("parent_id", null)
-      .eq("status", "active")
-      .limit(1)
       .single();
 
     expect(category.error).toBeNull();
+
+    categoryId = category.data?.id ?? "";
 
     const product = await service
       .from("products")
@@ -103,7 +113,7 @@ describe("checkout Supabase locale e RLS", () => {
         code: productCode,
         name: "Prodotto tecnico checkout",
         slug: productSlug,
-        category_id: category.data!.id,
+        category_id: categoryId,
         capacity_label: "70 cl",
         status: "active",
       })
@@ -252,6 +262,10 @@ describe("checkout Supabase locale e RLS", () => {
       await service.from("products").delete().eq("id", productId);
     }
 
+    if (categoryId) {
+      await service.from("categories").delete().eq("id", categoryId);
+    }
+
     await database.end();
   });
 
@@ -377,8 +391,8 @@ describe("checkout Supabase locale e RLS", () => {
 
     expect(order.subtotal_net_amount_minor).toBe(2_000);
     expect(order.vat_amount_minor).toBe(440);
-    expect(order.shipping_gross_amount_minor).toBe(750);
-    expect(order.total_gross_amount_minor).toBe(3_190);
+    expect(order.shipping_gross_amount_minor).toBe(990);
+    expect(order.total_gross_amount_minor).toBe(3_430);
 
     const cartId = await getOrderSourceCart(order.order_id);
     const cart = await getCart(cartId);
@@ -552,6 +566,112 @@ describe("checkout Supabase locale e RLS", () => {
     });
   });
 
+
+  it("rifiuta un successo Stripe appartenente a una sessione precedente", async () => {
+    const order = await createStripeOrder(2);
+    const cartId = await getOrderSourceCart(order.order_id);
+
+    const staleSessionId = `cs_test_stale_success_${testRunId}`;
+    const stalePaymentIntentId = `pi_test_stale_success_${testRunId}`;
+    const currentSessionId = `cs_test_current_success_${testRunId}`;
+
+    const linked = await service
+      .from("orders")
+      .update({
+        stripe_checkout_session_id: currentSessionId,
+        payment_provider_reference: currentSessionId,
+      })
+      .eq("id", order.order_id);
+
+    expect(linked.error).toBeNull();
+
+    const inventoryBefore = await getInventory();
+    const cartBefore = await getCart(cartId);
+    const cartItemsBefore = await getCartItems(cartId);
+
+    const staleSuccess = await service.rpc("complete_stripe_order_payment", {
+      p_order_id: order.order_id,
+      p_checkout_session_id: staleSessionId,
+      p_payment_intent_id: stalePaymentIntentId,
+    });
+
+    expect(staleSuccess.error).not.toBeNull();
+    expect(staleSuccess.error?.message).toContain(
+      "Checkout Session Stripe non coerente",
+    );
+
+    const storedOrder = await service
+      .from("orders")
+      .select(
+        "payment_status, stripe_checkout_session_id, stripe_payment_intent_id, reservation_released_at",
+      )
+      .eq("id", order.order_id)
+      .single();
+
+    expect(storedOrder.error).toBeNull();
+
+    expect(storedOrder.data).toMatchObject({
+      payment_status: "pending",
+      stripe_checkout_session_id: currentSessionId,
+      stripe_payment_intent_id: null,
+      reservation_released_at: null,
+    });
+
+    expect(await getInventory()).toEqual(inventoryBefore);
+    expect(await getCart(cartId)).toEqual(cartBefore);
+    expect(await getCartItems(cartId)).toEqual(cartItemsBefore);
+  });
+
+  it("ignora un failure Stripe appartenente a una sessione precedente", async () => {
+    const order = await createStripeOrder(2);
+
+    const staleSessionId = `cs_test_stale_${testRunId}`;
+    const currentSessionId = `cs_test_current_${testRunId}`;
+
+    const linked = await service
+      .from("orders")
+      .update({
+        stripe_checkout_session_id: currentSessionId,
+        payment_provider_reference: currentSessionId,
+      })
+      .eq("id", order.order_id);
+
+    expect(linked.error).toBeNull();
+
+    const inventoryBefore = await getInventory();
+
+    expect(inventoryBefore).toMatchObject({
+      reserved_quantity: 2,
+      available_quantity: 8,
+    });
+
+    const staleFailure = await service.rpc("fail_stripe_order_payment", {
+      p_order_id: order.order_id,
+      p_checkout_session_id: staleSessionId,
+    });
+
+    expect(staleFailure.error).toBeNull();
+    expect(staleFailure.data).toBe(false);
+
+    const storedOrder = await service
+      .from("orders")
+      .select(
+        "payment_status, stripe_checkout_session_id, reservation_released_at",
+      )
+      .eq("id", order.order_id)
+      .single();
+
+    expect(storedOrder.error).toBeNull();
+
+    expect(storedOrder.data).toMatchObject({
+      payment_status: "pending",
+      stripe_checkout_session_id: currentSessionId,
+      reservation_released_at: null,
+    });
+
+    expect(await getInventory()).toEqual(inventoryBefore);
+  });
+
   it("il bonifico converte immediatamente il carrello", async () => {
     await prepareCart(1);
 
@@ -579,11 +699,11 @@ describe("checkout Supabase locale e RLS", () => {
     expect(await getCartItems(cartId)).toEqual([]);
   });
 
-  it("applica la spedizione gratuita TNT da 60 euro", async () => {
+  it("applica la spedizione gratuita TNT da 100 euro lordi", async () => {
     await service
       .from("prices")
       .update({
-        net_amount_minor: 5_000,
+        net_amount_minor: 8_197,
         vat_rate_basis_points: 2_200,
       })
       .eq("product_id", productId)
@@ -601,10 +721,10 @@ describe("checkout Supabase locale e RLS", () => {
     expect(result.error).toBeNull();
 
     expect(result.data?.[0]).toMatchObject({
-      subtotal_net_amount_minor: 5_000,
-      vat_amount_minor: 1_100,
+      subtotal_net_amount_minor: 8_197,
+      vat_amount_minor: 1_803,
       shipping_gross_amount_minor: 0,
-      total_gross_amount_minor: 6_100,
+      total_gross_amount_minor: 10_000,
     });
   });
 

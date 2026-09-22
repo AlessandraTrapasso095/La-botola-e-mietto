@@ -103,11 +103,34 @@ export async function createOrderStripeCheckoutSession({
       order.stripe_checkout_session_id,
     );
 
-    if (existingSession.status === "open" && existingSession.url) {
+    if (existingSession.status === "open") {
+      if (!existingSession.url) {
+        throw new AuthHttpError(
+          502,
+          "La sessione di pagamento Stripe aperta non contiene un URL valido.",
+        );
+      }
+
       return {
         sessionId: existingSession.id,
         redirectUrl: existingSession.url,
       };
+    }
+
+    if (existingSession.status === "complete") {
+      throw new AuthHttpError(
+        409,
+        existingSession.payment_status === "paid"
+          ? "Il pagamento Stripe risulta già completato. Aggiorna la pagina."
+          : "Il pagamento Stripe è ancora in elaborazione. Attendi la conferma prima di riprovare.",
+      );
+    }
+
+    if (existingSession.status !== "expired") {
+      throw new AuthHttpError(
+        502,
+        "Lo stato della sessione Stripe precedente non consente di creare un nuovo pagamento.",
+      );
     }
   }
 
