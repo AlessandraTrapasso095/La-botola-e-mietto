@@ -53,4 +53,23 @@ describe("conferma bonifico admin", () => {
     expect(page).toContain('order.paymentStatus === "pending"');
     expect(button).toContain("Conferma bonifico ricevuto");
   });
+  it("usa il response envelope standard message per gli errori", () => {
+    expect(button).toContain(
+      "const body: unknown = await response.json().catch(() => null)",
+    );
+
+    expect(button).toContain('"message" in body');
+
+    expect(button).toContain('typeof body.message === "string"');
+
+    expect(button).toContain("? body.message");
+
+    expect(button).not.toContain("error?: string");
+    expect(button).not.toContain("payload.error");
+  });
+
+  it("mantiene il successo vincolato a ok true", () => {
+    expect(button).toContain('!("ok" in body)');
+    expect(button).toContain("body.ok !== true");
+  });
 });

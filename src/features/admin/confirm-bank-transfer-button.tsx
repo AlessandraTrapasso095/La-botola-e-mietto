@@ -47,13 +47,24 @@ export function ConfirmBankTransferButton({ orderId }: { orderId: string }) {
         }),
       });
 
-      const payload = (await response.json()) as {
-        ok?: boolean;
-        error?: string;
-      };
+      const body: unknown = await response.json().catch(() => null);
 
-      if (!response.ok || !payload.ok) {
-        throw new Error(payload.error ?? "Impossibile confermare il bonifico.");
+      if (
+        !response.ok ||
+        !body ||
+        typeof body !== "object" ||
+        !("ok" in body) ||
+        body.ok !== true
+      ) {
+        const message =
+          body &&
+          typeof body === "object" &&
+          "message" in body &&
+          typeof body.message === "string"
+            ? body.message
+            : "Impossibile confermare il bonifico.";
+
+        throw new Error(message);
       }
 
       setOpen(false);
