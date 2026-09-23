@@ -1,7 +1,14 @@
+import { type NextRequest } from "next/server";
 import { z } from "zod";
 
 import { shipAdminOrder } from "@/server/admin/ship-order";
-import { AuthHttpError, authErrorResponse, authJson } from "@/server/auth/http";
+import {
+  AuthHttpError,
+  authErrorResponse,
+  authJson,
+  requireSameOrigin,
+  requireSupabaseAuthMode,
+} from "@/server/auth/http";
 
 const inputSchema = z.object({
   orderId: z.string().uuid(),
@@ -10,8 +17,10 @@ const inputSchema = z.object({
   trackingUrl: z.string().trim().url().max(2_000),
 });
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
+    requireSupabaseAuthMode();
+    requireSameOrigin(request);
     const body: unknown = await request.json().catch(() => null);
     const input = inputSchema.safeParse(body);
 
