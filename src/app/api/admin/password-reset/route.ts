@@ -4,12 +4,16 @@ import { passwordResetInputSchema } from "@/lib/validation/auth";
 import {
   authErrorResponse,
   authJson,
-  enforceAuthRateLimit,
   getRequestOrigin,
   parseAuthInput,
   requireSameOrigin,
   requireSupabaseAuthMode,
 } from "@/server/auth/http";
+import {
+  enforceAccountRateLimit,
+  enforceIpRateLimit,
+  rateLimitPolicies,
+} from "@/server/security/rate-limit";
 import { createSupabaseAdminClient } from "@/server/supabase-admin";
 import { createSupabaseServerClient } from "@/server/supabase";
 
@@ -17,9 +21,10 @@ export async function POST(request: NextRequest) {
   try {
     requireSupabaseAuthMode();
     requireSameOrigin(request);
-    enforceAuthRateLimit(request, "password-reset", 5);
+    await enforceIpRateLimit(request, rateLimitPolicies.adminPasswordReset);
 
     const { email } = await parseAuthInput(request, passwordResetInputSchema);
+    await enforceAccountRateLimit(email, rateLimitPolicies.adminPasswordReset);
 
     const adminClient = createSupabaseAdminClient();
 

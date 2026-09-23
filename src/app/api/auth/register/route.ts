@@ -6,13 +6,17 @@ import {
   AuthHttpError,
   authErrorResponse,
   authJson,
-  enforceAuthRateLimit,
   getRequestOrigin,
   parseAuthInput,
   requireSameOrigin,
   requireSupabaseAuthMode,
 } from "@/server/auth/http";
 import { createSupabaseServerClient } from "@/server/supabase";
+import {
+  enforceAccountRateLimit,
+  enforceIpRateLimit,
+  rateLimitPolicies,
+} from "@/server/security/rate-limit";
 
 const registrationPolicyVersion = "local-auth-v1";
 
@@ -20,8 +24,9 @@ export async function POST(request: NextRequest) {
   try {
     requireSupabaseAuthMode();
     requireSameOrigin(request);
-    enforceAuthRateLimit(request, "register");
+    await enforceIpRateLimit(request, rateLimitPolicies.register);
     const input = await parseAuthInput(request, registrationInputSchema);
+    await enforceAccountRateLimit(input.email, rateLimitPolicies.register);
     const requestOrigin = getRequestOrigin(request);
     if (!requestOrigin) throw new AuthHttpError(400, "Richiesta non valida.");
     const client = await createSupabaseServerClient();

@@ -4,6 +4,10 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 
 import type { CheckoutInput, CheckoutResult } from "@/lib/validation/checkout";
 import { AuthHttpError } from "@/server/auth/http";
+import {
+  enforceUserRateLimit,
+  rateLimitPolicies,
+} from "@/server/security/rate-limit";
 import { createSupabaseServerClient } from "@/server/supabase";
 import type { Database } from "@/types/database.generated";
 
@@ -107,7 +111,9 @@ export async function checkoutAccountCart(
   client: SupabaseClient<Database>,
   input: CheckoutInput,
 ): Promise<CheckoutResult> {
-  await requireAccountUser(client);
+  const accountUser = await requireAccountUser(client);
+
+  await enforceUserRateLimit(accountUser.id, rateLimitPolicies.checkout);
 
   const shippingAddressId =
     input.shippingMethod === "store_pickup"

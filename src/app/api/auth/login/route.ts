@@ -6,19 +6,24 @@ import {
   AuthHttpError,
   authErrorResponse,
   authJson,
-  enforceAuthRateLimit,
   parseAuthInput,
   requireSameOrigin,
   requireSupabaseAuthMode,
 } from "@/server/auth/http";
 import { createSupabaseServerClient } from "@/server/supabase";
+import {
+  enforceAccountRateLimit,
+  enforceIpRateLimit,
+  rateLimitPolicies,
+} from "@/server/security/rate-limit";
 
 export async function POST(request: NextRequest) {
   try {
     requireSupabaseAuthMode();
     requireSameOrigin(request);
-    enforceAuthRateLimit(request, "login");
+    await enforceIpRateLimit(request, rateLimitPolicies.login);
     const input = await parseAuthInput(request, loginInputSchema);
+    await enforceAccountRateLimit(input.email, rateLimitPolicies.login);
     const client = await createSupabaseServerClient();
     const { data, error } = await client.auth.signInWithPassword(input);
     if (error || !data.user) {

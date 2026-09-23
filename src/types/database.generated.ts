@@ -1416,6 +1416,30 @@ export type Database = {
         }
         Relationships: []
       }
+      rate_limit_buckets: {
+        Row: {
+          identifier_hash: string
+          request_count: number
+          scope: string
+          updated_at: string
+          window_started_at: string
+        }
+        Insert: {
+          identifier_hash: string
+          request_count: number
+          scope: string
+          updated_at?: string
+          window_started_at: string
+        }
+        Update: {
+          identifier_hash?: string
+          request_count?: number
+          scope?: string
+          updated_at?: string
+          window_started_at?: string
+        }
+        Relationships: []
+      }
       wishlist_items: {
         Row: {
           created_at: string
@@ -1922,6 +1946,20 @@ export type Database = {
           order_status: Database["public"]["Enums"]["order_status"]
           paid_at: string
           payment_status: Database["public"]["Enums"]["payment_status"]
+        }[]
+      }
+      consume_rate_limit: {
+        Args: {
+          p_identifier_hash: string
+          p_limit: number
+          p_scope: string
+          p_window_seconds: number
+        }
+        Returns: {
+          allowed: boolean
+          remaining: number
+          reset_at: string
+          retry_after_seconds: number
         }[]
       }
       current_user_is_admin: { Args: never; Returns: boolean }

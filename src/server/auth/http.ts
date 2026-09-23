@@ -5,13 +5,11 @@ import type { z } from "zod";
 
 import { getServerEnvironment } from "@/server/env";
 
-type RateLimitState = { count: number; resetAt: number };
-const rateLimits = new Map<string, RateLimitState>();
-
 export class AuthHttpError extends Error {
   constructor(
     readonly status: number,
     message: string,
+    readonly headers?: HeadersInit,
   ) {
     super(message);
   }
@@ -43,29 +41,6 @@ export function requireSameOrigin(request: NextRequest) {
   }
 }
 
-export function enforceAuthRateLimit(
-  request: NextRequest,
-  action: "login" | "register" | "password-reset",
-  limit = 10,
-) {
-  const forwarded = request.headers.get("x-forwarded-for")?.split(",")[0];
-  const identifier = forwarded?.trim() || "local";
-  const key = `${action}:${identifier}`;
-  const now = Date.now();
-  const current = rateLimits.get(key);
-  if (!current || current.resetAt <= now) {
-    rateLimits.set(key, { count: 1, resetAt: now + 5 * 60_000 });
-    return;
-  }
-  if (current.count >= limit) {
-    throw new AuthHttpError(
-      429,
-      "Troppe richieste. Attendi qualche minuto e riprova.",
-    );
-  }
-  current.count += 1;
-}
-
 export async function parseAuthInput<TSchema extends z.ZodType>(
   request: NextRequest,
   schema: TSchema,
@@ -78,16 +53,20 @@ export async function parseAuthInput<TSchema extends z.ZodType>(
   return result.data;
 }
 
-export function authJson(value: unknown, status = 200) {
+export function authJson(value: unknown, status = 200, headers?: HeadersInit) {
+  const responseHeaders = new Headers(headers);
+
+  responseHeaders.set("cache-control", "private, no-store");
+
   return NextResponse.json(value, {
     status,
-    headers: { "cache-control": "private, no-store" },
+    headers: responseHeaders,
   });
 }
 
 export function authErrorResponse(error: unknown) {
   if (error instanceof AuthHttpError) {
-    return authJson({ message: error.message }, error.status);
+    return authJson({ message: error.message }, error.status, error.headers);
   }
   return authJson(
     { message: "Non è stato possibile completare l’operazione." },

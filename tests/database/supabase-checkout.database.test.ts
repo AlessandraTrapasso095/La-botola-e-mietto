@@ -254,17 +254,62 @@ describe("checkout Supabase locale e RLS", () => {
   });
 
   afterAll(async () => {
-    for (const userId of [primaryId, secondaryId].filter(Boolean)) {
-      await service.auth.admin.deleteUser(userId);
+    const userIds = [primaryId, secondaryId].filter(Boolean);
+
+    if (userIds.length > 0) {
+      const orderCleanup = await service
+        .from("orders")
+        .delete()
+        .in("profile_id", userIds);
+
+      expect(orderCleanup.error).toBeNull();
+    }
+
+    for (const userId of userIds) {
+      const userCleanup = await service.auth.admin.deleteUser(userId);
+
+      expect(userCleanup.error).toBeNull();
     }
 
     if (productId) {
-      await service.from("products").delete().eq("id", productId);
+      const productCleanup = await service
+        .from("products")
+        .delete()
+        .eq("id", productId);
+
+      expect(productCleanup.error).toBeNull();
     }
 
     if (categoryId) {
-      await service.from("categories").delete().eq("id", categoryId);
+      const categoryCleanup = await service
+        .from("categories")
+        .delete()
+        .eq("id", categoryId);
+
+      expect(categoryCleanup.error).toBeNull();
     }
+
+    const [remainingUsers] = await database<{ count: number }[]>`
+      select count(*)::int as count
+      from auth.users
+      where email in (${primaryEmail}, ${secondaryEmail})
+    `;
+
+    const [remainingProduct] = await database<{ count: number }[]>`
+      select count(*)::int as count
+      from public.products
+      where code = ${productCode}
+    `;
+
+    const [remainingCategory] = await database<{ count: number }[]>`
+      select count(*)::int as count
+      from public.categories
+      where slug = ${categorySlug}
+    `;
+
+    expect(remainingUsers?.count).toBe(0);
+    expect(remainingProduct?.count).toBe(0);
+    expect(remainingCategory?.count).toBe(0);
 
     await database.end();
   });
@@ -442,7 +487,9 @@ describe("checkout Supabase locale e RLS", () => {
     const secondOrder = second.data?.[0];
 
     if (!firstOrder || !secondOrder) {
-      throw new Error("Checkout concorrente non ha restituito entrambi gli ordini.");
+      throw new Error(
+        "Checkout concorrente non ha restituito entrambi gli ordini.",
+      );
     }
 
     expect(secondOrder.order_id).toBe(firstOrder.order_id);
@@ -625,7 +672,6 @@ describe("checkout Supabase locale e RLS", () => {
       available_quantity: 10,
     });
   });
-
 
   it("rifiuta un successo Stripe appartenente a una sessione precedente", async () => {
     const order = await createStripeOrder(2);

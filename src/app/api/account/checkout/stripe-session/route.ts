@@ -10,6 +10,10 @@ import {
   requireSupabaseAuthMode,
 } from "@/server/auth/http";
 import { createSupabaseServerClient } from "@/server/supabase";
+import {
+  enforceUserRateLimit,
+  rateLimitPolicies,
+} from "@/server/security/rate-limit";
 import { createOrderStripeCheckoutSession } from "@/server/stripe/order-checkout-session";
 
 export async function POST(request: NextRequest) {
@@ -34,6 +38,11 @@ export async function POST(request: NextRequest) {
     if (userResponse.error || !userResponse.data.user) {
       return authJson({ message: "Accesso richiesto." }, 401);
     }
+
+    await enforceUserRateLimit(
+      userResponse.data.user.id,
+      rateLimitPolicies.stripeSession,
+    );
 
     const result = await createOrderStripeCheckoutSession({
       orderId: input.orderId,

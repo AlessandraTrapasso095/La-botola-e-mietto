@@ -7,6 +7,10 @@ import type {
   PromotionCodePreviewResult,
 } from "@/lib/validation/checkout";
 import { AuthHttpError } from "@/server/auth/http";
+import {
+  enforceUserRateLimit,
+  rateLimitPolicies,
+} from "@/server/security/rate-limit";
 import { createSupabaseAdminClient } from "@/server/supabase-admin";
 import type { Database } from "@/types/database.generated";
 
@@ -41,7 +45,12 @@ export async function previewPromotionCode(
   client: SupabaseClient<Database>,
   input: PromotionCodePreviewInput,
 ): Promise<PromotionCodePreviewResult> {
-  await requireAccountUser(client);
+  const accountUser = await requireAccountUser(client);
+
+  await enforceUserRateLimit(
+    accountUser.id,
+    rateLimitPolicies.promotionPreview,
+  );
 
   const code = input.code.trim().toUpperCase();
 
