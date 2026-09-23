@@ -39,8 +39,8 @@ export async function getServerAdminUser(): Promise<AdminUser | null> {
       firstName: profile.first_name,
       lastName: profile.last_name,
     };
-  } catch (error) {
-    console.error("[admin-auth] Impossibile verificare la sessione admin.", error);
+  } catch {
+    console.error("[admin-auth] Impossibile verificare la sessione admin.");
     return null;
   }
 }

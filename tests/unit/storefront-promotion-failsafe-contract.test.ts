@@ -18,17 +18,21 @@ describe("storefront promotion fail-safe contract", () => {
   it("non lascia propagare errori della promo al render storefront", () => {
     expect(source).toContain("try {");
     expect(source).toContain("return await loadStorefrontPromotion()");
-    expect(source).toContain("catch (error)");
+    expect(source).toContain("catch {");
     expect(source).toContain("return null");
   });
 
-  it("registra l'errore lato server senza esporlo al cliente", () => {
+  it("registra il fallimento lato server senza serializzare l'eccezione", () => {
     expect(source).toContain(
       '"[storefront-promotion] impossibile caricare la promozione"',
     );
 
-    expect(source).toContain(
-      "error instanceof Error ? error.message : String(error)",
+    expect(source).not.toContain(
+      "error: error instanceof Error ? error.message : String(error)",
+    );
+
+    expect(source).not.toContain(
+      'console.error("[storefront-promotion] impossibile caricare la promozione", error',
     );
   });
 
@@ -37,9 +41,7 @@ describe("storefront promotion fail-safe contract", () => {
       "async function loadStorefrontPromotion()",
     );
 
-    const adminIndex = source.indexOf(
-      "createSupabaseAdminClient()",
-    );
+    const adminIndex = source.indexOf("createSupabaseAdminClient()");
 
     expect(loaderIndex).toBeGreaterThan(-1);
     expect(adminIndex).toBeGreaterThan(loaderIndex);

@@ -73,7 +73,7 @@ describe("email pagamento ricevuto", () => {
     expect(safeSource).toContain("safelySendPaymentReceivedEmail");
 
     expect(safeSource).toContain("try {");
-    expect(safeSource).toContain("catch (error)");
+    expect(safeSource).toContain("catch {");
   });
 
   it("contiene il messaggio corretto per il cliente", () => {

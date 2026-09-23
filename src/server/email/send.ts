@@ -59,8 +59,7 @@ export async function sendTrackedEmail({
   } catch (error) {
     await markEmailDeliveryFailed({
       deliveryId: reservation.id,
-      errorMessage:
-        error instanceof Error ? error.message : "Invio email non riuscito.",
+      errorMessage: "Invio email non riuscito.",
     });
 
     throw error;

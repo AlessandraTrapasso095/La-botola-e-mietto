@@ -463,7 +463,7 @@ export async function sendAdminMarketingCampaign(
     if (update.error) {
       console.error("[email-marketing] storico campagna non aggiornato", {
         campaignId,
-        error: update.error.message,
+        code: update.error.code,
       });
     }
 
@@ -491,7 +491,7 @@ export async function sendAdminMarketingCampaign(
         "[email-marketing] impossibile marcare la campagna come fallita",
         {
           campaignId,
-          error: failureUpdate.error.message,
+          code: failureUpdate.error.code,
         },
       );
     }

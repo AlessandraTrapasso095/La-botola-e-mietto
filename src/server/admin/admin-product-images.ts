@@ -89,13 +89,11 @@ async function removeStorageObject(storagePath: string | null) {
     if (error) {
       console.error(
         "[admin-product-image] Impossibile rimuovere il file dallo Storage.",
-        error,
       );
     }
-  } catch (error) {
+  } catch {
     console.error(
       "[admin-product-image] Rimozione del file dallo Storage fallita.",
-      error,
     );
   }
 }

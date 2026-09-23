@@ -127,8 +127,6 @@ export async function GET(request: NextRequest) {
       profileResponse.data &&
       profileResponse.data.email !== confirmedUser.email
     ) {
-      const previousEmail = profileResponse.data.email;
-
       const updateResponse = await admin
         .from("profiles")
         .update({
@@ -151,14 +149,10 @@ export async function GET(request: NextRequest) {
           );
         }
 
-        console.info("[auth] email profilo sincronizzata", {
-          userId: confirmedUser.id,
-          previousEmail,
-        });
+        console.info("[auth] email profilo sincronizzata");
       } else {
         console.error("[auth] sincronizzazione email profilo non riuscita", {
-          userId: confirmedUser.id,
-          error: updateResponse.error.message,
+          code: updateResponse.error.code,
         });
       }
     }

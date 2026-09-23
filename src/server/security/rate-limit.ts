@@ -95,10 +95,9 @@ async function consumeRateLimit(policy: RateLimitPolicy, identifier: string) {
   });
 
   if (error) {
-    console.error(
-      "[rate-limit] impossibile verificare il limite condiviso",
-      error.message,
-    );
+    console.error("[rate-limit] impossibile verificare il limite condiviso", {
+      code: error.code,
+    });
 
     throw new AuthHttpError(
       503,

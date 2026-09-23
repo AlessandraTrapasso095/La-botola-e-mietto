@@ -23,17 +23,15 @@ import {
 
 async function safelySend<T>(
   label: string,
-  orderId: string,
+  contextId: string,
   send: () => Promise<T>,
 ) {
+  void contextId;
+
   try {
     return await send();
-  } catch (error) {
-    console.error(`[email] ${label} non inviata`, {
-      orderId,
-      error:
-        error instanceof Error ? error.message : "Errore email sconosciuto",
-    });
+  } catch {
+    console.error(`[email] ${label} non inviata`);
 
     return null;
   }

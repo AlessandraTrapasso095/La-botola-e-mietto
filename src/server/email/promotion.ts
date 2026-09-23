@@ -181,14 +181,11 @@ export async function sendPromotionCampaign(
       } else if (delivery.sent) {
         result.sent += 1;
       }
-    } catch (error) {
+    } catch {
       result.failed += 1;
 
       console.error("[email] email promozionale non inviata", {
         campaignId,
-        profileId: recipient.id,
-        error:
-          error instanceof Error ? error.message : "Errore email sconosciuto",
       });
     }
   }

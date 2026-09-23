@@ -13,10 +13,8 @@ export type StorefrontPromotion = {
 export async function getStorefrontPromotion(): Promise<StorefrontPromotion | null> {
   try {
     return await loadStorefrontPromotion();
-  } catch (error) {
-    console.error("[storefront-promotion] impossibile caricare la promozione", {
-      error: error instanceof Error ? error.message : String(error),
-    });
+  } catch {
+    console.error("[storefront-promotion] impossibile caricare la promozione");
 
     return null;
   }
