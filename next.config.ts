@@ -21,6 +21,9 @@ const contentSecurityPolicy = [
   "connect-src 'self' https://*.supabase.co wss://*.supabase.co",
   "media-src 'self'",
   "object-src 'none'",
+  "script-src-attr 'none'",
+  "frame-src 'none'",
+  "manifest-src 'self'",
   "base-uri 'self'",
   "form-action 'self'",
   "frame-ancestors 'none'",
@@ -53,6 +56,14 @@ const securityHeaders = [
     key: "Cross-Origin-Opener-Policy",
     value: "same-origin",
   },
+  ...(!isDevelopment
+    ? [
+        {
+          key: "Strict-Transport-Security",
+          value: "max-age=31536000; includeSubDomains",
+        },
+      ]
+    : []),
 ];
 
 const nextConfig: NextConfig = {
