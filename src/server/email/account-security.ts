@@ -163,8 +163,6 @@ export async function sendAdminEmailChangeRequestedEmail({
     message,
     metadata: {
       user_id: account.id,
-      old_email: account.email,
-      requested_email: newEmail,
       stage: "requested",
     },
   });
@@ -238,7 +236,6 @@ export async function sendAdminEmailChangedEmail({
     message,
     metadata: {
       user_id: userId,
-      email,
       stage: "completed",
     },
   });

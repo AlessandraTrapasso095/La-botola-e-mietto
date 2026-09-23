@@ -99,10 +99,9 @@ export async function uploadAdminProductImage({
           storagePath: preparedUpload.storagePath,
           thumbnailStoragePath: preparedUpload.thumbnailStoragePath,
         });
-      } catch (cleanupError) {
+      } catch {
         console.error(
           "[admin-product-image] Pulizia upload incompleto fallita.",
-          cleanupError,
         );
       }
     }

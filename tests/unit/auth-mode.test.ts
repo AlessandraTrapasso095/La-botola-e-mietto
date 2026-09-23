@@ -8,22 +8,17 @@ describe("configurazione autenticazione", () => {
     expect(resolveAuthMode(undefined, "development")).toBe("demo");
     expect(resolveAuthMode("", "test")).toBe("demo");
     expect(resolveAuthMode("invalid", "development")).toBe("demo");
-    expect(resolveAuthMode("supabase", "production")).toBe("supabase");
-    expect(resolveAuthMode("demo", "production")).toBe("demo");
+    expect(resolveAuthMode("demo", "development")).toBe("demo");
   });
 
-  it("fallisce in produzione se AUTH_SERVICE è mancante o invalido", () => {
-    expect(() => resolveAuthMode(undefined, "production")).toThrow(
-      "AUTH_SERVICE deve essere configurato esplicitamente in produzione.",
-    );
+  it("consente soltanto Supabase in produzione", () => {
+    expect(resolveAuthMode("supabase", "production")).toBe("supabase");
 
-    expect(() => resolveAuthMode("", "production")).toThrow(
-      "AUTH_SERVICE deve essere configurato esplicitamente in produzione.",
-    );
-
-    expect(() => resolveAuthMode("invalid", "production")).toThrow(
-      "AUTH_SERVICE deve essere configurato esplicitamente in produzione.",
-    );
+    for (const value of [undefined, "", "invalid", "demo"]) {
+      expect(() => resolveAuthMode(value, "production")).toThrow(
+        "AUTH_SERVICE deve essere impostato su supabase in produzione.",
+      );
+    }
   });
 
   it("accetta soltanto redirect interni", () => {
