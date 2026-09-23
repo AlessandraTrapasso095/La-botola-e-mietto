@@ -67,7 +67,11 @@ export async function upsertAdminBrand(input: AdminBrandInput) {
       throw new Error("Nome o slug del marchio già utilizzato.");
     }
 
-    throw new Error(`Impossibile salvare il marchio: ${error.message}`);
+    console.error("[admin-taxonomy] salvataggio marchio fallito", {
+      code: error.code,
+    });
+
+    throw new Error("Impossibile salvare il marchio. Riprova.");
   }
 
   revalidateTaxonomyPaths();
@@ -105,7 +109,11 @@ export async function upsertAdminCategory(input: AdminCategoryInput) {
       throw new Error("Nome o slug della categoria già utilizzato.");
     }
 
-    throw new Error(`Impossibile salvare la categoria: ${error.message}`);
+    console.error("[admin-taxonomy] salvataggio categoria fallito", {
+      code: error.code,
+    });
+
+    throw new Error("Impossibile salvare la categoria. Riprova.");
   }
 
   revalidateTaxonomyPaths();
@@ -143,7 +151,11 @@ export async function deleteAdminBrand(brandId: string) {
       );
     }
 
-    throw new Error(`Impossibile eliminare il marchio: ${error.message}`);
+    console.error("[admin-taxonomy] eliminazione marchio fallita", {
+      code: error.code,
+    });
+
+    throw new Error("Impossibile eliminare il marchio. Riprova.");
   }
 
   revalidateTaxonomyPaths();
@@ -179,7 +191,11 @@ export async function deleteAdminCategory(categoryId: string) {
       );
     }
 
-    throw new Error(`Impossibile eliminare l’elemento: ${error.message}`);
+    console.error("[admin-taxonomy] eliminazione categoria fallita", {
+      code: error.code,
+    });
+
+    throw new Error("Impossibile eliminare l’elemento. Riprova.");
   }
 
   revalidateTaxonomyPaths();

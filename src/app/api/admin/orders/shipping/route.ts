@@ -1,8 +1,7 @@
-import { NextResponse } from "next/server";
 import { z } from "zod";
 
 import { shipAdminOrder } from "@/server/admin/ship-order";
-import { AuthHttpError } from "@/server/auth/http";
+import { AuthHttpError, authErrorResponse, authJson } from "@/server/auth/http";
 
 const inputSchema = z.object({
   orderId: z.string().uuid(),
@@ -13,45 +12,17 @@ const inputSchema = z.object({
 
 export async function POST(request: Request) {
   try {
-    const body: unknown = await request.json();
+    const body: unknown = await request.json().catch(() => null);
+    const input = inputSchema.safeParse(body);
 
-    const input = inputSchema.parse(body);
+    if (!input.success) {
+      throw new AuthHttpError(400, "Dati di spedizione non validi.");
+    }
 
-    const result = await shipAdminOrder(input);
+    const result = await shipAdminOrder(input.data);
 
-    return NextResponse.json(result);
+    return authJson(result);
   } catch (error) {
-    if (error instanceof AuthHttpError) {
-      return NextResponse.json(
-        {
-          message: error.message,
-        },
-        {
-          status: error.status,
-        },
-      );
-    }
-
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        {
-          message: "Dati di spedizione non validi.",
-        },
-        {
-          status: 400,
-        },
-      );
-    }
-
-    console.error("Admin shipping update failed:", error);
-
-    return NextResponse.json(
-      {
-        message: "Registrazione della spedizione non riuscita.",
-      },
-      {
-        status: 500,
-      },
-    );
+    return authErrorResponse(error);
   }
 }

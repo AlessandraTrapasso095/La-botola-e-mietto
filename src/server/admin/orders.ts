@@ -107,8 +107,10 @@ async function getProfilesById(
     .in("id", [...profileIds]);
 
   if (profilesResponse.error) {
-    throw new Error(
-      `Clienti ordini non disponibili: ${profilesResponse.error.message}`,
+    throwAdminOrdersError(
+      "caricamento clienti ordini fallito",
+      "I dati cliente degli ordini non sono disponibili. Riprova.",
+      profilesResponse.error,
     );
   }
 
@@ -166,8 +168,10 @@ export const getServerAdminOrders = cache(
       .order("created_at", { ascending: false });
 
     if (ordersResponse.error) {
-      throw new Error(
-        `Ordini amministrazione non disponibili: ${ordersResponse.error.message}`,
+      throwAdminOrdersError(
+        "caricamento ordini amministrazione fallito",
+        "Gli ordini non sono disponibili. Riprova.",
+        ordersResponse.error,
       );
     }
 
@@ -197,6 +201,18 @@ export const getServerAdminOrders = cache(
     }));
   },
 );
+
+function throwAdminOrdersError(
+  operation: string,
+  userMessage: string,
+  error: { code?: string },
+): never {
+  console.error(`[admin-orders] ${operation}`, {
+    code: error.code,
+  });
+
+  throw new Error(userMessage);
+}
 
 export async function getServerAdminOrderByNumber(
   orderNumber: string,
@@ -266,8 +282,10 @@ export async function getServerAdminOrderByNumber(
     .maybeSingle();
 
   if (response.error) {
-    throw new Error(
-      `Dettaglio ordine amministrazione non disponibile: ${response.error.message}`,
+    throwAdminOrdersError(
+      "caricamento dettaglio ordine fallito",
+      "Il dettaglio dell’ordine non è disponibile. Riprova.",
+      response.error,
     );
   }
 

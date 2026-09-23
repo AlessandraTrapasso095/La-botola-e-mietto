@@ -155,7 +155,11 @@ function mapPromotionCodeError(error: { message: string; code?: string }) {
     return "Esiste già un codice promozionale con questo codice.";
   }
 
-  return `Impossibile aggiornare il codice promozionale: ${error.message}`;
+  console.error("[admin-promotion-code] operazione database fallita", {
+    code: error.code,
+  });
+
+  return "Impossibile aggiornare il codice promozionale. Riprova.";
 }
 
 async function requireAdmin() {
@@ -200,9 +204,11 @@ export async function getAdminPromotionCodes(): Promise<AdminPromotionCode[]> {
     .order("created_at", { ascending: false });
 
   if (codesResponse.error) {
-    throw new Error(
-      `Impossibile caricare i codici promozionali: ${codesResponse.error.message}`,
-    );
+    console.error("[admin-promotion-code] caricamento codici fallito", {
+      code: codesResponse.error.code,
+    });
+
+    throw new Error("Impossibile caricare i codici promozionali. Riprova.");
   }
 
   const rows = codesResponse.data ?? [];
@@ -223,8 +229,12 @@ export async function getAdminPromotionCodes(): Promise<AdminPromotionCode[]> {
       .in("payment_status", ["pending", "authorized", "paid"]);
 
     if (usageResponse.error) {
+      console.error("[admin-promotion-code] caricamento utilizzi fallito", {
+        code: usageResponse.error.code,
+      });
+
       throw new Error(
-        `Impossibile caricare gli utilizzi dei codici promozionali: ${usageResponse.error.message}`,
+        "Impossibile caricare gli utilizzi dei codici promozionali. Riprova.",
       );
     }
 

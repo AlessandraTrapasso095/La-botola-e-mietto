@@ -1,8 +1,7 @@
-import { NextResponse } from "next/server";
 import { z } from "zod";
 
-import { AuthHttpError } from "@/server/auth/http";
 import { updateAdminOrderStatus } from "@/server/admin/update-order-status";
+import { AuthHttpError, authErrorResponse, authJson } from "@/server/auth/http";
 
 const inputSchema = z.object({
   orderId: z.string().uuid(),
@@ -11,45 +10,17 @@ const inputSchema = z.object({
 
 export async function POST(request: Request) {
   try {
-    const body: unknown = await request.json();
+    const body: unknown = await request.json().catch(() => null);
+    const input = inputSchema.safeParse(body);
 
-    const input = inputSchema.parse(body);
+    if (!input.success) {
+      throw new AuthHttpError(400, "Richiesta non valida.");
+    }
 
-    const result = await updateAdminOrderStatus(input);
+    const result = await updateAdminOrderStatus(input.data);
 
-    return NextResponse.json(result);
+    return authJson(result);
   } catch (error) {
-    if (error instanceof AuthHttpError) {
-      return NextResponse.json(
-        {
-          message: error.message,
-        },
-        {
-          status: error.status,
-        },
-      );
-    }
-
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        {
-          message: "Richiesta non valida.",
-        },
-        {
-          status: 400,
-        },
-      );
-    }
-
-    console.error("Admin order status update failed:", error);
-
-    return NextResponse.json(
-      {
-        message: "Aggiornamento stato ordine non riuscito.",
-      },
-      {
-        status: 500,
-      },
-    );
+    return authErrorResponse(error);
   }
 }

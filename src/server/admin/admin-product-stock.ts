@@ -39,7 +39,7 @@ function mapStockError(message: string) {
     return "La quantità di stock inserita non è valida.";
   }
 
-  return `Impossibile aggiornare lo stock: ${message}`;
+  return "Impossibile aggiornare lo stock. Riprova.";
 }
 
 export async function updateAdminProductStock(

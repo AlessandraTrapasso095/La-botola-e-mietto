@@ -65,9 +65,13 @@ export async function updateAdminProductStatus(
   );
 
   if (error) {
-    throw new Error(
-      `Impossibile aggiornare lo stato prodotto: ${error.message}`,
-    );
+    console.error("[admin-product-status] aggiornamento stato fallito", {
+      productId,
+      status,
+      code: error.code,
+    });
+
+    throw new Error("Impossibile aggiornare lo stato prodotto. Riprova.");
   }
 
   revalidatePath("/admin/prodotti");

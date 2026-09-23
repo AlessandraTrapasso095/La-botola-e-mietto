@@ -19,6 +19,18 @@ async function requireAdmin() {
   return adminUser;
 }
 
+function throwAdminProductsError(
+  operation: string,
+  userMessage: string,
+  error: { code?: string },
+): never {
+  console.error(`[admin-products] ${operation}`, {
+    code: error.code,
+  });
+
+  throw new Error(userMessage);
+}
+
 export type AdminProductAvailability = "all" | "available" | "unavailable";
 
 export type AdminProductStatus = "all" | "active" | "draft" | "archived";
@@ -151,8 +163,10 @@ export async function getAdminProducts(
     .range(0, 0);
 
   if (countOnlyResponse.error) {
-    throw new Error(
-      `Impossibile contare i prodotti admin: ${countOnlyResponse.error.message}`,
+    throwAdminProductsError(
+      "conteggio prodotti fallito",
+      "Impossibile caricare i prodotti. Riprova.",
+      countOnlyResponse.error,
     );
   }
 
@@ -236,20 +250,26 @@ export async function getAdminProducts(
     ]);
 
   if (productsResponse.error) {
-    throw new Error(
-      `Impossibile caricare i prodotti admin: ${productsResponse.error.message}`,
+    throwAdminProductsError(
+      "caricamento prodotti fallito",
+      "Impossibile caricare i prodotti. Riprova.",
+      productsResponse.error,
     );
   }
 
   if (brandsResponse.error) {
-    throw new Error(
-      `Impossibile caricare i marchi admin: ${brandsResponse.error.message}`,
+    throwAdminProductsError(
+      "caricamento marchi fallito",
+      "Impossibile caricare i marchi. Riprova.",
+      brandsResponse.error,
     );
   }
 
   if (categoriesResponse.error) {
-    throw new Error(
-      `Impossibile caricare le categorie admin: ${categoriesResponse.error.message}`,
+    throwAdminProductsError(
+      "caricamento categorie fallito",
+      "Impossibile caricare le categorie. Riprova.",
+      categoriesResponse.error,
     );
   }
 
@@ -417,20 +437,26 @@ export async function getAdminProductDetail(
   );
 
   if (productResponse.error) {
-    throw new Error(
-      `Impossibile caricare il prodotto admin: ${productResponse.error.message}`,
+    throwAdminProductsError(
+      "caricamento dettaglio prodotto fallito",
+      "Impossibile caricare il prodotto. Riprova.",
+      productResponse.error,
     );
   }
 
   if (inventoryResponse.error) {
-    throw new Error(
-      `Impossibile caricare lo stock prodotto: ${inventoryResponse.error.message}`,
+    throwAdminProductsError(
+      "caricamento stock prodotto fallito",
+      "Impossibile caricare lo stock del prodotto. Riprova.",
+      inventoryResponse.error,
     );
   }
 
   if (priceResponse.error) {
-    throw new Error(
-      `Impossibile caricare il prezzo prodotto: ${priceResponse.error.message}`,
+    throwAdminProductsError(
+      "caricamento prezzo prodotto fallito",
+      "Impossibile caricare il prezzo del prodotto. Riprova.",
+      priceResponse.error,
     );
   }
 
@@ -452,8 +478,10 @@ export async function getAdminProductDetail(
     .maybeSingle();
 
   if (primaryImageResponse.error) {
-    throw new Error(
-      `Impossibile caricare l’immagine prodotto: ${primaryImageResponse.error.message}`,
+    throwAdminProductsError(
+      "caricamento immagine prodotto fallito",
+      "Impossibile caricare l’immagine del prodotto. Riprova.",
+      primaryImageResponse.error,
     );
   }
 
@@ -570,20 +598,26 @@ export async function getAdminProductEditOptions(): Promise<AdminProductEditOpti
     ]);
 
   if (brandsResponse.error) {
-    throw new Error(
-      `Impossibile caricare i marchi admin: ${brandsResponse.error.message}`,
+    throwAdminProductsError(
+      "caricamento marchi fallito",
+      "Impossibile caricare i marchi. Riprova.",
+      brandsResponse.error,
     );
   }
 
   if (categoriesResponse.error) {
-    throw new Error(
-      `Impossibile caricare le categorie admin: ${categoriesResponse.error.message}`,
+    throwAdminProductsError(
+      "caricamento categorie fallito",
+      "Impossibile caricare le categorie. Riprova.",
+      categoriesResponse.error,
     );
   }
 
   if (subcategoriesResponse.error) {
-    throw new Error(
-      `Impossibile caricare le sottocategorie admin: ${subcategoriesResponse.error.message}`,
+    throwAdminProductsError(
+      "caricamento sottocategorie fallito",
+      "Impossibile caricare le sottocategorie. Riprova.",
+      subcategoriesResponse.error,
     );
   }
 
@@ -646,14 +680,18 @@ export async function getAdminTaxonomyData(): Promise<AdminTaxonomyData> {
   ]);
 
   if (brandsResponse.error) {
-    throw new Error(
-      `Impossibile caricare i marchi: ${brandsResponse.error.message}`,
+    throwAdminProductsError(
+      "caricamento tassonomia marchi fallito",
+      "Impossibile caricare i marchi. Riprova.",
+      brandsResponse.error,
     );
   }
 
   if (categoriesResponse.error) {
-    throw new Error(
-      `Impossibile caricare le categorie: ${categoriesResponse.error.message}`,
+    throwAdminProductsError(
+      "caricamento tassonomia categorie fallito",
+      "Impossibile caricare le categorie. Riprova.",
+      categoriesResponse.error,
     );
   }
 
@@ -735,8 +773,10 @@ export async function getAdminProductInventoryMovements(
     .limit(normalizedLimit);
 
   if (movementsResponse.error) {
-    throw new Error(
-      `Impossibile caricare lo storico magazzino: ${movementsResponse.error.message}`,
+    throwAdminProductsError(
+      "caricamento storico magazzino fallito",
+      "Impossibile caricare lo storico magazzino. Riprova.",
+      movementsResponse.error,
     );
   }
 
@@ -759,8 +799,10 @@ export async function getAdminProductInventoryMovements(
       : null;
 
   if (creatorsResponse?.error) {
-    throw new Error(
-      `Impossibile caricare gli autori dei movimenti: ${creatorsResponse.error.message}`,
+    throwAdminProductsError(
+      "caricamento autori movimenti fallito",
+      "Impossibile caricare lo storico magazzino. Riprova.",
+      creatorsResponse.error,
     );
   }
 
@@ -844,8 +886,10 @@ export async function getAdminProductOffer(
     .maybeSingle();
 
   if (offerResponse.error) {
-    throw new Error(
-      `Impossibile caricare l’offerta prodotto: ${offerResponse.error.message}`,
+    throwAdminProductsError(
+      "caricamento offerta prodotto fallito",
+      "Impossibile caricare l’offerta del prodotto. Riprova.",
+      offerResponse.error,
     );
   }
 

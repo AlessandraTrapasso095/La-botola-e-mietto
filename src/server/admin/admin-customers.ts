@@ -107,6 +107,18 @@ async function requireAdmin() {
   return admin;
 }
 
+function throwAdminCustomersError(
+  operation: string,
+  userMessage: string,
+  error: { code?: string },
+): never {
+  console.error(`[admin-customers] ${operation}`, {
+    code: error.code,
+  });
+
+  throw new Error(userMessage);
+}
+
 function escapePostgrestSearch(value: string) {
   return value
     .replaceAll("\\", "\\\\")
@@ -188,8 +200,10 @@ export async function getAdminCustomers(
   const customersResponse = await customersQuery.range(from, to);
 
   if (customersResponse.error) {
-    throw new Error(
-      `Impossibile caricare i clienti: ${customersResponse.error.message}`,
+    throwAdminCustomersError(
+      "caricamento clienti fallito",
+      "Impossibile caricare i clienti. Riprova.",
+      customersResponse.error,
     );
   }
 
@@ -211,8 +225,10 @@ export async function getAdminCustomers(
       .order("created_at", { ascending: false });
 
     if (ordersResponse.error) {
-      throw new Error(
-        `Impossibile caricare le statistiche ordini clienti: ${ordersResponse.error.message}`,
+      throwAdminCustomersError(
+        "caricamento statistiche ordini clienti fallito",
+        "Impossibile caricare le statistiche dei clienti. Riprova.",
+        ordersResponse.error,
       );
     }
 
@@ -250,8 +266,10 @@ export async function getAdminCustomers(
     .is("deleted_at", null);
 
   if (summaryProfilesResponse.error) {
-    throw new Error(
-      `Impossibile caricare il riepilogo clienti: ${summaryProfilesResponse.error.message}`,
+    throwAdminCustomersError(
+      "caricamento riepilogo clienti fallito",
+      "Impossibile caricare il riepilogo clienti. Riprova.",
+      summaryProfilesResponse.error,
     );
   }
 
@@ -270,8 +288,10 @@ export async function getAdminCustomers(
       .in("profile_id", allCustomerIds);
 
     if (summaryOrdersResponse.error) {
-      throw new Error(
-        `Impossibile caricare il riepilogo ordini clienti: ${summaryOrdersResponse.error.message}`,
+      throwAdminCustomersError(
+        "caricamento riepilogo ordini clienti fallito",
+        "Impossibile caricare il riepilogo clienti. Riprova.",
+        summaryOrdersResponse.error,
       );
     }
 
@@ -361,8 +381,10 @@ export async function getAdminCustomerById(
     .maybeSingle();
 
   if (profileResponse.error) {
-    throw new Error(
-      `Impossibile caricare il cliente: ${profileResponse.error.message}`,
+    throwAdminCustomersError(
+      "caricamento dettaglio cliente fallito",
+      "Impossibile caricare il cliente. Riprova.",
+      profileResponse.error,
     );
   }
 
@@ -415,14 +437,18 @@ export async function getAdminCustomerById(
   ]);
 
   if (addressesResponse.error) {
-    throw new Error(
-      `Impossibile caricare gli indirizzi cliente: ${addressesResponse.error.message}`,
+    throwAdminCustomersError(
+      "caricamento indirizzi cliente fallito",
+      "Impossibile caricare gli indirizzi del cliente. Riprova.",
+      addressesResponse.error,
     );
   }
 
   if (ordersResponse.error) {
-    throw new Error(
-      `Impossibile caricare gli ordini cliente: ${ordersResponse.error.message}`,
+    throwAdminCustomersError(
+      "caricamento ordini cliente fallito",
+      "Impossibile caricare gli ordini del cliente. Riprova.",
+      ordersResponse.error,
     );
   }
 

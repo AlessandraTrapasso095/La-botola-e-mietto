@@ -90,7 +90,12 @@ export async function updateAdminProduct(input: AdminProductEditInput) {
       throw new Error("Codice o slug già utilizzato da un altro prodotto.");
     }
 
-    throw new Error(`Impossibile aggiornare il prodotto: ${error.message}`);
+    console.error("[admin-product-edit] aggiornamento prodotto fallito", {
+      productId: data.productId,
+      code: error.code,
+    });
+
+    throw new Error("Impossibile aggiornare il prodotto. Riprova.");
   }
 
   const { error: characteristicsError } = await admin

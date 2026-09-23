@@ -63,9 +63,7 @@ export async function uploadAdminProductImage({
     );
 
     if (originalUploadError) {
-      throw new Error(
-        `Impossibile caricare l’immagine: ${originalUploadError.message}`,
-      );
+      throw new Error("Impossibile caricare l’immagine. Riprova.");
     }
 
     const { error: thumbnailUploadError } = await storage.uploadToSignedUrl(
@@ -81,7 +79,7 @@ export async function uploadAdminProductImage({
 
     if (thumbnailUploadError) {
       throw new Error(
-        `Impossibile caricare la thumbnail: ${thumbnailUploadError.message}`,
+        "Impossibile caricare l’anteprima dell’immagine. Riprova.",
       );
     }
 

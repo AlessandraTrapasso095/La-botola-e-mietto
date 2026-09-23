@@ -5,6 +5,18 @@ import { createSupabaseAdminClient } from "@/server/supabase-admin";
 
 export const adminOffersPageSize = 50;
 
+function throwAdminOffersError(
+  operation: string,
+  userMessage: string,
+  error: { code?: string },
+): never {
+  console.error(`[admin-offers] ${operation}`, {
+    code: error.code,
+  });
+
+  throw new Error(userMessage);
+}
+
 async function requireAdmin() {
   const adminUser = await getServerAdminUser();
 
@@ -112,8 +124,10 @@ export async function getAdminOffers(
     .select("product_id,is_active");
 
   if (summaryResponse.error) {
-    throw new Error(
-      `Impossibile caricare il riepilogo offerte: ${summaryResponse.error.message}`,
+    throwAdminOffersError(
+      "caricamento riepilogo offerte fallito",
+      "Impossibile caricare il riepilogo offerte. Riprova.",
+      summaryResponse.error,
     );
   }
 
@@ -139,8 +153,10 @@ export async function getAdminOffers(
       .or(`name.ilike.%${search}%,code.ilike.%${search}%`);
 
     if (productsResponse.error) {
-      throw new Error(
-        `Impossibile cercare i prodotti delle offerte: ${productsResponse.error.message}`,
+      throwAdminOffersError(
+        "ricerca prodotti offerte fallita",
+        "Impossibile cercare i prodotti delle offerte. Riprova.",
+        productsResponse.error,
       );
     }
 
@@ -179,8 +195,10 @@ export async function getAdminOffers(
   const countResponse = await countQuery;
 
   if (countResponse.error) {
-    throw new Error(
-      `Impossibile contare le offerte admin: ${countResponse.error.message}`,
+    throwAdminOffersError(
+      "conteggio offerte fallito",
+      "Impossibile caricare le offerte. Riprova.",
+      countResponse.error,
     );
   }
 
@@ -229,8 +247,10 @@ export async function getAdminOffers(
     .range(from, to);
 
   if (offersResponse.error) {
-    throw new Error(
-      `Impossibile caricare le offerte admin: ${offersResponse.error.message}`,
+    throwAdminOffersError(
+      "caricamento offerte fallito",
+      "Impossibile caricare le offerte. Riprova.",
+      offersResponse.error,
     );
   }
 
@@ -268,8 +288,10 @@ export async function getAdminOffers(
       .is("valid_to", null);
 
     if (pricesResponse.error) {
-      throw new Error(
-        `Impossibile caricare i prezzi delle offerte: ${pricesResponse.error.message}`,
+      throwAdminOffersError(
+        "caricamento prezzi offerte fallito",
+        "Impossibile caricare i prezzi delle offerte. Riprova.",
+        pricesResponse.error,
       );
     }
 

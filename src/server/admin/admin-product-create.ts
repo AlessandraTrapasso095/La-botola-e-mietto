@@ -81,7 +81,11 @@ export async function createAdminProduct(input: AdminProductCreateInput) {
       );
     }
 
-    throw new Error(`Impossibile creare il prodotto: ${error.message}`);
+    console.error("[admin-product-create] creazione prodotto fallita", {
+      code: error.code,
+    });
+
+    throw new Error("Impossibile creare il prodotto. Riprova.");
   }
 
   if (!productId || typeof productId !== "string") {

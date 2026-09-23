@@ -1,7 +1,7 @@
-import { NextResponse } from "next/server";
 import { z } from "zod";
 
 import { confirmAdminBankTransfer } from "@/server/admin/confirm-bank-transfer";
+import { AuthHttpError, authErrorResponse, authJson } from "@/server/auth/http";
 
 const inputSchema = z.object({
   orderId: z.uuid(),
@@ -9,29 +9,21 @@ const inputSchema = z.object({
 
 export async function POST(request: Request) {
   try {
-    const input = inputSchema.parse(await request.json());
+    const payload: unknown = await request.json().catch(() => null);
+    const input = inputSchema.safeParse(payload);
 
-    const result = await confirmAdminBankTransfer(input.orderId);
+    if (!input.success) {
+      throw new AuthHttpError(400, "Richiesta non valida.");
+    }
 
-    return NextResponse.json({
+    const result = await confirmAdminBankTransfer(input.data.orderId);
+
+    return authJson({
       ok: true,
       paymentStatus: result.paymentStatus,
       paidAt: result.paidAt,
     });
   } catch (error) {
-    const message =
-      error instanceof Error
-        ? error.message
-        : "Impossibile confermare il bonifico.";
-
-    return NextResponse.json(
-      {
-        ok: false,
-        error: message,
-      },
-      {
-        status: 400,
-      },
-    );
+    return authErrorResponse(error);
   }
 }

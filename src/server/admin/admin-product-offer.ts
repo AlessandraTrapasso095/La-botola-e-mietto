@@ -43,7 +43,7 @@ function mapOfferError(message: string) {
     return "Prodotto non valido.";
   }
 
-  return `Impossibile aggiornare l’offerta: ${message}`;
+  return "Impossibile aggiornare l’offerta prodotto. Riprova.";
 }
 
 function revalidateOfferPaths(productId: string) {

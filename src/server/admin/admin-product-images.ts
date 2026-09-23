@@ -152,9 +152,12 @@ export async function prepareAdminProductImageUpload(
     .maybeSingle();
 
   if (productError) {
-    throw new Error(
-      `Impossibile verificare il prodotto: ${productError.message}`,
-    );
+    console.error("[admin-product-image] verifica prodotto fallita", {
+      productId: data.productId,
+      code: productError.code,
+    });
+
+    throw new Error("Non è stato possibile verificare il prodotto. Riprova.");
   }
 
   if (!product) {
@@ -185,12 +188,14 @@ export async function prepareAdminProductImageUpload(
     !originalUpload.data?.token ||
     !thumbnailUpload.data?.token
   ) {
+    console.error("[admin-product-image] preparazione upload firmato fallita", {
+      productId: data.productId,
+      originalFailed: Boolean(originalUpload.error),
+      thumbnailFailed: Boolean(thumbnailUpload.error),
+    });
+
     throw new Error(
-      `Impossibile preparare il caricamento dell’immagine: ${
-        originalUpload.error?.message ??
-        thumbnailUpload.error?.message ??
-        "autorizzazione temporanea non disponibile"
-      }`,
+      "Impossibile preparare il caricamento dell’immagine. Riprova.",
     );
   }
 
@@ -242,11 +247,16 @@ export async function registerAdminProductImage(
   if (productError || !product) {
     await removePreparedUpload(data.storagePath, data.thumbnailStoragePath);
 
-    throw new Error(
-      productError
-        ? `Impossibile verificare il prodotto: ${productError.message}`
-        : "Prodotto non trovato.",
-    );
+    if (productError) {
+      console.error("[admin-product-image] verifica prodotto fallita", {
+        productId: data.productId,
+        code: productError.code,
+      });
+
+      throw new Error("Non è stato possibile verificare il prodotto. Riprova.");
+    }
+
+    throw new Error("Prodotto non trovato.");
   }
 
   const { data: replacementData, error } = await admin.rpc(
@@ -273,9 +283,12 @@ export async function registerAdminProductImage(
       );
     }
 
-    throw new Error(
-      `Impossibile registrare l’immagine prodotto: ${error.message}`,
-    );
+    console.error("[admin-product-image] registrazione immagine fallita", {
+      productId: data.productId,
+      code: error.code,
+    });
+
+    throw new Error("Impossibile registrare l’immagine prodotto. Riprova.");
   }
 
   const replacement = Array.isArray(replacementData)
@@ -318,11 +331,16 @@ export async function deleteAdminProductImage(input: { productId: string }) {
     .maybeSingle();
 
   if (productError || !product) {
-    throw new Error(
-      productError
-        ? `Impossibile verificare il prodotto: ${productError.message}`
-        : "Prodotto non trovato.",
-    );
+    if (productError) {
+      console.error("[admin-product-image] verifica prodotto fallita", {
+        productId: data.productId,
+        code: productError.code,
+      });
+
+      throw new Error("Non è stato possibile verificare il prodotto. Riprova.");
+    }
+
+    throw new Error("Prodotto non trovato.");
   }
 
   const { data: deletionData, error } = await admin.rpc(
@@ -337,7 +355,14 @@ export async function deleteAdminProductImage(input: { productId: string }) {
       throw new Error("Il prodotto non possiede un’immagine da eliminare.");
     }
 
-    throw new Error(`Impossibile eliminare l’immagine: ${error.message}`);
+    console.error("[admin-product-image] eliminazione immagine fallita", {
+      productId: data.productId,
+      code: error.code,
+    });
+
+    throw new Error(
+      "Impossibile eliminare l’immagine. Aggiorna la pagina e riprova.",
+    );
   }
 
   const deletion = Array.isArray(deletionData)
