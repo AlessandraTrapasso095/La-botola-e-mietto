@@ -18,6 +18,24 @@ export async function proxy(request: NextRequest) {
     pathname === "/account" || pathname.startsWith("/account/");
   const guestRoute = pathname === "/accedi" || pathname === "/registrati";
 
+  const adminRoute = pathname === "/admin" || pathname.startsWith("/admin/");
+  const adminGuestRoute =
+    pathname === "/admin/login" ||
+    pathname === "/admin/password-dimenticata" ||
+    pathname === "/admin/nuova-password";
+
+  if (adminRoute && !adminGuestRoute && !user) {
+    const destination = request.nextUrl.clone();
+    destination.pathname = "/admin/login";
+    destination.search = "";
+    destination.searchParams.set(
+      "ritorno",
+      getSafeRedirectPath(`${pathname}${request.nextUrl.search}`),
+    );
+
+    return copyResponseCookies(response, NextResponse.redirect(destination));
+  }
+
   if (accountRoute && !user) {
     const destination = request.nextUrl.clone();
     destination.pathname = "/accedi";
