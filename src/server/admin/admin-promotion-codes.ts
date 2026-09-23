@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { z } from "zod";
 
 import { getServerAdminUser } from "@/server/admin/admin-user";
 import { createSupabaseAdminClient } from "@/server/supabase-admin";
@@ -25,6 +26,19 @@ export type AdminPromotionCode = {
   createdAt: string;
   updatedAt: string;
 };
+
+const promotionCodeIdSchema = z.string().uuid();
+const promotionCodeActiveSchema = z.boolean();
+
+function parsePromotionCodeId(value: string) {
+  const result = promotionCodeIdSchema.safeParse(value);
+
+  if (!result.success) {
+    throw new Error("Codice promozionale non valido.");
+  }
+
+  return result.data;
+}
 
 export type AdminPromotionCodeInput = {
   code: string;
@@ -298,9 +312,7 @@ export async function updateAdminPromotionCode(
 ) {
   await requireAdmin();
 
-  if (!promotionCodeId) {
-    throw new Error("Codice promozionale non valido.");
-  }
+  const normalizedPromotionCodeId = parsePromotionCodeId(promotionCodeId);
 
   const normalized = validatePromotionCodeInput(input);
 
@@ -320,7 +332,7 @@ export async function updateAdminPromotionCode(
       is_active: normalized.isActive,
       updated_at: new Date().toISOString(),
     })
-    .eq("id", promotionCodeId)
+    .eq("id", normalizedPromotionCodeId)
     .select("id")
     .maybeSingle();
 
@@ -343,19 +355,19 @@ export async function setAdminPromotionCodeActive(
 ) {
   await requireAdmin();
 
-  if (!promotionCodeId) {
-    throw new Error("Codice promozionale non valido.");
-  }
+  const normalizedPromotionCodeId = parsePromotionCodeId(promotionCodeId);
+
+  const normalizedIsActive = promotionCodeActiveSchema.parse(isActive);
 
   const admin = createSupabaseAdminClient();
 
   const { data, error } = await admin
     .from("promotion_codes")
     .update({
-      is_active: isActive,
+      is_active: normalizedIsActive,
       updated_at: new Date().toISOString(),
     })
-    .eq("id", promotionCodeId)
+    .eq("id", normalizedPromotionCodeId)
     .select("id")
     .maybeSingle();
 

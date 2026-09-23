@@ -1,9 +1,22 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { z } from "zod";
 
 import { getServerAdminUser } from "@/server/admin/admin-user";
 import { createSupabaseAdminClient } from "@/server/supabase-admin";
+
+const productIdSchema = z.string().uuid();
+
+function parseProductId(productId: string) {
+  const result = productIdSchema.safeParse(productId);
+
+  if (!result.success) {
+    throw new Error("Prodotto non valido.");
+  }
+
+  return result.data;
+}
 
 function mapStockError(message: string) {
   if (message.includes("INVENTORY_STOCK_BELOW_RESERVED")) {
@@ -40,9 +53,7 @@ export async function updateAdminProductStock(
     throw new Error("Accesso amministratore richiesto.");
   }
 
-  if (!productId) {
-    throw new Error("Prodotto non valido.");
-  }
+  productId = parseProductId(productId);
 
   if (!Number.isSafeInteger(stockQuantity) || stockQuantity < 0) {
     throw new Error("La quantità di stock inserita non è valida.");

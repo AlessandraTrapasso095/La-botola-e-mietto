@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { z } from "zod";
 
 import { getServerAdminUser } from "@/server/admin/admin-user";
 import {
@@ -24,6 +25,69 @@ export type AdminMarketingRecipientsResult = {
   totalCustomers: number;
   totalEligible: number;
 };
+
+const marketingCampaignUrlSchema = z
+  .string()
+  .trim()
+  .url()
+  .refine(
+    (value) => {
+      const protocol = new URL(value).protocol;
+
+      return protocol === "http:" || protocol === "https:";
+    },
+    {
+      message: "Il link del pulsante deve usare http o https.",
+    },
+  );
+
+const marketingAudienceSchema = z.discriminatedUnion("mode", [
+  z.object({
+    mode: z.literal("all"),
+  }),
+  z.object({
+    mode: z.literal("selected"),
+    profileIds: z.array(z.string().uuid()).min(1),
+  }),
+]);
+
+const adminMarketingCampaignInputSchema = z
+  .object({
+    campaignId: z.string().trim().uuid(),
+    subject: z.string().trim().min(1).max(160),
+    title: z.string().trim().min(1).max(120),
+    intro: z.string().trim().min(1),
+    content: z.string().trim().min(1),
+    ctaLabel: z.string().trim().max(80).optional(),
+    ctaHref: z.string().trim().optional(),
+    audience: marketingAudienceSchema,
+  })
+  .superRefine((input, context) => {
+    const ctaLabel = input.ctaLabel?.trim() ?? "";
+    const ctaHref = input.ctaHref?.trim() ?? "";
+
+    if (Boolean(ctaLabel) !== Boolean(ctaHref)) {
+      context.addIssue({
+        code: "custom",
+        message: "Testo e link del pulsante devono essere compilati insieme.",
+        path: ctaHref ? ["ctaLabel"] : ["ctaHref"],
+      });
+
+      return;
+    }
+
+    if (ctaHref) {
+      const hrefResult = marketingCampaignUrlSchema.safeParse(ctaHref);
+
+      if (!hrefResult.success) {
+        context.addIssue({
+          code: "custom",
+          message: "Inserisci un link valido con http o https.",
+          path: ["ctaHref"],
+        });
+      }
+    }
+  });
 
 export type SendAdminMarketingCampaignInput = {
   campaignId: string;
@@ -229,6 +293,42 @@ function normalizeAudience(
 }
 
 function validateCampaignInput(input: SendAdminMarketingCampaignInput) {
+  const validation = adminMarketingCampaignInputSchema.safeParse(input);
+
+  if (!validation.success) {
+    const issue = validation.error.issues[0];
+
+    if (issue?.path.includes("campaignId")) {
+      throw new Error("Identificativo campagna non valido.");
+    }
+
+    if (issue?.path.includes("subject")) {
+      throw new Error(
+        "L’oggetto dell’email non è valido o supera 160 caratteri.",
+      );
+    }
+
+    if (issue?.path.includes("title")) {
+      throw new Error(
+        "Il titolo dell’email non è valido o supera 120 caratteri.",
+      );
+    }
+
+    if (issue?.path.includes("ctaLabel")) {
+      throw new Error(issue.message || "Il testo del pulsante non è valido.");
+    }
+
+    if (issue?.path.includes("ctaHref")) {
+      throw new Error(issue.message || "Il link del pulsante non è valido.");
+    }
+
+    if (issue?.path.includes("profileIds")) {
+      throw new Error("La selezione dei destinatari non è valida.");
+    }
+
+    throw new Error("Controlla i dati della campagna e riprova.");
+  }
+
   if (!input.campaignId.trim()) {
     throw new Error("Identificativo campagna obbligatorio.");
   }

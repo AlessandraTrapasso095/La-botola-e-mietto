@@ -1,7 +1,11 @@
 import "server-only";
 
+import { z } from "zod";
+
 import { getServerAdminUser } from "@/server/admin/admin-user";
 import { createSupabaseAdminClient } from "@/server/supabase-admin";
+
+const adminProductIdSchema = z.string().uuid();
 
 export const adminProductsPageSize = 50;
 
@@ -331,6 +335,14 @@ export async function getAdminProductDetail(
   productId: string,
 ): Promise<AdminProductDetail | null> {
   await requireAdmin();
+
+  const parsedProductId = adminProductIdSchema.safeParse(productId);
+
+  if (!parsedProductId.success) {
+    return null;
+  }
+
+  productId = parsedProductId.data;
 
   const admin = createSupabaseAdminClient();
 
@@ -685,6 +697,14 @@ export async function getAdminProductInventoryMovements(
 ): Promise<AdminProductInventoryMovement[]> {
   await requireAdmin();
 
+  const parsedProductId = adminProductIdSchema.safeParse(productId);
+
+  if (!parsedProductId.success) {
+    return [];
+  }
+
+  productId = parsedProductId.data;
+
   const admin = createSupabaseAdminClient();
 
   const normalizedLimit = Math.min(Math.max(Math.trunc(limit), 1), 100);
@@ -795,6 +815,14 @@ export async function getAdminProductOffer(
   productId: string,
 ): Promise<AdminProductOffer | null> {
   await requireAdmin();
+
+  const parsedProductId = adminProductIdSchema.safeParse(productId);
+
+  if (!parsedProductId.success) {
+    return null;
+  }
+
+  productId = parsedProductId.data;
 
   const admin = createSupabaseAdminClient();
 

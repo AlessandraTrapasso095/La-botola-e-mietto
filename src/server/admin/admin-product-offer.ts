@@ -1,9 +1,22 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { z } from "zod";
 
 import { getServerAdminUser } from "@/server/admin/admin-user";
 import { createSupabaseAdminClient } from "@/server/supabase-admin";
+
+const productIdSchema = z.string().uuid();
+
+function parseProductId(productId: string) {
+  const result = productIdSchema.safeParse(productId);
+
+  if (!result.success) {
+    throw new Error("Prodotto non valido.");
+  }
+
+  return result.data;
+}
 
 function mapOfferError(message: string) {
   if (message.includes("OFFER_DISCOUNT_INVALID")) {
@@ -54,9 +67,7 @@ export async function setAdminProductOffer(
     throw new Error("Accesso amministratore richiesto.");
   }
 
-  if (!productId) {
-    throw new Error("Prodotto non valido.");
-  }
+  const normalizedProductId = parseProductId(productId);
 
   if (
     !Number.isSafeInteger(discountPercentage) ||
@@ -69,7 +80,7 @@ export async function setAdminProductOffer(
   const admin = createSupabaseAdminClient();
 
   const { data, error } = await admin.rpc("admin_set_product_offer", {
-    p_product_id: productId,
+    p_product_id: normalizedProductId,
     p_discount_percentage: discountPercentage,
   });
 
@@ -77,7 +88,7 @@ export async function setAdminProductOffer(
     throw new Error(mapOfferError(error.message));
   }
 
-  revalidateOfferPaths(productId);
+  revalidateOfferPaths(normalizedProductId);
 
   return data;
 }
@@ -89,21 +100,19 @@ export async function deactivateAdminProductOffer(productId: string) {
     throw new Error("Accesso amministratore richiesto.");
   }
 
-  if (!productId) {
-    throw new Error("Prodotto non valido.");
-  }
+  const normalizedProductId = parseProductId(productId);
 
   const admin = createSupabaseAdminClient();
 
   const { data, error } = await admin.rpc("admin_deactivate_product_offer", {
-    p_product_id: productId,
+    p_product_id: normalizedProductId,
   });
 
   if (error) {
     throw new Error(mapOfferError(error.message));
   }
 
-  revalidateOfferPaths(productId);
+  revalidateOfferPaths(normalizedProductId);
 
   return data;
 }

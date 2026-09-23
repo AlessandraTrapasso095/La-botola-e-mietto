@@ -1,7 +1,11 @@
 "use server";
 
+import { z } from "zod";
+
 import { getServerAdminUser } from "@/server/admin/admin-user";
 import { createSupabaseAdminClient } from "@/server/supabase-admin";
+
+const adminCustomerIdSchema = z.string().uuid();
 
 export type AdminCustomerMarketingFilter =
   | "all"
@@ -326,11 +330,13 @@ export async function getAdminCustomerById(
 ): Promise<AdminCustomerDetail | null> {
   await requireAdmin();
 
-  const normalizedCustomerId = customerId.trim();
+  const parsedCustomerId = adminCustomerIdSchema.safeParse(customerId.trim());
 
-  if (!normalizedCustomerId) {
+  if (!parsedCustomerId.success) {
     return null;
   }
+
+  const normalizedCustomerId = parsedCustomerId.data;
 
   const admin = createSupabaseAdminClient();
 
