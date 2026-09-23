@@ -2,6 +2,7 @@ import "server-only";
 
 import { z } from "zod";
 
+import { resolveCatalogMode } from "@/server/catalog/catalog-mode";
 import { resolveAuthMode } from "@/services/auth/auth-mode";
 
 const optionalSecret = z.preprocess(
@@ -14,13 +15,11 @@ const rateLimitSecret = z.preprocess(
   z.string().min(32).optional(),
 );
 
-const catalogRepository = z.preprocess(
-  (value) => (value === "" ? undefined : value),
-  z.enum(["demo", "supabase"]).default("demo"),
-);
-
 const serverEnvironmentSchema = z.object({
-  CATALOG_REPOSITORY: catalogRepository,
+  CATALOG_REPOSITORY: z.preprocess(
+    (value) => resolveCatalogMode(value),
+    z.enum(["demo", "supabase"]),
+  ),
   AUTH_SERVICE: z.preprocess(
     (value) => resolveAuthMode(value),
     z.enum(["demo", "supabase"]),

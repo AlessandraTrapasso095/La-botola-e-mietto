@@ -90,8 +90,13 @@ const requiredEnv = [
   "NEXT_PUBLIC_SUPABASE_URL",
   "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY",
   "SUPABASE_SERVICE_ROLE_KEY",
+  "RATE_LIMIT_SECRET",
   "STRIPE_SECRET_KEY",
   "STRIPE_WEBHOOK_SECRET",
+  "EMAIL_PROVIDER",
+  "EMAIL_PROVIDER_API_KEY",
+  "EMAIL_FROM_ADDRESS",
+  "EMAIL_FROM_NAME",
 ];
 
 const rawEnv = fs.existsSync(".env.local")
@@ -103,19 +108,13 @@ const envNames = new Set();
 for (const rawLine of rawEnv.split(/\r?\n/)) {
   const line = rawLine.trim();
 
-  if (
-    !line ||
-    line.startsWith("#") ||
-    !line.includes("=")
-  ) {
+  if (!line || line.startsWith("#") || !line.includes("=")) {
     continue;
   }
 
   const separator = line.indexOf("=");
 
-  const name = line
-    .slice(0, separator)
-    .trim();
+  const name = line.slice(0, separator).trim();
 
   const value = line
     .slice(separator + 1)
@@ -138,10 +137,9 @@ for (const name of requiredEnv) {
 section("4. SECURITY BASICS");
 
 try {
-  const ignoredEnv = execSync(
-    "git check-ignore .env.local",
-    { encoding: "utf8" }
-  ).trim();
+  const ignoredEnv = execSync("git check-ignore .env.local", {
+    encoding: "utf8",
+  }).trim();
 
   if (ignoredEnv) {
     ok(".env.local ignorato da Git");
@@ -153,10 +151,9 @@ try {
 }
 
 try {
-  const ignoredReference = execSync(
-    "git check-ignore reference-private",
-    { encoding: "utf8" }
-  ).trim();
+  const ignoredReference = execSync("git check-ignore reference-private", {
+    encoding: "utf8",
+  }).trim();
 
   if (ignoredReference) {
     ok("reference-private ignorato da Git");
