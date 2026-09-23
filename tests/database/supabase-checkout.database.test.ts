@@ -398,6 +398,15 @@ describe("checkout Supabase locale e RLS", () => {
     return result.data;
   }
 
+  async function cancelUnpaidOrder(orderId: string) {
+    const result = await primary.rpc("cancel_account_order", {
+      p_order_id: orderId,
+    });
+
+    expect(result.error).toBeNull();
+    expect(result.data).toBe("cancelled");
+  }
+
   it("nega il checkout all'utente anonimo", async () => {
     const result = await anonymous.rpc("checkout_account_cart", {
       p_shipping_address_id: shippingAddressId,
@@ -803,6 +812,118 @@ describe("checkout Supabase locale e RLS", () => {
 
     expect((await getCart(cartId))?.status).toBe("converted");
     expect(await getCartItems(cartId)).toEqual([]);
+  });
+
+  it("blocca più bonifici pending sullo stesso account e riapre dopo annullamento", async () => {
+    await prepareCart(1);
+
+    const first = await primary.rpc("checkout_account_cart", {
+      p_shipping_address_id: shippingAddressId,
+      p_billing_address_id: billingAddressId,
+      p_shipping_method: "tnt",
+      p_payment_method: "bank_transfer",
+    });
+
+    expect(first.error).toBeNull();
+    expect(first.data).toHaveLength(1);
+
+    const firstOrder = first.data?.[0];
+
+    if (!firstOrder) {
+      throw new Error("Primo ordine con bonifico non restituito.");
+    }
+
+    expect(firstOrder.payment_status).toBe("pending");
+
+    expect(await getInventory()).toMatchObject({
+      stock_quantity: 10,
+      reserved_quantity: 1,
+      available_quantity: 9,
+    });
+
+    await prepareCart(1);
+
+    const second = await primary.rpc("checkout_account_cart", {
+      p_shipping_address_id: shippingAddressId,
+      p_billing_address_id: billingAddressId,
+      p_shipping_method: "tnt",
+      p_payment_method: "bank_transfer",
+    });
+
+    expect(second.error).not.toBeNull();
+    expect(second.error?.message).toContain(
+      "Hai già un ordine con bonifico in attesa di pagamento.",
+    );
+
+    /*
+     * Il tentativo bloccato deve essere completamente atomico:
+     * non deve creare una seconda prenotazione di magazzino.
+     */
+    expect(await getInventory()).toMatchObject({
+      stock_quantity: 10,
+      reserved_quantity: 1,
+      available_quantity: 9,
+    });
+
+    const pendingBeforeCancel = await service
+      .from("orders")
+      .select("id", { count: "exact", head: true })
+      .eq("profile_id", primaryId)
+      .eq("payment_method", "bank_transfer")
+      .eq("payment_status", "pending")
+      .neq("status", "cancelled")
+      .is("reservation_released_at", null);
+
+    expect(pendingBeforeCancel.error).toBeNull();
+    expect(pendingBeforeCancel.count).toBe(1);
+
+    await cancelUnpaidOrder(firstOrder.order_id);
+
+    expect(await getInventory()).toMatchObject({
+      stock_quantity: 10,
+      reserved_quantity: 0,
+      available_quantity: 10,
+    });
+
+    /*
+     * Il secondo tentativo aveva lasciato il nuovo carrello attivo.
+     * Dopo l'annullamento del precedente bonifico deve quindi poter
+     * essere trasformato normalmente in un nuovo ordine.
+     */
+    const third = await primary.rpc("checkout_account_cart", {
+      p_shipping_address_id: shippingAddressId,
+      p_billing_address_id: billingAddressId,
+      p_shipping_method: "tnt",
+      p_payment_method: "bank_transfer",
+    });
+
+    expect(third.error).toBeNull();
+    expect(third.data).toHaveLength(1);
+
+    const thirdOrder = third.data?.[0];
+
+    if (!thirdOrder) {
+      throw new Error(
+        "Nuovo ordine con bonifico non restituito dopo l'annullamento.",
+      );
+    }
+
+    expect(thirdOrder.order_id).not.toBe(firstOrder.order_id);
+    expect(thirdOrder.payment_status).toBe("pending");
+
+    expect(await getInventory()).toMatchObject({
+      stock_quantity: 10,
+      reserved_quantity: 1,
+      available_quantity: 9,
+    });
+
+    await cancelUnpaidOrder(thirdOrder.order_id);
+
+    expect(await getInventory()).toMatchObject({
+      stock_quantity: 10,
+      reserved_quantity: 0,
+      available_quantity: 10,
+    });
   });
 
   it("applica la spedizione gratuita TNT da 100 euro lordi", async () => {
