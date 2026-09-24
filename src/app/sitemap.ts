@@ -4,34 +4,31 @@ import { defaultSiteUrl } from "@/config/metadata";
 import { catalogBrands } from "@/content/catalog/brands";
 import { catalogCategories } from "@/content/catalog/categories";
 import { catalogCollections } from "@/content/catalog/collections";
-import { catalogProducts } from "@/content/catalog/products";
+import { getCatalogRepository } from "@/server/catalog/get-catalog-repository";
 
 const staticRoutes = [
   "",
   "/catalogo",
   "/in-offerta",
   "/marchi",
-  "/preferiti",
-  "/carrello",
   "/chi-siamo",
-  "/privacy-policy",
-  "/cookie-policy",
-  "/termini-e-condizioni",
-  "/spedizioni-e-resi",
   "/contatti",
 ] as const;
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const categoryRoutes = catalogCategories.map(
     (category) => `/categoria/${category.slug}`,
   );
+
   const brandRoutes = catalogBrands.map((brand) => `/marchio/${brand.slug}`);
+
   const collectionRoutes = catalogCollections
     .filter((collection) => collection.productSlugs.length > 0)
     .map((collection) => collection.href);
-  const productRoutes = catalogProducts.map(
-    (product) => `/prodotto/${product.slug}`,
-  );
+
+  const runtimeProductSlugs = await getCatalogRepository().getAllProductSlugs();
+
+  const productRoutes = runtimeProductSlugs.map((slug) => `/prodotto/${slug}`);
 
   return [
     ...staticRoutes,

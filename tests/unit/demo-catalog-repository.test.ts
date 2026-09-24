@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { emptyCatalogFilters } from "@/features/catalog/catalog-filter";
 import { DemoCatalogRepository } from "@/server/catalog/demo-catalog-repository";
+import { catalogProducts } from "@/content/catalog/products";
 
 describe("DemoCatalogRepository", () => {
   const repository = new DemoCatalogRepository();
@@ -56,5 +57,12 @@ describe("DemoCatalogRepository", () => {
       filtered.items.every((product) => product.categorySlug === "gin"),
     ).toBe(true);
     expect(results.products.map((product) => product.code)).toContain("AB1170");
+  });
+  it("espone tutti gli slug pubblici per la sitemap", async () => {
+    const slugs = await repository.getAllProductSlugs();
+
+    expect(slugs).toHaveLength(catalogProducts.length);
+    expect(slugs).toEqual(catalogProducts.map((product) => product.slug));
+    expect(new Set(slugs).size).toBe(slugs.length);
   });
 });

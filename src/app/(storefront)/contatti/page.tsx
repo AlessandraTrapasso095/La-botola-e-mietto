@@ -12,6 +12,7 @@ import { ContactForm } from "@/features/contact/contact-form";
 export const metadata: Metadata = {
   title: "Contatti",
   description: `Contatti di ${businessInfo.brandName}.`,
+  alternates: { canonical: "/contatti" },
 };
 
 export default function ContactsPage() {

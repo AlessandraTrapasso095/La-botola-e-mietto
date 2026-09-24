@@ -329,6 +329,36 @@ export class SupabaseCatalogRepository implements CatalogRepository {
     return mapSupabaseProductDetail(productResponse.data, media);
   }
 
+  async getAllProductSlugs() {
+    const client = await this.createClient();
+    const pageSize = 1000;
+    const slugs: string[] = [];
+
+    for (let start = 0; ; start += pageSize) {
+      const response = await client
+        .from("catalog_products_view")
+        .select("slug")
+        .order("slug", { ascending: true })
+        .range(start, start + pageSize - 1);
+
+      if (response.error) {
+        throw databaseError("slug prodotti per sitemap", response.error);
+      }
+
+      const rows = response.data ?? [];
+
+      slugs.push(
+        ...rows
+          .map((row) => row.slug)
+          .filter((slug): slug is string => Boolean(slug)),
+      );
+
+      if (rows.length < pageSize) break;
+    }
+
+    return slugs;
+  }
+
   async getProductBySlug(slug: string) {
     return this.getProduct("slug", slug);
   }

@@ -128,6 +128,10 @@ export class DemoCatalogRepository implements CatalogRepository {
     );
   }
 
+  async getAllProductSlugs() {
+    return catalogProducts.map((product) => product.slug);
+  }
+
   async getProductBySlug(slug: string) {
     const product = getProductBySlug(slug);
     return product
