@@ -10,6 +10,19 @@ async function enterSite(page: Page) {
   await expect(ageConfirmation).toBeVisible({ timeout: 120_000 });
   await ageConfirmation.click();
 
+  const promotionClose = page.getByRole("button", {
+    name: "Chiudi promozione",
+  });
+  const promotionVisible = await promotionClose
+    .waitFor({ state: "visible", timeout: 5_000 })
+    .then(() => true)
+    .catch(() => false);
+
+  if (promotionVisible) {
+    await promotionClose.click();
+    await expect(promotionClose).toBeHidden();
+  }
+
   const cookieChoice = page.getByRole("button", {
     name: "Rifiuta non necessari",
   });
@@ -81,8 +94,16 @@ test("il mega menu mostra soltanto collezioni verificate e non vuote", async ({
   }
 
   await page.goto("/collezione/etichette-di-pregio");
+  const donJulioCard = page
+    .locator("article.product-card")
+    .filter({ hasText: "Don Julio 1942" })
+    .first();
+
+  await expect(donJulioCard).toBeVisible();
   await expect(
-    page.getByRole("link", { name: "Don Julio 1942", exact: true }),
+    donJulioCard.getByRole("heading", {
+      name: /Don Julio 1942/,
+    }),
   ).toBeVisible();
 });
 
@@ -135,7 +156,10 @@ test("la ricerca globale usa Invio, submit, suggerimenti e query URL", async ({
   await searchDialog.getByRole("button", { name: "Avvia ricerca" }).click();
   await expect(page).toHaveURL(/\/cerca\?q=AB1319$/, { timeout: 60_000 });
   await expect(
-    page.getByRole("link", { name: "Don Julio 1942", exact: true }),
+    page.getByRole("link", {
+      name: "Don Julio 1942 – 700 ml – 38.0% vol.",
+      exact: true,
+    }),
   ).toBeVisible();
 
   searchDialog = await openSearch(page);
@@ -144,9 +168,12 @@ test("la ricerca globale usa Invio, submit, suggerimenti e query URL", async ({
     .getByRole("link", { name: /Don Julio 1942/ })
     .first()
     .click();
-  await expect(page).toHaveURL(/\/prodotto\/don-julio-1942$/, {
-    timeout: 60_000,
-  });
+  await expect(page).toHaveURL(
+    /\/prodotto\/don-julio-1942-700-ml-38-0-vol-ab1319$/,
+    {
+      timeout: 60_000,
+    },
+  );
 
   searchDialog = await openSearch(page);
   await searchDialog.getByRole("searchbox").fill("termine impossibile 987654");

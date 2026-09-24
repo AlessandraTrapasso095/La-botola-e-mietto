@@ -228,6 +228,13 @@ const collectionDefinitions = [
   },
 ] as const satisfies readonly CatalogCollectionDefinition[];
 
+export function getCollectionProductCodes(slug: string): readonly string[] {
+  return (
+    collectionDefinitions.find((collection) => collection.slug === slug)
+      ?.productCodes ?? []
+  );
+}
+
 export const catalogCollections: readonly CatalogCollection[] =
   collectionDefinitions.map(({ productCodes, ...collection }) => {
     const codes = new Set<string>(productCodes);

@@ -26,6 +26,22 @@ describe("DemoCatalogRepository", () => {
     expect(secondPage.items[0]?.slug).not.toBe(firstPage.items[0]?.slug);
   });
 
+  it("risolve prodotti tramite codici stabili preservando l'ordine richiesto", async () => {
+    const products = await repository.getProductsByCodes([
+      "AB1319",
+      "AB6737",
+      "AB1170",
+    ]);
+
+    expect(products.map((product) => product.code)).toEqual([
+      "AB1319",
+      "AB6737",
+      "AB1170",
+    ]);
+
+    expect(products).toHaveLength(3);
+  });
+
   it("applica filtri e ricerca nel repository server", async () => {
     const filtered = await repository.queryProducts({
       page: 1,

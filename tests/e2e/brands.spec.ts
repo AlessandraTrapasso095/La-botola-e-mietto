@@ -13,6 +13,19 @@ test("marchio canonico e scheda prodotto funzionano anche su mobile", async ({
   });
 
   await page.getByRole("button", { name: "Sì, ho almeno 18 anni" }).click();
+
+  const promotionClose = page.getByRole("button", {
+    name: "Chiudi promozione",
+  });
+  const promotionVisible = await promotionClose
+    .waitFor({ state: "visible", timeout: 5_000 })
+    .then(() => true)
+    .catch(() => false);
+
+  if (promotionVisible) {
+    await promotionClose.click();
+    await expect(promotionClose).toBeHidden();
+  }
   const cookieChoice = page.getByRole("button", {
     name: "Rifiuta non necessari",
   });
@@ -25,11 +38,12 @@ test("marchio canonico e scheda prodotto funzionano anche su mobile", async ({
 
   await page
     .getByRole("link", {
-      name: "Scopri Glen Grant 12YO 0.70 +2 Bicchieri",
+      name: "Scopri Scotch Whisky Glen Grant 12YO +2 Bicchieri – Set Regalo – 700 ml + 2 bicchieri",
+      exact: true,
     })
     .click();
   await expect(page).toHaveURL(
-    /\/prodotto\/glen-grant-12yo-0-70-2-bicchieri$/,
+    /\/prodotto\/scotch-whisky-glen-grant-12yo-2-bicchieri-set-regalo-700-ml-2-bicchieri-ab1170$/,
     { timeout: 120_000 },
   );
   await expect(
@@ -78,7 +92,10 @@ test("il marchio generico The non è pubblico e le referenze restano separate", 
       page.getByRole("heading", { name: brandName, level: 1 }),
     ).toBeVisible({ timeout: 120_000 });
     await expect(
-      page.getByRole("link", { name: productName, exact: true }).first(),
+      page
+        .locator("article.product-card")
+        .filter({ hasText: productName })
+        .first(),
     ).toBeVisible({ timeout: 120_000 });
   }
 });

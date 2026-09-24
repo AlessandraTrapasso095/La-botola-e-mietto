@@ -10,6 +10,19 @@ async function enterSite(page: Page) {
   await expect(ageConfirmation).toBeVisible({ timeout: 120_000 });
   await ageConfirmation.click();
 
+  const promotionClose = page.getByRole("button", {
+    name: "Chiudi promozione",
+  });
+  const promotionVisible = await promotionClose
+    .waitFor({ state: "visible", timeout: 5_000 })
+    .then(() => true)
+    .catch(() => false);
+
+  if (promotionVisible) {
+    await promotionClose.click();
+    await expect(promotionClose).toBeHidden();
+  }
+
   const cookieChoice = page.getByRole("button", {
     name: "Rifiuta non necessari",
   });

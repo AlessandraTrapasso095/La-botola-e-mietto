@@ -21,6 +21,7 @@ export interface CatalogRepository {
   getFilterOptions(scope?: CatalogQueryScope): Promise<CatalogFilterOptions>;
   getProductBySlug(slug: string): Promise<ProductDetailView | null>;
   getProductByCode(code: string): Promise<ProductDetailView | null>;
+  getProductsByCodes(codes: readonly string[]): Promise<ProductCardView[]>;
   getProductsBySlugs(slugs: readonly string[]): Promise<ProductCardView[]>;
   getRelatedProducts(slug: string, limit: number): Promise<ProductCardView[]>;
   search(

@@ -17,6 +17,19 @@ async function enterSite(page: Page) {
   });
   await expect(ageConfirmation).toBeVisible({ timeout: 120_000 });
   await ageConfirmation.click();
+
+  const promotionClose = page.getByRole("button", {
+    name: "Chiudi promozione",
+  });
+  const promotionVisible = await promotionClose
+    .waitFor({ state: "visible", timeout: 5_000 })
+    .then(() => true)
+    .catch(() => false);
+
+  if (promotionVisible) {
+    await promotionClose.click();
+    await expect(promotionClose).toBeHidden();
+  }
   const cookieChoice = page.getByRole("button", {
     name: "Rifiuta non necessari",
   });
@@ -147,7 +160,14 @@ test("registrazione, recupero password e accesso da menu mobile", async ({
     page.getByRole("heading", { name: "Ciao, Livia." }),
   ).toBeVisible();
 
-  const mobileAccountNavigation = page.locator("#account-mobile-navigation");
-  await mobileAccountNavigation.selectOption("/account/ordini");
+  const recentOrdersLink = page.getByRole("link", {
+    name: /Ordini recenti/,
+  });
+
+  await expect(recentOrdersLink).toBeVisible();
+  await expect(recentOrdersLink).toHaveAttribute("href", "/account/ordini");
+
+  await recentOrdersLink.click();
+
   await expect(page).toHaveURL(/\/account\/ordini$/, { timeout: 30_000 });
 });

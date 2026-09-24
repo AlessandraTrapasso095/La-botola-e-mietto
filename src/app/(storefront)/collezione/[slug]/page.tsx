@@ -3,13 +3,17 @@ import { notFound } from "next/navigation";
 
 import { Container } from "@/components/ui/container";
 import { Section } from "@/components/ui/section";
-import { catalogCollections } from "@/content/catalog/collections";
+import {
+  catalogCollections,
+  getCollectionProductCodes,
+} from "@/content/catalog/collections";
 import { getCollectionBySlug } from "@/content/catalog/selectors";
 import { Breadcrumbs } from "@/features/catalog/breadcrumbs";
 import { CatalogExplorer } from "@/features/catalog/catalog-explorer";
 import { CatalogHero } from "@/features/catalog/catalog-hero";
 import { ShippingPromise } from "@/features/catalog/shipping-promise";
 import type { CatalogSearchParams } from "@/server/catalog/catalog-query";
+import { getCatalogRepository } from "@/server/catalog/get-catalog-repository";
 import { loadCatalogPage } from "@/server/catalog/load-catalog-page";
 
 type CollectionPageProps = {
@@ -49,9 +53,18 @@ export default async function CollectionPage({
   const collection = getCollectionBySlug(slug);
   if (!collection || collection.productSlugs.length === 0) notFound();
 
+  const productCodes = getCollectionProductCodes(slug);
+  if (productCodes.length === 0) notFound();
+
+  const repository = getCatalogRepository();
+  const runtimeProducts = await repository.getProductsByCodes(productCodes);
+  const runtimeProductSlugs = runtimeProducts.map((product) => product.slug);
+
+  if (runtimeProductSlugs.length === 0) notFound();
+
   const { query, result, filterOptions } = await loadCatalogPage(
     await searchParams,
-    { productSlugs: collection.productSlugs },
+    { productSlugs: runtimeProductSlugs },
   );
 
   return (

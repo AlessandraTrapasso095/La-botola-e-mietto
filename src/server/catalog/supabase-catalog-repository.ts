@@ -337,6 +337,43 @@ export class SupabaseCatalogRepository implements CatalogRepository {
     return this.getProduct("code", code.trim().toUpperCase());
   }
 
+  async getProductsByCodes(codes: readonly string[]) {
+    if (codes.length === 0) return [];
+
+    const requestedCodes = [
+      ...new Set(codes.map((code) => code.trim().toUpperCase())),
+    ].slice(0, 500);
+
+    const client = await this.createClient();
+    const products: ProductCardView[] = [];
+
+    for (let index = 0; index < requestedCodes.length; index += 100) {
+      const batch = requestedCodes.slice(index, index + 100);
+
+      const response = await client
+        .from("catalog_products_view")
+        .select(productCardColumns)
+        .in("code", batch)
+        .limit(batch.length);
+
+      if (response.error) {
+        throw databaseError("risoluzione prodotti per codice", response.error);
+      }
+
+      products.push(...(response.data ?? []).map(mapSupabaseProductCard));
+    }
+
+    const productsByCode = new Map(
+      products.map((product) => [product.code.trim().toUpperCase(), product]),
+    );
+
+    return codes.flatMap((code) => {
+      const product = productsByCode.get(code.trim().toUpperCase());
+
+      return product ? [product] : [];
+    });
+  }
+
   async getProductsBySlugs(slugs: readonly string[]) {
     if (slugs.length === 0) return [];
 

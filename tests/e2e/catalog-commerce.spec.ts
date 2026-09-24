@@ -37,6 +37,19 @@ test("catalogo mobile, filtri, prodotto, carrello, wishlist e ricerca", async ({
     .getByRole("button", { name: "Sì, ho almeno 18 anni" })
     .click({ timeout: 60_000 });
 
+  const promotionClose = page.getByRole("button", {
+    name: "Chiudi promozione",
+  });
+  const promotionVisible = await promotionClose
+    .waitFor({ state: "visible", timeout: 5_000 })
+    .then(() => true)
+    .catch(() => false);
+
+  if (promotionVisible) {
+    await promotionClose.click();
+    await expect(promotionClose).toBeHidden();
+  }
+
   const cookieChoice = page.getByRole("button", {
     name: "Rifiuta non necessari",
   });
@@ -77,14 +90,33 @@ test("catalogo mobile, filtri, prodotto, carrello, wishlist e ricerca", async ({
   await expect(filterTrigger).toBeFocused();
   await expect(filterTrigger).toHaveAccessibleName("Filtri (1)");
 
-  await page
-    .getByRole("link", { name: "Scopri Caprisius", exact: true })
-    .click();
-  await expect(page).toHaveURL(/\/prodotto\/caprisius$/, {
+  const caprisiusCard = page
+    .locator("article.product-card")
+    .filter({ hasText: "Caprisius – 700 ml – 43.0% vol." })
+    .first();
+
+  await expect(caprisiusCard).toBeVisible({ timeout: 60_000 });
+
+  const caprisiusLink = caprisiusCard.getByRole("link", {
+    name: "Scopri Caprisius – 700 ml – 43.0% vol.",
+    exact: true,
+  });
+
+  const caprisiusHref = await caprisiusLink.getAttribute("href");
+
+  expect(caprisiusHref).toMatch(/^\/prodotto\/caprisius-/);
+
+  await caprisiusLink.click();
+
+  await expect(page).toHaveURL(new RegExp(`${caprisiusHref}$`), {
     timeout: 60_000,
   });
+
   await expect(
-    page.getByRole("heading", { name: "Caprisius", level: 1 }),
+    page.getByRole("heading", {
+      name: "Caprisius – 700 ml – 43.0% vol.",
+      level: 1,
+    }),
   ).toBeVisible({ timeout: 60_000 });
 
   await page.getByRole("button", { name: "Aggiungi al carrello" }).click();
@@ -108,14 +140,20 @@ test("catalogo mobile, filtri, prodotto, carrello, wishlist e ricerca", async ({
   await expect(
     page.getByRole("button", { name: "Nei preferiti" }),
   ).toBeVisible();
+  if (!caprisiusHref) {
+    throw new Error("Href prodotto Caprisius non disponibile.");
+  }
+
+  const caprisiusSlug = caprisiusHref.replace("/prodotto/", "");
+
   await expect
     .poll(() =>
-      page.evaluate(() => {
+      page.evaluate((slug) => {
         const value = window.localStorage.getItem("lbm-demo-commerce");
         if (!value) return false;
         const parsed = JSON.parse(value) as { wishlist?: string[] };
-        return parsed.wishlist?.includes("caprisius") ?? false;
-      }),
+        return parsed.wishlist?.includes(slug) ?? false;
+      }, caprisiusSlug),
     )
     .toBe(true);
 
@@ -141,9 +179,12 @@ test("catalogo mobile, filtri, prodotto, carrello, wishlist e ricerca", async ({
     .getByRole("searchbox", {
       name: "Cerca prodotti, marchi e categorie",
     })
-    .fill("Yamazaki");
+    .fill("Caprisius");
+
   await expect(
-    searchDialog.getByRole("link", { name: /Suntory Yamazaki 18 Y.O./ }),
+    searchDialog.getByRole("link", {
+      name: /Caprisius – 700 ml – 43\.0% vol\./,
+    }),
   ).toBeVisible();
   await page.keyboard.press("Escape");
   await expect(searchDialog).toBeHidden();

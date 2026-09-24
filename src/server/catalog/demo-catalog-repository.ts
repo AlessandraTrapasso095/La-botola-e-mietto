@@ -144,6 +144,23 @@ export class DemoCatalogRepository implements CatalogRepository {
       : null;
   }
 
+  async getProductsByCodes(codes: readonly string[]) {
+    const requested = new Set(codes.map((code) => code.trim().toUpperCase()));
+
+    const productsByCode = new Map(
+      createCatalogProductViews(
+        catalogProducts
+          .filter((product) => requested.has(product.code))
+          .map(mapCatalogProductToDomain),
+      ).map((product) => [product.code, product]),
+    );
+
+    return codes.flatMap((code) => {
+      const product = productsByCode.get(code.trim().toUpperCase());
+      return product ? [product] : [];
+    });
+  }
+
   async getProductsBySlugs(slugs: readonly string[]) {
     const requested = new Set(slugs);
     const productsBySlug = new Map(
