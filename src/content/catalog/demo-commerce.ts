@@ -12,11 +12,6 @@ export const catalogBanners = {
     description:
       "Una collezione costruita tra grandi classici, nuove release e distillati dalla disponibilità limitata.",
   },
-  shipping: {
-    title: "La cura continua durante il viaggio.",
-    description:
-      "Imballaggio protettivo e spedizione gratuita in Italia per ordini superiori a 60 €.",
-  },
 } as const;
 
 export const newsletterContent = {

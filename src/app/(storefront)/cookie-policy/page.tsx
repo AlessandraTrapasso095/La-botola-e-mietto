@@ -16,7 +16,6 @@ export default function CookiePolicyPage() {
     <LegalPage
       title="Cookie Policy di Mietto Giuliano"
       intro="I Cookie sono costituiti da porzioni di codice installate all'interno del browser che assistono il Titolare nell’erogazione del Servizio in base alle finalità descritte. Alcune delle finalità di installazione dei Cookie potrebbero, inoltre, necessitare del consenso dell'Utente."
-      showReviewNotice={false}
     >
       <Text tone="muted">
         Quando l’installazione di Cookies avviene sulla base del consenso, tale

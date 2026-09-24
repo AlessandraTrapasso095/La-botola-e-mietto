@@ -17,7 +17,6 @@ export default function PrivacyPolicyPage() {
     <LegalPage
       title="Informativa ai sensi dell'art. 13 del Codice della Privacy"
       intro="Ai sensi dell'articolo 13 del codice della D.Lgs. 196/2003, vi rendiamo le seguenti informazioni."
-      showReviewNotice={false}
     >
       <Text tone="muted">
         Noi di www.labotolaemietto.com riteniamo che la privacy dei nostri

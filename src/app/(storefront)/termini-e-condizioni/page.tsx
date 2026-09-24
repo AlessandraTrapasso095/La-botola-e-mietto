@@ -14,7 +14,7 @@ export default function TermsPage() {
   return (
     <LegalPage
       title="Termini e condizioni"
-      intro="Principi che regolano l’accesso al catalogo e la futura conclusione degli acquisti."
+      intro="Condizioni che regolano l’accesso al catalogo e gli acquisti effettuati sul sito."
     >
       <section>
         <Heading as="h2" size="md">
@@ -51,10 +51,9 @@ export default function TermsPage() {
           Consegna, recesso e garanzie
         </Heading>
         <Text tone="muted" className="mt-3">
-          Tempi indicativi, imballaggio, resi ed eccezioni sono riepilogati
-          nella pagina Spedizioni e resi. Le condizioni definitive dovranno
-          specificare anche pagamenti, conclusione del contratto, garanzie,
-          responsabilità, legge applicabile e risoluzione delle controversie.
+          Tempi indicativi di consegna, modalità di imballaggio, condizioni per
+          i resi ed eventuali eccezioni sono riepilogati nella pagina Spedizioni
+          e resi.
         </Text>
       </section>
     </LegalPage>
