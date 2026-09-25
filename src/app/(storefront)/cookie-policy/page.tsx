@@ -136,7 +136,7 @@ export default function CookiePolicyPage() {
           C.F. MTTGLN65S29B564C
         </Text>
         <Text tone="muted" className="mt-3">
-          Indirizzo email del Titolare: info@labotolaemietto.com
+          Indirizzo email del Titolare: admin@labotolaemietto.it
         </Text>
         <Text tone="muted" className="mt-5">
           Dal momento che l&apos;installazione di Cookie e di altri sistemi di

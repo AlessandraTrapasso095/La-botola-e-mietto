@@ -166,7 +166,7 @@ export default function PrivacyPolicyPage() {
           <br />
           Tel/Fax: 3482607738
           <br />
-          E-mail: info@labotolaemietto.com
+          E-mail: admin@labotolaemietto.it
           <br />
           P.IVA 01989480288
         </address>

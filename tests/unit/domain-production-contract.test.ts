@@ -40,6 +40,6 @@ describe("production domain contract", () => {
   it("does not silently rewrite business email addresses", () => {
     const business = source("src/config/business.ts");
 
-    expect(business).toContain('email: "info@labotolaemietto.com"');
+    expect(business).toContain('email: "admin@labotolaemietto.it"');
   });
 });

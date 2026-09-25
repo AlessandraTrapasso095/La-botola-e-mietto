@@ -9,7 +9,7 @@ describe("businessInfo", () => {
       legalName: "Mietto Giuliano",
       vatNumber: "01989480288",
       fiscalCode: "MTTGLN65S29B564C",
-      email: "info@labotolaemietto.com",
+      email: "admin@labotolaemietto.it",
       phone: "+39 348 260 7738",
       currency: "EUR",
       locale: "it-IT",
