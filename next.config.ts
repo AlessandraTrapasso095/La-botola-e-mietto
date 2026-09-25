@@ -84,6 +84,17 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       {
+        source: "/:path*",
+        has: [
+          {
+            type: "host",
+            value: "www.labotolaemietto.it",
+          },
+        ],
+        destination: "https://labotolaemietto.it/:path*",
+        permanent: true,
+      },
+      {
         source: "/marchio/the",
         destination: "/marchi",
         permanent: true,

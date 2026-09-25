@@ -19,10 +19,10 @@ export default function PrivacyPolicyPage() {
       intro="Ai sensi dell'articolo 13 del codice della D.Lgs. 196/2003, vi rendiamo le seguenti informazioni."
     >
       <Text tone="muted">
-        Noi di www.labotolaemietto.com riteniamo che la privacy dei nostri
-        visitatori sia estremamente importante. Questo documento descrive
-        dettagliatamente i tipi di informazioni personali raccolti e registrati
-        dal nostro sito e come essi vengano utilizzati.
+        Noi di labotolaemietto.it riteniamo che la privacy dei nostri visitatori
+        sia estremamente importante. Questo documento descrive dettagliatamente
+        i tipi di informazioni personali raccolti e registrati dal nostro sito e
+        come essi vengano utilizzati.
       </Text>
 
       <section>

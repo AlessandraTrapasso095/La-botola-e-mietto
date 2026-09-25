@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { brandAssets } from "@/config/brand";
 import { businessInfo } from "@/config/business";
 
-export const defaultSiteUrl = "https://labotolaemietto.com";
+export const defaultSiteUrl = "https://labotolaemietto.it";
 
 export const baseMetadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? defaultSiteUrl),
