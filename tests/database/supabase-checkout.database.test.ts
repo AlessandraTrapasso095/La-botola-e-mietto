@@ -955,6 +955,72 @@ describe("checkout Supabase locale e RLS", () => {
     });
   });
 
+  it("rifiuta il checkout database verso un Paese extra-Schengen", async () => {
+    const unsupportedAddress = await service
+      .from("addresses")
+      .insert({
+        profile_id: primaryId,
+        type: "shipping",
+        label: "USA test tecnico",
+        first_name: "Livia",
+        last_name: "Conti",
+        street: "350 Fifth Avenue",
+        street_number: "1",
+        phone: "+1 212 000 0000",
+        postal_code: "10001",
+        city: "New York",
+        province: "NY",
+        country_code: "US",
+        is_default_shipping: false,
+        is_default_billing: false,
+      })
+      .select("id")
+      .single();
+
+    expect(unsupportedAddress.error).toBeNull();
+
+    const unsupportedAddressId = unsupportedAddress.data?.id ?? "";
+
+    expect(unsupportedAddressId).not.toBe("");
+
+    try {
+      await prepareCart(1);
+
+      const ordersBefore = await service
+        .from("orders")
+        .select("id", { count: "exact", head: true })
+        .eq("profile_id", primaryId);
+
+      expect(ordersBefore.error).toBeNull();
+
+      const inventoryBefore = await getInventory();
+
+      const result = await primary.rpc("checkout_account_cart", {
+        p_shipping_address_id: unsupportedAddressId,
+        p_billing_address_id: billingAddressId,
+        p_shipping_method: "fedex",
+        p_payment_method: "bank_transfer",
+      });
+
+      expect(result.error).not.toBeNull();
+      expect(result.error?.message).toContain(
+        "Paese di spedizione non supportato.",
+      );
+
+      const ordersAfter = await service
+        .from("orders")
+        .select("id", { count: "exact", head: true })
+        .eq("profile_id", primaryId);
+
+      expect(ordersAfter.error).toBeNull();
+      expect(ordersAfter.count).toBe(ordersBefore.count);
+
+      expect(await getInventory()).toEqual(inventoryBefore);
+    } finally {
+      await service.from("addresses").delete().eq("id", unsupportedAddressId);
+    }
+  });
+
   it("mantiene gratuito il ritiro in negozio", async () => {
     await prepareCart(1);
 

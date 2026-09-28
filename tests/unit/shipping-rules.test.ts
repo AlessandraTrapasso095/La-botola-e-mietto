@@ -20,6 +20,24 @@ describe("regole spedizione Italia / estero", () => {
     expect(shippingCarrierLabel("fedex")).toBe("FedEx");
   });
 
+  it("rifiuta Paesi fuori dallo spazio Schengen", () => {
+    expect(() => shippingMethodForCountry("GB")).toThrow(
+      "Paese di spedizione non supportato.",
+    );
+    expect(() => shippingMethodForCountry("IE")).toThrow(
+      "Paese di spedizione non supportato.",
+    );
+    expect(() => shippingMethodForCountry("US")).toThrow(
+      "Paese di spedizione non supportato.",
+    );
+    expect(() => shippingMethodForCountry(null)).toThrow(
+      "Paese di spedizione non supportato.",
+    );
+    expect(() => shippingMethodForCountry(undefined)).toThrow(
+      "Paese di spedizione non supportato.",
+    );
+  });
+
   it("Italia costa 9,90 sotto i 100 euro", () => {
     expect(
       calculateShippingGrossAmountMinor({

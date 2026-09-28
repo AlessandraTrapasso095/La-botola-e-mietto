@@ -1,11 +1,19 @@
+import { isEuropeanCountryCode } from "@/lib/european-countries";
+
 import { businessInfo } from "@/config/business";
 
 export type CommerceShippingMethod = "store_pickup" | "tnt" | "fedex";
 
 export function shippingMethodForCountry(
   countryCode: string | null | undefined,
-): "tnt" | "fedex" {
-  return countryCode?.trim().toUpperCase() === "IT" ? "tnt" : "fedex";
+): Exclude<CommerceShippingMethod, "store_pickup"> {
+  const normalizedCountryCode = countryCode?.trim().toUpperCase() ?? "";
+
+  if (!isEuropeanCountryCode(normalizedCountryCode)) {
+    throw new Error("Paese di spedizione non supportato.");
+  }
+
+  return normalizedCountryCode === "IT" ? "tnt" : "fedex";
 }
 
 export function shippingCarrierLabel(method: CommerceShippingMethod) {
