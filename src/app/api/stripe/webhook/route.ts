@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { getServerEnvironment } from "@/server/env";
+import { logOperationalError } from "@/server/monitoring/operational-log";
 import { getStripeClient } from "@/server/stripe/client";
 import { handleStripeWebhookEvent } from "@/server/stripe/webhook";
 
@@ -36,6 +37,8 @@ export async function POST(request: Request) {
       STRIPE_WEBHOOK_SECRET,
     );
   } catch {
+    logOperationalError("stripe.webhook.signature_invalid");
+
     return NextResponse.json(
       { message: "Firma webhook Stripe non valida." },
       { status: 400 },
@@ -45,6 +48,8 @@ export async function POST(request: Request) {
   try {
     await handleStripeWebhookEvent(event);
   } catch {
+    logOperationalError("stripe.webhook.processing_failed");
+
     return NextResponse.json(
       { message: "Gestione webhook non riuscita." },
       { status: 500 },

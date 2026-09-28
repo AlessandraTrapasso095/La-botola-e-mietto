@@ -19,6 +19,12 @@ describe("logging security contract", () => {
   const rateLimit = source("src/server/security/rate-limit.ts");
   const productImages = source("src/server/admin/admin-product-images.ts");
   const adminUser = source("src/server/admin/admin-user.ts");
+  const operationalLog = source(
+    "src/server/monitoring/operational-log.ts",
+  );
+  const stripeWebhookRoute = source(
+    "src/app/api/stripe/webhook/route.ts",
+  );
 
   it("non registra messaggi email grezzi o identificativi destinatario", () => {
     expect(safeSend).not.toContain("error instanceof Error ? error.message");
@@ -83,6 +89,21 @@ describe("logging security contract", () => {
   it("non serializza l'Error completo della verifica admin", () => {
     expect(adminUser).not.toContain(
       '"[admin-auth] Impossibile verificare la sessione admin.", error',
+    );
+  });
+
+  it("mantiene il monitoring operativo privo di errori grezzi e identificativi", () => {
+    expect(operationalLog).not.toContain("error.message");
+    expect(operationalLog).not.toContain("String(error)");
+    expect(operationalLog).not.toContain("email");
+    expect(operationalLog).not.toContain("orderId");
+    expect(operationalLog).not.toContain("sessionId");
+
+    expect(stripeWebhookRoute).toContain(
+      'logOperationalError("stripe.webhook.signature_invalid")',
+    );
+    expect(stripeWebhookRoute).toContain(
+      'logOperationalError("stripe.webhook.processing_failed")',
     );
   });
 });
