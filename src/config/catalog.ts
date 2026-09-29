@@ -125,9 +125,6 @@ const catalogMenuGroups = [
     title: "Cantina",
     description: "Vini, bollicine e proposte per l’aperitivo.",
     links: createCategoryLinks([
-      "Vini",
-      "Champagne",
-      "Spumanti",
       "Aperitivi",
       "Birre",
     ]),

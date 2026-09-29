@@ -43,7 +43,13 @@ export default async function CatalogPage({ searchParams }: CatalogPageProps) {
       />
       <Section spacing="standard">
         <Container>
-          <CategoryNavigation categories={catalogCategories} />
+          <CategoryNavigation
+            categories={catalogCategories.filter(
+              (category) =>
+                category.slug !== "vini" &&
+                category.slug !== "champagne-spumanti",
+            )}
+          />
         </Container>
       </Section>
       <ShippingPromise />
