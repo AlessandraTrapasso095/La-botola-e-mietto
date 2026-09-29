@@ -1,12 +1,12 @@
 import { type NextRequest } from "next/server";
 
+import { getPublicEnvironment } from "@/config/public-env";
 import { registrationInputSchema } from "@/lib/validation/auth";
 import { loadAccountUser } from "@/server/auth/account-user";
 import {
   AuthHttpError,
   authErrorResponse,
   authJson,
-  getRequestOrigin,
   parseAuthInput,
   requireSameOrigin,
   requireSupabaseAuthMode,
@@ -27,14 +27,14 @@ export async function POST(request: NextRequest) {
     await enforceIpRateLimit(request, rateLimitPolicies.register);
     const input = await parseAuthInput(request, registrationInputSchema);
     await enforceAccountRateLimit(input.email, rateLimitPolicies.register);
-    const requestOrigin = getRequestOrigin(request);
-    if (!requestOrigin) throw new AuthHttpError(400, "Richiesta non valida.");
+    const siteUrl = getPublicEnvironment().NEXT_PUBLIC_SITE_URL;
+    if (!siteUrl) throw new AuthHttpError(500, "Configurazione sito non disponibile.");
     const client = await createSupabaseServerClient();
     const { data, error } = await client.auth.signUp({
       email: input.email,
       password: input.password,
       options: {
-        emailRedirectTo: new URL("/auth/confirm", requestOrigin).toString(),
+        emailRedirectTo: new URL("/auth/confirm", siteUrl).toString(),
         data: {
           first_name: input.firstName,
           last_name: input.lastName,

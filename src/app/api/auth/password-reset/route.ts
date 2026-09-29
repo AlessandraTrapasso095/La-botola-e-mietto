@@ -1,10 +1,10 @@
 import { type NextRequest } from "next/server";
 
+import { getPublicEnvironment } from "@/config/public-env";
 import { passwordResetInputSchema } from "@/lib/validation/auth";
 import {
   authErrorResponse,
   authJson,
-  getRequestOrigin,
   parseAuthInput,
   requireSameOrigin,
   requireSupabaseAuthMode,
@@ -23,17 +23,17 @@ export async function POST(request: NextRequest) {
     await enforceIpRateLimit(request, rateLimitPolicies.passwordReset);
     const { email } = await parseAuthInput(request, passwordResetInputSchema);
     await enforceAccountRateLimit(email, rateLimitPolicies.passwordReset);
-    const origin = getRequestOrigin(request);
+    const siteUrl = getPublicEnvironment().NEXT_PUBLIC_SITE_URL;
 
-    if (!origin) {
-      throw new Error("Origine della richiesta non disponibile.");
+    if (!siteUrl) {
+      throw new Error("Configurazione sito non disponibile.");
     }
 
     const client = await createSupabaseServerClient();
     const { error } = await client.auth.resetPasswordForEmail(email, {
       redirectTo: new URL(
         "/auth/confirm?next=/nuova-password",
-        origin,
+        siteUrl,
       ).toString(),
     });
     if (error) {

@@ -1,10 +1,10 @@
 import { type NextRequest } from "next/server";
 
+import { getPublicEnvironment } from "@/config/public-env";
 import { passwordResetInputSchema } from "@/lib/validation/auth";
 import {
   authErrorResponse,
   authJson,
-  getRequestOrigin,
   parseAuthInput,
   requireSameOrigin,
   requireSupabaseAuthMode,
@@ -46,16 +46,16 @@ export async function POST(request: NextRequest) {
       return authJson(null);
     }
 
-    const origin = getRequestOrigin(request);
+    const siteUrl = getPublicEnvironment().NEXT_PUBLIC_SITE_URL;
 
-    if (!origin) {
-      throw new Error("Origine della richiesta non disponibile.");
+    if (!siteUrl) {
+      throw new Error("Configurazione sito non disponibile.");
     }
 
     const client = await createSupabaseServerClient();
 
     const { error } = await client.auth.resetPasswordForEmail(email, {
-      redirectTo: `${origin}/auth/confirm?next=/admin/nuova-password`,
+      redirectTo: new URL("/auth/confirm?next=/admin/nuova-password", siteUrl).toString(),
     });
 
     if (error) {
