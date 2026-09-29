@@ -4,6 +4,7 @@ import { passwordResetInputSchema } from "@/lib/validation/auth";
 import {
   authErrorResponse,
   authJson,
+  getRequestOrigin,
   parseAuthInput,
   requireSameOrigin,
   requireSupabaseAuthMode,
@@ -22,11 +23,17 @@ export async function POST(request: NextRequest) {
     await enforceIpRateLimit(request, rateLimitPolicies.passwordReset);
     const { email } = await parseAuthInput(request, passwordResetInputSchema);
     await enforceAccountRateLimit(email, rateLimitPolicies.passwordReset);
+    const origin = getRequestOrigin(request);
+
+    if (!origin) {
+      throw new Error("Origine della richiesta non disponibile.");
+    }
+
     const client = await createSupabaseServerClient();
     const { error } = await client.auth.resetPasswordForEmail(email, {
       redirectTo: new URL(
         "/auth/confirm?next=/nuova-password",
-        request.url,
+        origin,
       ).toString(),
     });
     if (error) {
