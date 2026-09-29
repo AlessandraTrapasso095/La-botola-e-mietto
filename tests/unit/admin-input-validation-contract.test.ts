@@ -52,8 +52,12 @@ describe("admin runtime input validation contract", () => {
     expect(promotionSource).toContain("is_active: normalizedIsActive");
   });
 
-  it("mantiene invariata la validazione business del codice promozionale", () => {
-    expect(promotionSource).toContain("/^[A-Z0-9_-]{3,32}$/");
+  it("mantiene la validazione business del codice promozionale", () => {
+    expect(promotionSource).toContain(
+      "code.length < 1 || code.length > 64",
+    );
+
+    expect(promotionSource).not.toContain("/^[A-Z0-9_-]{3,32}$/");
 
     expect(promotionSource).toContain('input.discountType !== "percentage"');
 

@@ -43,9 +43,10 @@ describe("admin promotion codes server contract", () => {
     expect(source).toContain("paidDiscountGrossAmountMinor");
   });
 
-  it("normalizza il codice in uppercase e applica il formato consentito", () => {
+  it("normalizza il codice in uppercase e consente caratteri promozionali", () => {
     expect(source).toContain("value.trim().toUpperCase()");
-    expect(source).toContain("/^[A-Z0-9_-]{3,32}$/");
+    expect(source).toContain("code.length < 1 || code.length > 64");
+    expect(source).not.toContain("/^[A-Z0-9_-]{3,32}$/");
   });
 
   it("valida percentuali da 1 a 90 e importi fissi positivi", () => {

@@ -212,8 +212,8 @@ export function AdminPromotionCodeManager({
   }
 
   function validateForm() {
-    if (!/^[A-Z0-9_-]{3,32}$/.test(parsed.code)) {
-      return "Il codice deve contenere da 3 a 32 caratteri: lettere, numeri, trattino o underscore.";
+    if (parsed.code.length < 1 || parsed.code.length > 64) {
+      return "Il codice deve contenere da 1 a 64 caratteri.";
     }
 
     if (

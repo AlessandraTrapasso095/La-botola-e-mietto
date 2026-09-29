@@ -13,9 +13,8 @@ export const checkoutInputSchema = z
     promotionCode: z
       .string()
       .trim()
-      .min(3)
-      .max(32)
-      .regex(/^[A-Za-z0-9_-]+$/)
+      .min(1)
+      .max(64)
       .nullable()
       .optional(),
   })
@@ -61,9 +60,8 @@ export const promotionCodePreviewInputSchema = z.object({
   code: z
     .string()
     .trim()
-    .min(3)
-    .max(32)
-    .regex(/^[A-Za-z0-9_-]+$/),
+    .min(1)
+    .max(64),
   subtotalGrossAmountMinor: z.number().int().positive(),
 });
 

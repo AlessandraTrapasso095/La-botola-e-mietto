@@ -81,10 +81,8 @@ function normalizeDate(value: string | null | undefined) {
 function validatePromotionCodeInput(input: AdminPromotionCodeInput) {
   const code = normalizeCode(input.code);
 
-  if (!/^[A-Z0-9_-]{3,32}$/.test(code)) {
-    throw new Error(
-      "Il codice deve contenere da 3 a 32 caratteri: lettere, numeri, trattino o underscore.",
-    );
+  if (code.length < 1 || code.length > 64) {
+    throw new Error("Il codice deve contenere da 1 a 64 caratteri.");
   }
 
   if (input.discountType !== "percentage" && input.discountType !== "fixed") {

@@ -16,8 +16,9 @@ const serverSource = fs.readFileSync(
 describe("checkout promotion plumbing contract", () => {
   it("accetta un promotion code opzionale nel checkout input", () => {
     expect(validationSource).toContain("promotionCode:");
-    expect(validationSource).toContain(".max(32)");
-    expect(validationSource).toContain("/^[A-Za-z0-9_-]+$/");
+    expect(validationSource).toContain(".min(1)");
+    expect(validationSource).toContain(".max(64)");
+    expect(validationSource).not.toContain("/^[A-Za-z0-9_-]+$/");
   });
 
   it("restituisce codice e sconto realmente applicati", () => {
