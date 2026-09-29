@@ -15,7 +15,7 @@ export const businessInfo = {
     countryCode: "IT",
   },
   email: "admin@labotolaemietto.it",
-  phone: "+39 348 260 7738",
+  phone: "+39 345 838 5967",
   whatsappMessage:
     "Ciao, avrei bisogno di informazioni su un prodotto di La Botola e Mietto.",
   freeShippingThresholdMinor: 10_000n,
