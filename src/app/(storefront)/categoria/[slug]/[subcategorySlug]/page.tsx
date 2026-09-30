@@ -20,11 +20,15 @@ type SubcategoryPageProps = {
   searchParams: Promise<CatalogSearchParams>;
 };
 
-const whiskyFamilies: Record<
-  string,
-  { label: string; subcategories: readonly string[] }
-> = {
+type CatalogFamily = {
+  categorySlug: string;
+  label: string;
+  subcategories: readonly string[];
+};
+
+const catalogFamilies: Record<string, CatalogFamily> = {
   "irish-whiskey": {
+    categorySlug: "whisky-whiskey",
     label: "Irish Whiskey",
     subcategories: [
       "Irish Blended Whiskey",
@@ -34,6 +38,7 @@ const whiskyFamilies: Record<
     ],
   },
   "bourbon-rye": {
+    categorySlug: "whisky-whiskey",
     label: "Bourbon | Rye",
     subcategories: [
       "Bourbon Whiskey",
@@ -41,12 +46,49 @@ const whiskyFamilies: Record<
     ],
   },
   "whisky-giapponesi": {
+    categorySlug: "whisky-whiskey",
     label: "Whisky Giapponesi",
     subcategories: [
       "Japanese Blended Whisky",
       "Japanese Grain Whisky",
       "Japanese Single Malt",
     ],
+  },
+  "rum-invecchiati": {
+    categorySlug: "rum-rhum",
+    label: "Rum Invecchiati",
+    subcategories: ["Rum Invecchiato"],
+  },
+  "rum-tradizionali": {
+    categorySlug: "rum-rhum",
+    label: "Rum Tradizionali",
+    subcategories: ["Rum Tradizionale da Melassa"],
+  },
+  "rhum-agricole": {
+    categorySlug: "rum-rhum",
+    label: "Rhum Agricole",
+    subcategories: ["Rhum Agricole"],
+  },
+  cachaca: {
+    categorySlug: "rum-rhum",
+    label: "Cachaça",
+    subcategories: ["Cachaça"],
+  },
+  tequila: {
+    categorySlug: "tequila-mezcal",
+    label: "Tequila",
+    subcategories: [
+      "Tequila Añejo",
+      "Tequila Blanco / Plata",
+      "Tequila Cristalino",
+      "Tequila Joven / Oro",
+      "Tequila Reposado",
+    ],
+  },
+  mezcal: {
+    categorySlug: "tequila-mezcal",
+    label: "Mezcal",
+    subcategories: ["Mezcal Artesanal"],
   },
 };
 
@@ -73,23 +115,9 @@ function resolveCatalogScope(slug: string, subcategorySlug: string) {
     };
   }
 
-  if (category.slug !== "whisky-whiskey") {
-    return null;
-  }
+  const family = catalogFamilies[subcategorySlug];
 
-  const family = whiskyFamilies[subcategorySlug];
-
-  if (!family) {
-    return null;
-  }
-
-  const categorySubcategories = new Set<string>(category.subcategories);
-
-  if (
-    family.subcategories.some(
-      (name) => !categorySubcategories.has(name),
-    )
-  ) {
+  if (!family || family.categorySlug !== category.slug) {
     return null;
   }
 
