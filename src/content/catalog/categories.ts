@@ -91,19 +91,37 @@ export const catalogCategories = [
     media: demoMedia.whiskyCellar,
   },
   {
-    slug: "brandy-distillati",
-    name: "Brandy | altri distillati",
+    slug: "brandy",
+    name: "Brandy",
     shortName: "Brandy",
-    eyebrow: "Tradizioni internazionali",
+    eyebrow: "Tradizione e affinamento",
     description:
-      "Brandy, aquavit, pisco, aguardiente e distillati tradizionali selezionati dal catalogo.",
+      "Brandy italiani e internazionali, dalle espressioni classiche alle riserve e alle specialità di Jerez.",
     introduction:
-      "Una raccolta trasversale dedicata alle grandi tradizioni di distillazione europee e internazionali, ordinata per tipologia e stile.",
+      "Una selezione dedicata al Brandy, tra produzioni italiane, europee e specialità di Jerez, con espressioni classiche e riserve da degustazione.",
     subcategories: [
       "Brandy Europeo",
       "Brandy Italiano",
+      "Brandy de Jerez",
+      "Brandy e altri distillati",
+    ],
+    media: demoMedia.curation,
+  },
+  {
+    slug: "brandy-distillati",
+    name: "Altri distillati",
+    shortName: "Altri distillati",
+    eyebrow: "Tradizioni internazionali",
+    description:
+      "Aquavit, pisco, aguardiente e altri distillati tradizionali selezionati dal catalogo.",
+    introduction:
+      "Una raccolta dedicata alle tradizioni di distillazione internazionali che completano la selezione della cantina.",
+    subcategories: [
       "Aquavit / Akvavit",
       "Pisco",
+      "Aguardiente di Canna",
+      "Aguardiente di Frutta",
+      "Bagaceira",
       "Distillati Tradizionali - Altri",
     ],
     media: demoMedia.curation,

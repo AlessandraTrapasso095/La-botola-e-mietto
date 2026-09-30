@@ -30,8 +30,8 @@ export const primaryNavigation = [
 ] as const;
 
 const menuCategoryRoutes: Record<string, string> = {
-  "Single Malt Scotch": "/categoria/whisky-whiskey",
-  "Blended Scotch": "/categoria/whisky-whiskey",
+  "Single Malt Scotch": "/categoria/whisky-whiskey/whisky-whiskey--single-malt-scotch",
+  "Blended Scotch": "/categoria/whisky-whiskey/whisky-whiskey--blended-scotch",
   "Irish Whiskey": "/categoria/whisky-whiskey",
   "Bourbon | Rye": "/categoria/whisky-whiskey",
   "Whisky Giapponesi": "/categoria/whisky-whiskey",
@@ -43,8 +43,7 @@ const menuCategoryRoutes: Record<string, string> = {
   Vodka: "/categoria/vodka",
   Tequila: "/categoria/tequila-mezcal",
   Mezcal: "/categoria/tequila-mezcal",
-  Calvados: "/categoria/brandy-distillati",
-  Brandy: "/categoria/brandy-distillati",
+  Brandy: "/categoria/brandy",
   Cognac: "/categoria/cognac",
   Armagnac: "/categoria/armagnac",
   Grappe: "/categoria/grappe",
@@ -107,7 +106,6 @@ const catalogMenuGroups = [
       "Tequila",
       "Mezcal",
       "Brandy",
-      "Calvados",
     ]),
   },
   {
