@@ -49,8 +49,43 @@ export default async function ProductPage({ params }: ProductPageProps) {
   ]);
   if (!productView) notFound();
 
+  const productUrl = `https://labotolaemietto.it/prodotto/${productView.slug}`;
+  const productJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: productView.name,
+    description: productView.overview,
+    image: productView.media.map((media) => media.src),
+    sku: productView.code,
+    ...(productView.brandName
+      ? {
+          brand: {
+            "@type": "Brand",
+            name: productView.brandName,
+          },
+        }
+      : {}),
+    offers: {
+      "@type": "Offer",
+      url: productUrl,
+      priceCurrency: "EUR",
+      price: (productView.grossPriceMinor / 100).toFixed(2),
+      availability:
+        (productView.stockQuantity ?? 0) > 0
+          ? "https://schema.org/InStock"
+          : "https://schema.org/OutOfStock",
+      itemCondition: "https://schema.org/NewCondition",
+    },
+  };
+
   return (
     <main id="main-content">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(productJsonLd).replace(/</g, "\\u003c"),
+        }}
+      />
       <Breadcrumbs
         items={[
           { label: "Home", href: "/" },
