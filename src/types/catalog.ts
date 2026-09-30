@@ -158,6 +158,7 @@ export type CatalogSort =
 export type CatalogQueryScope = {
   categorySlug?: string;
   subcategorySlug?: string;
+  subcategorySlugs?: readonly string[];
   brandSlug?: string;
   productSlugs?: readonly string[];
   onlyOffers?: boolean;

@@ -58,6 +58,40 @@ describe("DemoCatalogRepository", () => {
     ).toBe(true);
     expect(results.products.map((product) => product.code)).toContain("AB1170");
   });
+  it("limita una famiglia whisky a più sottocategorie", async () => {
+    const subcategorySlugs = [
+      "whisky-whiskey--irish-blended-whiskey",
+      "whisky-whiskey--irish-grain-whiskey",
+      "whisky-whiskey--irish-single-malt",
+      "whisky-whiskey--irish-single-pot-still",
+    ];
+
+    const result = await repository.queryProducts({
+      page: 1,
+      pageSize: 100,
+      sort: "name",
+      filters: emptyCatalogFilters,
+      scope: {
+        categorySlug: "whisky-whiskey",
+        subcategorySlugs,
+      },
+    });
+
+    expect(result.totalCount).toBeGreaterThan(0);
+    expect(
+      result.items.every((product) =>
+        subcategorySlugs.includes(
+          `${product.categorySlug}--${product.subcategory
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .replace(/[^a-z0-9]+/g, "-")
+            .replace(/^-|-$/g, "")}`,
+        ),
+      ),
+    ).toBe(true);
+  });
+
   it("espone tutti gli slug pubblici per la sitemap", async () => {
     const slugs = await repository.getAllProductSlugs();
 

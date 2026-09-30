@@ -32,9 +32,9 @@ export const primaryNavigation = [
 const menuCategoryRoutes: Record<string, string> = {
   "Single Malt Scotch": "/categoria/whisky-whiskey/whisky-whiskey--single-malt-scotch",
   "Blended Scotch": "/categoria/whisky-whiskey/whisky-whiskey--blended-scotch",
-  "Irish Whiskey": "/categoria/whisky-whiskey",
-  "Bourbon | Rye": "/categoria/whisky-whiskey",
-  "Whisky Giapponesi": "/categoria/whisky-whiskey",
+  "Irish Whiskey": "/categoria/whisky-whiskey/irish-whiskey",
+  "Bourbon | Rye": "/categoria/whisky-whiskey/bourbon-rye",
+  "Whisky Giapponesi": "/categoria/whisky-whiskey/whisky-giapponesi",
   "Rum Invecchiati": "/categoria/rum-rhum",
   "Rum Tradizionali": "/categoria/rum-rhum",
   "Rhum Agricole": "/categoria/rum-rhum",

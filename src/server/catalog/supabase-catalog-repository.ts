@@ -131,6 +131,9 @@ export class SupabaseCatalogRepository implements CatalogRepository {
     if (scope?.subcategorySlug) {
       query = query.eq("subcategory_slug", scope.subcategorySlug);
     }
+    if (scope?.subcategorySlugs) {
+      query = query.in("subcategory_slug", [...scope.subcategorySlugs]);
+    }
     if (scope?.brandSlug) query = query.eq("brand_slug", scope.brandSlug);
     if (scope?.productSlugs) {
       query = query.in("slug", [...scope.productSlugs]);
@@ -266,6 +269,56 @@ export class SupabaseCatalogRepository implements CatalogRepository {
     scope?: CatalogQueryScope,
   ): Promise<CatalogFilterOptions> {
     const client = await this.createClient();
+
+    if (scope?.subcategorySlugs) {
+      let request = client
+        .from("catalog_products_view")
+        .select("brand_slug,brand_name,category_slug,category_name,country");
+
+      request = request.in("subcategory_slug", [...scope.subcategorySlugs]);
+
+      if (scope.categorySlug && scope.categorySlug !== "bottiglie-rare") {
+        request = request.eq("category_slug", scope.categorySlug);
+      }
+
+      const response = await request;
+
+      if (response.error) {
+        throw databaseError("opzioni filtri famiglia", response.error);
+      }
+
+      const rows = response.data ?? [];
+      const uniqueOptions = (
+        values: Array<{ value: string; label: string }>,
+      ) =>
+        [...new Map(values.map((option) => [option.value, option])).values()]
+          .sort((left, right) => left.label.localeCompare(right.label, "it"));
+
+      return {
+        brands: uniqueOptions(
+          rows.flatMap((row) =>
+            row.brand_slug && row.brand_name
+              ? [{ value: row.brand_slug, label: row.brand_name }]
+              : [],
+          ),
+        ),
+        categories: uniqueOptions(
+          rows.flatMap((row) =>
+            row.category_slug && row.category_name
+              ? [{ value: row.category_slug, label: row.category_name }]
+              : [],
+          ),
+        ),
+        countries: uniqueOptions(
+          rows.flatMap((row) =>
+            row.country
+              ? [{ value: row.country, label: row.country }]
+              : [],
+          ),
+        ),
+      };
+    }
+
     const args: Database["public"]["Functions"]["catalog_filter_options"]["Args"] =
       {
         only_offers: scope?.onlyOffers ?? false,

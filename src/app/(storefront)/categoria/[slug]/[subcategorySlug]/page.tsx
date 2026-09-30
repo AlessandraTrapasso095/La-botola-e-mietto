@@ -20,7 +20,37 @@ type SubcategoryPageProps = {
   searchParams: Promise<CatalogSearchParams>;
 };
 
-function getSubcategory(slug: string, subcategorySlug: string) {
+const whiskyFamilies: Record<
+  string,
+  { label: string; subcategories: readonly string[] }
+> = {
+  "irish-whiskey": {
+    label: "Irish Whiskey",
+    subcategories: [
+      "Irish Blended Whiskey",
+      "Irish Grain Whiskey",
+      "Irish Single Malt",
+      "Irish Single Pot Still",
+    ],
+  },
+  "bourbon-rye": {
+    label: "Bourbon | Rye",
+    subcategories: [
+      "Bourbon Whiskey",
+      "Rye Whiskey",
+    ],
+  },
+  "whisky-giapponesi": {
+    label: "Whisky Giapponesi",
+    subcategories: [
+      "Japanese Blended Whisky",
+      "Japanese Grain Whisky",
+      "Japanese Single Malt",
+    ],
+  },
+};
+
+function resolveCatalogScope(slug: string, subcategorySlug: string) {
   const category = getCategoryBySlug(slug);
 
   if (!category) {
@@ -32,34 +62,70 @@ function getSubcategory(slug: string, subcategorySlug: string) {
       createCatalogSubcategorySlug(category.slug, name) === subcategorySlug,
   );
 
-  if (!subcategory) {
+  if (subcategory) {
+    return {
+      category,
+      label: subcategory,
+      scope: {
+        categorySlug: category.slug,
+        subcategorySlug,
+      },
+    };
+  }
+
+  if (category.slug !== "whisky-whiskey") {
     return null;
   }
 
-  return { category, subcategory };
+  const family = whiskyFamilies[subcategorySlug];
+
+  if (!family) {
+    return null;
+  }
+
+  const categorySubcategories = new Set<string>(category.subcategories);
+
+  if (
+    family.subcategories.some(
+      (name) => !categorySubcategories.has(name),
+    )
+  ) {
+    return null;
+  }
+
+  return {
+    category,
+    label: family.label,
+    scope: {
+      categorySlug: category.slug,
+      subcategorySlugs: family.subcategories.map((name) =>
+        createCatalogSubcategorySlug(category.slug, name),
+      ),
+    },
+  };
 }
 
 export async function generateMetadata({
   params,
 }: SubcategoryPageProps): Promise<Metadata> {
   const { slug, subcategorySlug } = await params;
-  const resolved = getSubcategory(slug, subcategorySlug);
+  const resolved = resolveCatalogScope(slug, subcategorySlug);
 
   if (!resolved) {
     return {};
   }
 
-  const { category, subcategory } = resolved;
+  const { category, label } = resolved;
 
   return {
-    title: subcategory,
-    description: `${subcategory}: scopri la selezione disponibile nella categoria ${category.name}.`,
+    title: label,
+    description: `${label}: scopri la selezione disponibile nella categoria ${category.name}.`,
     alternates: {
       canonical: `/categoria/${category.slug}/${subcategorySlug}`,
     },
     openGraph: {
-      title: `${subcategory} | La Botola e Mietto`,
-      description: `${subcategory}: scopri la selezione disponibile nella categoria ${category.name}.`,
+      title: `${label} | La Botola e Mietto`,
+      description: `${label}: scopri la selezione disponibile nella categoria ${category.name}.`,
     },
   };
 }
@@ -69,20 +135,17 @@ export default async function SubcategoryPage({
   searchParams,
 }: SubcategoryPageProps) {
   const { slug, subcategorySlug } = await params;
-  const resolved = getSubcategory(slug, subcategorySlug);
+  const resolved = resolveCatalogScope(slug, subcategorySlug);
 
   if (!resolved) {
     notFound();
   }
 
-  const { category, subcategory } = resolved;
+  const { category, label, scope } = resolved;
 
   const { query, result, filterOptions } = await loadCatalogPage(
     await searchParams,
-    {
-      categorySlug: category.slug,
-      subcategorySlug,
-    },
+    scope,
   );
 
   return (
@@ -95,14 +158,14 @@ export default async function SubcategoryPage({
             label: category.name,
             href: `/categoria/${category.slug}`,
           },
-          { label: subcategory },
+          { label },
         ]}
       />
 
       <CatalogHero
         eyebrow={category.eyebrow}
-        title={subcategory}
-        description={`Esplora la selezione ${subcategory} disponibile nel catalogo La Botola e Mietto.`}
+        title={label}
+        description={`Esplora la selezione ${label} disponibile nel catalogo La Botola e Mietto.`}
         introduction={category.introduction}
         media={category.media}
       />

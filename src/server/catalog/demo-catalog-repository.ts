@@ -47,12 +47,19 @@ function selectScope(scope?: CatalogQueryScope) {
       return false;
     }
     if (scope.brandSlug && product.brandSlug !== scope.brandSlug) return false;
+    const productSubcategorySlug = createCatalogSubcategorySlug(
+      product.categorySlug,
+      product.subcategory,
+    );
     if (
       scope.subcategorySlug &&
-      createCatalogSubcategorySlug(
-        product.categorySlug,
-        product.subcategory,
-      ) !== scope.subcategorySlug
+      productSubcategorySlug !== scope.subcategorySlug
+    ) {
+      return false;
+    }
+    if (
+      scope.subcategorySlugs &&
+      !scope.subcategorySlugs.includes(productSubcategorySlug)
     ) {
       return false;
     }
