@@ -143,17 +143,40 @@ export async function generateMetadata({
     return {};
   }
 
-  const { category, label } = resolved;
+  const { category, label, scope } = resolved;
+  const description = `${label}: scopri la selezione disponibile nella categoria ${category.name}.`;
+  const { result } = await loadCatalogPage({}, scope);
+  const socialImage = result.items
+    .flatMap((product) => product.media)
+    .find((media) => media.src !== "/images/placeholder-bottle.svg");
 
   return {
     title: label,
-    description: `${label}: scopri la selezione disponibile nella categoria ${category.name}.`,
+    description,
     alternates: {
       canonical: `/categoria/${category.slug}/${subcategorySlug}`,
     },
     openGraph: {
       title: `${label} | La Botola e Mietto`,
-      description: `${label}: scopri la selezione disponibile nella categoria ${category.name}.`,
+      description,
+      ...(socialImage
+        ? {
+            images: [
+              {
+                url: socialImage.src,
+                width: socialImage.width,
+                height: socialImage.height,
+                alt: socialImage.alt,
+              },
+            ],
+          }
+        : {}),
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${label} | La Botola e Mietto`,
+      description,
+      ...(socialImage ? { images: [socialImage.src] } : {}),
     },
   };
 }

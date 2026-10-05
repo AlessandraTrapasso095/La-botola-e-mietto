@@ -28,6 +28,14 @@ export async function generateMetadata({
   const category = getCategoryBySlug(slug);
   if (!category) return {};
 
+  const { result } = await loadCatalogPage(
+    {},
+    { categorySlug: category.slug },
+  );
+  const socialImage = result.items
+    .flatMap((product) => product.media)
+    .find((media) => media.src !== "/images/placeholder-bottle.svg");
+
   return {
     title: category.name,
     description: category.description,
@@ -35,6 +43,24 @@ export async function generateMetadata({
     openGraph: {
       title: `${category.name} | La Botola e Mietto`,
       description: category.description,
+      ...(socialImage
+        ? {
+            images: [
+              {
+                url: socialImage.src,
+                width: socialImage.width,
+                height: socialImage.height,
+                alt: socialImage.alt,
+              },
+            ],
+          }
+        : {}),
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${category.name} | La Botola e Mietto`,
+      description: category.description,
+      ...(socialImage ? { images: [socialImage.src] } : {}),
     },
   };
 }
