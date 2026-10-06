@@ -41,6 +41,7 @@ type CatalogFiltersPanelProps = {
     value: boolean,
   ) => void;
   onReset: () => void;
+  hideAlcoholFilter?: boolean;
 };
 
 const priceOptions = [
@@ -109,6 +110,7 @@ export function CatalogFiltersPanel({
   onListFilterChange,
   onBooleanFilterChange,
   onReset,
+  hideAlcoholFilter = false,
 }: CatalogFiltersPanelProps) {
   const [brandQuery, setBrandQuery] = useState("");
   const visibleBrands = useMemo(() => {
@@ -175,13 +177,15 @@ export function CatalogFiltersPanel({
         selected={filters.capacities}
         onChange={onListFilterChange}
       />
-      <FilterGroup
-        legend="Gradazione"
-        name="alcoholRanges"
-        options={alcoholOptions}
-        selected={filters.alcoholRanges}
-        onChange={onListFilterChange}
-      />
+      {!hideAlcoholFilter ? (
+        <FilterGroup
+          legend="Gradazione"
+          name="alcoholRanges"
+          options={alcoholOptions}
+          selected={filters.alcoholRanges}
+          onChange={onListFilterChange}
+        />
+      ) : null}
       {options.countries.length > 0 ? (
         <FilterGroup
           legend="Paese"

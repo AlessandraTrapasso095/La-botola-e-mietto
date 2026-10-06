@@ -122,6 +122,7 @@ export function CatalogExplorer({
       onListFilterChange={updateListFilter}
       onBooleanFilterChange={updateBooleanFilter}
       onReset={resetFilters}
+      hideAlcoholFilter={fixedCategory === "birre"}
     />
   );
   const visiblePageNumbers = [
