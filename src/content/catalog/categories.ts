@@ -246,8 +246,48 @@ export const catalogCategories = [
       "Birre selezionate per stile, territorio e qualità produttiva.",
     introduction:
       "Una proposta complementare dedicata a fermentazioni, interpretazioni artigianali e stili di riferimento.",
-    subcategories: ["Lager", "Ale", "Abbazia", "Specialità"],
+    subcategories: [
+      "Altre Birre / Specialità",
+      "Barley Wine & Strong Ale",
+      "Belgian Ale",
+      "Birre Analcoliche",
+      "Birre Senza Glutine",
+      "Blanche & Witbier",
+      "Dubbel, Tripel & Quadrupel",
+      "IPA & Pale Ale",
+      "Lager & Pils",
+      "Lambic, Gueuze & Kriek",
+      "Saison",
+      "Sour & Fruit Beer",
+      "Stout & Porter",
+      "Trappiste & Abbazia",
+      "Weiss & Weizen",
+    ],
     media: demoMedia.ginTea,
+  },
+  {
+    slug: "sidri",
+    name: "Sidri",
+    shortName: "Sidri",
+    eyebrow: "Mela, fermentazione e territorio",
+    description:
+      "Sidri selezionati tra interpretazioni tradizionali e produzioni contemporanee.",
+    introduction:
+      "Una selezione dedicata al sidro, tra fermentazioni della mela, territori produttivi e differenti espressioni di freschezza e struttura.",
+    subcategories: ["Sidri"],
+    media: demoMedia.ginTea,
+  },
+  {
+    slug: "confezioni-regalo",
+    name: "Confezioni Regalo",
+    shortName: "Confezioni Regalo",
+    eyebrow: "Selezioni da regalare",
+    description:
+      "Confezioni e selezioni dedicate al mondo della birra, pensate per la degustazione e il regalo.",
+    introduction:
+      "Cofanetti e confezioni che riuniscono referenze selezionate in formati pensati per essere condivisi, scoperti o regalati.",
+    subcategories: ["Confezioni Regalo"],
+    media: demoMedia.rumCellar,
   },
   {
     slug: "bottiglie-rare",

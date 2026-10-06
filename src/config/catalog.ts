@@ -54,6 +54,36 @@ const menuCategoryRoutes: Record<string, string> = {
   Spumanti: "/categoria/champagne-spumanti",
   Aperitivi: "/categoria/aperitivi",
   Birre: "/categoria/birre",
+  "Altre Birre / Specialità":
+    "/categoria/birre/altre-birre-specialita",
+  "Barley Wine & Strong Ale":
+    "/categoria/birre/barley-wine-e-strong-ale",
+  "Belgian Ale":
+    "/categoria/birre/belgian-ale",
+  "Birre Analcoliche":
+    "/categoria/birre/birre-analcoliche",
+  "Birre Senza Glutine":
+    "/categoria/birre/birre-senza-glutine",
+  "Blanche & Witbier":
+    "/categoria/birre/blanche-e-witbier",
+  "Dubbel, Tripel & Quadrupel":
+    "/categoria/birre/dubbel-tripel-e-quadrupel",
+  "IPA & Pale Ale":
+    "/categoria/birre/ipa-e-pale-ale",
+  "Lager & Pils":
+    "/categoria/birre/lager-e-pils",
+  "Lambic, Gueuze & Kriek":
+    "/categoria/birre/lambic-gueuze-e-kriek",
+  Saison:
+    "/categoria/birre/saison",
+  "Sour & Fruit Beer":
+    "/categoria/birre/sour-e-fruit-beer",
+  "Stout & Porter":
+    "/categoria/birre/stout-e-porter",
+  "Trappiste & Abbazia":
+    "/categoria/birre/trappiste-e-abbazia",
+  "Weiss & Weizen":
+    "/categoria/birre/weiss-e-weizen",
 };
 
 export function getCatalogMenuHref(label: string) {
@@ -125,6 +155,21 @@ const catalogMenuGroups = [
     links: createCategoryLinks([
       "Aperitivi",
       "Birre",
+      "Lager & Pils",
+      "IPA & Pale Ale",
+      "Belgian Ale",
+      "Blanche & Witbier",
+      "Weiss & Weizen",
+      "Dubbel, Tripel & Quadrupel",
+      "Trappiste & Abbazia",
+      "Lambic, Gueuze & Kriek",
+      "Stout & Porter",
+      "Saison",
+      "Sour & Fruit Beer",
+      "Barley Wine & Strong Ale",
+      "Birre Analcoliche",
+      "Birre Senza Glutine",
+      "Altre Birre / Specialità",
     ]),
   },
 ] as const satisfies readonly CatalogMenuGroup[];

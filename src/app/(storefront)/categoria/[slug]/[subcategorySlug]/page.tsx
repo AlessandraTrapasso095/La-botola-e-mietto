@@ -26,6 +26,33 @@ type CatalogFamily = {
   subcategories: readonly string[];
 };
 
+const productionSubcategorySlugs: Record<string, Record<string, string>> = {
+  birre: {
+    "Altre Birre / Specialità": "altre-birre-specialita",
+    "Barley Wine & Strong Ale": "barley-wine-e-strong-ale",
+    "Belgian Ale": "belgian-ale",
+    "Birre Analcoliche": "birre-analcoliche",
+    "Birre Senza Glutine": "birre-senza-glutine",
+    "Blanche & Witbier": "blanche-e-witbier",
+    "Dubbel, Tripel & Quadrupel": "dubbel-tripel-e-quadrupel",
+    "IPA & Pale Ale": "ipa-e-pale-ale",
+    "Lager & Pils": "lager-e-pils",
+    "Lambic, Gueuze & Kriek": "lambic-gueuze-e-kriek",
+    Saison: "saison",
+    "Sour & Fruit Beer": "sour-e-fruit-beer",
+    "Stout & Porter": "stout-e-porter",
+    "Trappiste & Abbazia": "trappiste-e-abbazia",
+    "Weiss & Weizen": "weiss-e-weizen",
+  },
+};
+
+function getCatalogSubcategorySlug(categorySlug: string, name: string) {
+  return (
+    productionSubcategorySlugs[categorySlug]?.[name] ??
+    createCatalogSubcategorySlug(categorySlug, name)
+  );
+}
+
 const catalogFamilies: Record<string, CatalogFamily> = {
   "irish-whiskey": {
     categorySlug: "whisky-whiskey",
@@ -101,7 +128,7 @@ function resolveCatalogScope(slug: string, subcategorySlug: string) {
 
   const subcategory = category.subcategories.find(
     (name) =>
-      createCatalogSubcategorySlug(category.slug, name) === subcategorySlug,
+      getCatalogSubcategorySlug(category.slug, name) === subcategorySlug,
   );
 
   if (subcategory) {
