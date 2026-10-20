@@ -164,12 +164,6 @@ export default async function AdminProductDetailPage({
         </div>
       </div>
 
-      <AdminProductActions
-        productId={product.id}
-        productName={product.name}
-        currentStatus={product.status}
-      />
-
       <AdminProductImagePreview
         productId={product.id}
         productName={product.name}
@@ -299,19 +293,27 @@ export default async function AdminProductDetailPage({
             />
           </Section>
 
-          <Section
-            title="Pubblicazione"
-            description="Scegli se il prodotto deve essere visibile, restare in bozza o essere archiviato."
-          >
+          <div className="space-y-6">
+            <AdminProductActions
+              productId={product.id}
+              productName={product.name}
+              currentStatus={product.status}
+            />
+
+            <Section
+              title="Pubblicazione"
+              description="Scegli se il prodotto deve essere visibile, restare in bozza o essere archiviato."
+            >
             <AdminProductStatusControl
               productId={product.id}
               currentStatus={product.status}
             />
 
-            <p className="mt-5 border-t border-white/10 pt-5 text-xs leading-5 text-white/30">
-              Gestisci qui lo stato e la visibilità del prodotto nello store.
-            </p>
-          </Section>
+              <p className="mt-5 border-t border-white/10 pt-5 text-xs leading-5 text-white/30">
+                Gestisci qui lo stato e la visibilità del prodotto nello store.
+              </p>
+            </Section>
+          </div>
         </div>
       </div>
 
