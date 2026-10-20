@@ -162,6 +162,23 @@ export function AdminProductCreateForm({
     [form.categoryId, options.subcategories],
   );
 
+  const grossPricePreview = useMemo(() => {
+    const net = Number(form.netAmount.trim().replace(",", "."));
+    const vat = Number(form.vatPercentage.trim().replace(",", "."));
+
+    if (
+      !Number.isFinite(net) ||
+      !Number.isFinite(vat) ||
+      net < 0 ||
+      vat < 0 ||
+      vat > 100
+    ) {
+      return null;
+    }
+
+    return net * (1 + vat / 100);
+  }, [form.netAmount, form.vatPercentage]);
+
   function setField<K extends keyof FormState>(key: K, value: FormState[K]) {
     setForm((current) => ({
       ...current,
@@ -308,11 +325,37 @@ export function AdminProductCreateForm({
   return (
     <>
       <div className="space-y-6">
-        <div className="rounded-lg border border-orange-400/20 bg-orange-400/10 px-4 py-3 text-sm leading-6 text-orange-200">
-          Compila i campi contrassegnati con <strong>*</strong>. Il prodotto
-          verrà creato come <strong>Bozza</strong>, così potrai controllarlo
-          prima di pubblicarlo. L’indirizzo della pagina viene creato
-          automaticamente dal nome: non devi occupartene tu.
+        <div className="overflow-hidden rounded-2xl border border-orange-400/20 bg-gradient-to-br from-orange-500/15 via-orange-400/[0.06] to-transparent">
+          <div className="p-5 sm:p-7">
+            <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+              <div className="max-w-2xl">
+                <p className="text-xs font-semibold tracking-[0.18em] text-orange-300 uppercase">
+                  Nuovo prodotto
+                </p>
+
+                <h2 className="mt-2 text-xl font-semibold text-white sm:text-2xl">
+                  Inserisci il prodotto passo dopo passo
+                </h2>
+
+                <p className="mt-3 text-sm leading-6 text-white/55">
+                  Compila prima i dati essenziali. Tutto ciò che è indicato come
+                  facoltativo può essere aggiunto anche dopo.
+                </p>
+              </div>
+
+              <div className="rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-sm leading-6 text-white/55">
+                <strong className="text-white">Non preoccuparti dello slug.</strong>
+                <br />
+                L’indirizzo della pagina viene creato automaticamente dal nome.
+              </div>
+            </div>
+
+            <div className="mt-6 grid gap-3 sm:grid-cols-3">
+              <GuideStep number="1" label="Inserisci i dati" />
+              <GuideStep number="2" label="Controlla il riepilogo" />
+              <GuideStep number="3" label="Crea come bozza" />
+            </div>
+          </div>
         </div>
 
         {error && !dialogOpen ? (
@@ -324,12 +367,17 @@ export function AdminProductCreateForm({
           </div>
         ) : null}
 
-        <Section title="Anagrafica prodotto">
+        <Section
+          step="1"
+          title="Dati principali"
+          description="Qui inserisci le informazioni che identificano il prodotto nel catalogo."
+        >
           <div className="grid gap-5 md:grid-cols-2">
             <Field label="Codice prodotto *">
               <input
                 value={form.code}
                 onChange={(event) => setField("code", event.target.value)}
+                placeholder="Es. AB1234"
                 className={inputClass}
               />
             </Field>
@@ -337,6 +385,7 @@ export function AdminProductCreateForm({
             <Field label="Nome prodotto *">
               <input
                 value={form.name}
+                placeholder="Es. Barolo DOCG 2021"
                 onChange={(event) => {
                   const value = event.target.value;
                   setField("name", value);
@@ -424,7 +473,11 @@ export function AdminProductCreateForm({
           </div>
         </Section>
 
-        <Section title="Caratteristiche">
+        <Section
+          step="2"
+          title="Formato e caratteristiche"
+          description="Indica formato, capacità e gradazione. I campi facoltativi possono essere lasciati vuoti."
+        >
           <div className="grid gap-5 md:grid-cols-2">
             <Field label="Formato commerciale *">
               <input
@@ -486,7 +539,11 @@ export function AdminProductCreateForm({
           </div>
         </Section>
 
-        <Section title="Descrizione e note (facoltative)">
+        <Section
+          step="3"
+          title="Descrizione e note"
+          description="Questa parte è facoltativa: serve a raccontare meglio il prodotto nello store."
+        >
           <div className="grid gap-5">
             <Field label="Descrizione">
               <textarea
@@ -523,7 +580,11 @@ export function AdminProductCreateForm({
           </div>
         </Section>
 
-        <Section title="Prezzo e IVA">
+        <Section
+          step="4"
+          title="Prezzo"
+          description="Inserisci il prezzo netto. Il prezzo finale IVA inclusa viene calcolato automaticamente."
+        >
           <div className="grid gap-5 md:grid-cols-2">
             <Field label="Prezzo netto (€) *">
               <input
@@ -546,15 +607,62 @@ export function AdminProductCreateForm({
               />
             </Field>
           </div>
+
+          <div className="mt-5 rounded-xl border border-emerald-400/15 bg-emerald-400/[0.06] p-4 sm:flex sm:items-center sm:justify-between sm:gap-6">
+            <div>
+              <p className="text-xs font-medium text-emerald-200/70">
+                Prezzo che vedrà il cliente
+              </p>
+              <p className="mt-1 text-xs leading-5 text-white/35">
+                Calcolato automaticamente aggiungendo l’IVA al prezzo netto.
+              </p>
+            </div>
+
+            <p className="mt-3 text-2xl font-semibold text-emerald-300 sm:mt-0">
+              {grossPricePreview === null
+                ? "—"
+                : new Intl.NumberFormat("it-IT", {
+                    style: "currency",
+                    currency: "EUR",
+                  }).format(grossPricePreview)}
+            </p>
+          </div>
         </Section>
 
-        <AdminProductCreateImageField
+        <div>
+          <div className="mb-3 flex items-center gap-3">
+            <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-orange-500 text-sm font-bold text-black">
+              5
+            </span>
+            <div>
+              <h2 className="text-base font-semibold text-white">
+                Immagine prodotto
+              </h2>
+              <p className="mt-0.5 text-xs text-white/40">
+                Facoltativa. Puoi inserirla ora oppure aggiungerla più tardi.
+              </p>
+            </div>
+          </div>
+
+          <AdminProductCreateImageField
           productName={form.name}
           disabled={isPending || Boolean(createdProductId)}
-          onSelectionChange={setSelectedImage}
-        />
+            onSelectionChange={setSelectedImage}
+          />
+        </div>
 
-        <div className="flex flex-wrap gap-3">
+        <div className="rounded-2xl border border-white/10 bg-[#171717] p-4 sm:flex sm:items-center sm:justify-between sm:gap-6 sm:p-5">
+          <div className="mb-4 sm:mb-0">
+            <p className="text-sm font-semibold text-white">
+              Tutto pronto?
+            </p>
+            <p className="mt-1 text-xs leading-5 text-white/40">
+              Il prodotto sarà creato come bozza. Potrai controllarlo e
+              pubblicarlo dalla sua scheda.
+            </p>
+          </div>
+
+          <div className="flex flex-col gap-3 sm:flex-row">
           {createdProductId ? (
             <button
               type="button"
@@ -569,7 +677,7 @@ export function AdminProductCreateForm({
                 type="button"
                 onClick={requestCreate}
                 disabled={isPending}
-                className="inline-flex min-h-12 items-center justify-center rounded-md bg-orange-500 px-6 text-sm font-semibold text-black transition hover:bg-orange-400 disabled:cursor-not-allowed disabled:opacity-50"
+                className="inline-flex min-h-12 w-full items-center justify-center rounded-xl bg-orange-500 px-6 text-sm font-semibold text-black transition hover:bg-orange-400 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
               >
                 {isPending
                   ? selectedImage
@@ -582,12 +690,13 @@ export function AdminProductCreateForm({
                 type="button"
                 onClick={() => router.push("/admin/prodotti")}
                 disabled={isPending}
-                className="inline-flex min-h-12 items-center justify-center rounded-md border border-white/10 px-6 text-sm font-medium text-white/70 transition hover:bg-white/5 hover:text-white"
+                className="inline-flex min-h-12 w-full items-center justify-center rounded-xl border border-white/10 px-6 text-sm font-medium text-white/70 transition hover:bg-white/5 hover:text-white sm:w-auto"
               >
                 Annulla
               </button>
             </>
           )}
+          </div>
         </div>
       </div>
 
@@ -618,18 +727,46 @@ export function AdminProductCreateForm({
 }
 
 function Section({
+  step,
   title,
+  description,
   children,
 }: {
+  step: string;
   title: string;
+  description: string;
   children: React.ReactNode;
 }) {
   return (
-    <section className="rounded-xl border border-white/10 bg-[#171717] p-5 sm:p-6">
-      <h2 className="text-base font-semibold text-white">{title}</h2>
+    <section className="overflow-hidden rounded-2xl border border-white/10 bg-[#171717]">
+      <div className="border-b border-white/10 bg-white/[0.02] px-5 py-4 sm:px-6">
+        <div className="flex items-start gap-3">
+          <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-orange-500 text-sm font-bold text-black">
+            {step}
+          </span>
 
-      <div className="mt-5">{children}</div>
+          <div>
+            <h2 className="text-base font-semibold text-white">{title}</h2>
+            <p className="mt-1 text-xs leading-5 text-white/40">
+              {description}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div className="p-5 sm:p-6">{children}</div>
     </section>
+  );
+}
+
+function GuideStep({ number, label }: { number: string; label: string }) {
+  return (
+    <div className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/20 px-4 py-3">
+      <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-white/10 text-xs font-semibold text-white">
+        {number}
+      </span>
+      <span className="text-xs font-medium text-white/60">{label}</span>
+    </div>
   );
 }
 

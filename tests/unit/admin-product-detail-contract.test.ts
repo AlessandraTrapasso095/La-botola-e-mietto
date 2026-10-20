@@ -27,11 +27,11 @@ describe("admin product detail", () => {
   it("renders the main product admin information", () => {
     const page = source("src/app/admin/(dashboard)/prodotti/[id]/page.tsx");
 
-    expect(page).toContain("Anagrafica");
-    expect(page).toContain("Caratteristiche");
-    expect(page).toContain("Contenuti prodotto");
-    expect(page).toContain("Prezzo corrente");
-    expect(page).toContain("Magazzino");
+    expect(page).toContain("Identità e classificazione");
+    expect(page).toContain("Formato e caratteristiche");
+    expect(page).toContain("Descrizione e note");
+    expect(page).toContain('title="Prezzo"');
+    expect(page).toContain('title="Magazzino"');
   });
 
   it("renders stock management separately from reservations", () => {
