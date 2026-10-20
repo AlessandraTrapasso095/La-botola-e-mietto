@@ -11,6 +11,7 @@ type AdminConfirmDialogProps = {
   cancelLabel?: string;
   pendingLabel?: string;
   pending?: boolean;
+  confirmDisabled?: boolean;
   error?: string | null;
   tone?: "default" | "danger" | "success";
   onConfirm: () => void;
@@ -26,6 +27,7 @@ export function AdminConfirmDialog({
   cancelLabel = "Annulla",
   pendingLabel = "Operazione in corso…",
   pending = false,
+  confirmDisabled = false,
   error = null,
   tone = "default",
   onConfirm,
@@ -152,9 +154,9 @@ export function AdminConfirmDialog({
           <button
             type="button"
             onClick={onConfirm}
-            disabled={pending}
+            disabled={pending || confirmDisabled}
             className={[
-              "inline-flex min-h-11 w-full items-center justify-center rounded-md px-5 text-sm font-semibold text-black transition disabled:cursor-wait disabled:opacity-60 sm:w-auto",
+              "inline-flex min-h-11 w-full items-center justify-center rounded-md px-5 text-sm font-semibold text-black transition disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto",
               confirmClass,
             ].join(" ")}
           >

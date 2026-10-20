@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { AdminProductActions } from "@/features/admin/admin-product-actions";
 import { AdminProductEditForm } from "@/features/admin/admin-product-edit-form";
 import { AdminProductImagePreview } from "@/features/admin/admin-product-image-preview";
 import { AdminProductInventoryHistory } from "@/features/admin/admin-product-inventory-history";
@@ -242,6 +243,12 @@ export default async function AdminProductDetailPage({
           </Section>
         </div>
       </div>
+
+      <AdminProductActions
+        productId={product.id}
+        productName={product.name}
+        currentStatus={product.status}
+      />
 
       <AdminProductInventoryHistory movements={inventoryMovements} />
     </div>
