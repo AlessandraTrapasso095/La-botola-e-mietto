@@ -48,39 +48,52 @@ function makeSlug(value: string) {
     .replace(/^-|-$/g, "");
 }
 
-function parseOptionalInteger(value: string) {
+function parseOptionalInteger(value: string, label: string) {
   const trimmed = value.trim();
 
   if (!trimmed) return null;
 
-  const parsed = Number.parseInt(trimmed, 10);
-
-  if (!Number.isFinite(parsed) || parsed <= 0) {
-    throw new Error("Inserisci un numero intero maggiore di zero.");
+  if (!/^\d+$/.test(trimmed)) {
+    throw new Error(`${label}: inserisci solo un numero intero, senza lettere o simboli.`);
   }
 
-  return parsed;
-}
+  const parsed = Number.parseInt(trimmed, 10);
 
-function parseRequiredInteger(value: string, label: string) {
-  const parsed = Number.parseInt(value.trim(), 10);
-
-  if (!Number.isFinite(parsed) || parsed <= 0) {
+  if (!Number.isSafeInteger(parsed) || parsed <= 0) {
     throw new Error(`${label}: inserisci un numero intero maggiore di zero.`);
   }
 
   return parsed;
 }
 
-function parseOptionalNumber(value: string) {
+function parseRequiredInteger(value: string, label: string) {
+  const trimmed = value.trim();
+
+  if (!/^\d+$/.test(trimmed)) {
+    throw new Error(`${label}: inserisci solo un numero intero, senza lettere o simboli.`);
+  }
+
+  const parsed = Number.parseInt(trimmed, 10);
+
+  if (!Number.isSafeInteger(parsed) || parsed <= 0) {
+    throw new Error(`${label}: inserisci un numero intero maggiore di zero.`);
+  }
+
+  return parsed;
+}
+
+function parseOptionalNumber(value: string, label: string) {
   const trimmed = value.trim();
 
   if (!trimmed) return null;
 
-  const parsed = Number(trimmed.replace(",", "."));
+  const normalized = trimmed.replace(",", ".");
+  const parsed = Number(normalized);
 
   if (!Number.isFinite(parsed)) {
-    throw new Error("Inserisci un valore numerico valido.");
+    throw new Error(
+      `${label}: inserisci solo il numero, ad esempio 40 oppure 40,5.`,
+    );
   }
 
   return parsed;
@@ -137,7 +150,6 @@ export function AdminProductCreateForm({
     vatPercentage: "22",
   });
 
-  const [slugTouched, setSlugTouched] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [selectedImage, setSelectedImage] =
@@ -179,7 +191,10 @@ export function AdminProductCreateForm({
       throw new Error("Il formato è obbligatorio.");
     }
 
-    const alcoholPercentage = parseOptionalNumber(form.alcoholPercentage);
+    const alcoholPercentage = parseOptionalNumber(
+      form.alcoholPercentage,
+      "Gradazione",
+    );
 
     if (
       alcoholPercentage !== null &&
@@ -201,7 +216,7 @@ export function AdminProductCreateForm({
       origin: form.origin,
       producer: form.producer,
       country: form.country,
-      capacityMl: parseOptionalInteger(form.capacityMl),
+      capacityMl: parseOptionalInteger(form.capacityMl, "Capacità"),
       capacityLabel: form.capacityLabel.trim(),
       packQuantity: parseRequiredInteger(
         form.packQuantity,
@@ -244,7 +259,15 @@ export function AdminProductCreateForm({
       let productId: string | null = null;
 
       try {
-        productId = await createAdminProduct(input);
+        const result = await createAdminProduct(input);
+
+        if (!result.ok) {
+          setDialogOpen(false);
+          setError(result.error);
+          return;
+        }
+
+        productId = result.productId;
 
         if (selectedImage) {
           await uploadAdminProductImage({
@@ -258,7 +281,6 @@ export function AdminProductCreateForm({
 
         setDialogOpen(false);
         router.push(`/admin/prodotti/${productId}`);
-        router.refresh();
       } catch (caught) {
         if (productId) {
           const message =
@@ -287,9 +309,10 @@ export function AdminProductCreateForm({
     <>
       <div className="space-y-6">
         <div className="rounded-lg border border-orange-400/20 bg-orange-400/10 px-4 py-3 text-sm leading-6 text-orange-200">
-          Il nuovo prodotto verrà creato inizialmente come{" "}
-          <strong>Bozza</strong>. Puoi selezionare subito l’immagine: verrà
-          caricata automaticamente insieme alla relativa thumbnail.
+          Compila i campi contrassegnati con <strong>*</strong>. Il prodotto
+          verrà creato come <strong>Bozza</strong>, così potrai controllarlo
+          prima di pubblicarlo. L’indirizzo della pagina viene creato
+          automaticamente dal nome: non devi occupartene tu.
         </div>
 
         {error && !dialogOpen ? (
@@ -318,20 +341,7 @@ export function AdminProductCreateForm({
                   const value = event.target.value;
                   setField("name", value);
 
-                  if (!slugTouched) {
-                    setField("slug", makeSlug(value));
-                  }
-                }}
-                className={inputClass}
-              />
-            </Field>
-
-            <Field label="Slug *">
-              <input
-                value={form.slug}
-                onChange={(event) => {
-                  setSlugTouched(true);
-                  setField("slug", event.target.value);
+                  setField("slug", makeSlug(value));
                 }}
                 className={inputClass}
               />
@@ -416,27 +426,28 @@ export function AdminProductCreateForm({
 
         <Section title="Caratteristiche">
           <div className="grid gap-5 md:grid-cols-2">
-            <Field label="Formato *">
+            <Field label="Formato commerciale *">
               <input
                 value={form.capacityLabel}
                 onChange={(event) =>
                   setField("capacityLabel", event.target.value)
                 }
-                placeholder="Es. 70 cl"
+                placeholder="Es. 70 cl, 75 cl oppure 1 L"
                 className={inputClass}
               />
             </Field>
 
-            <Field label="Capacità ml">
+            <Field label="Capacità in ml (facoltativa)">
               <input
                 inputMode="numeric"
                 value={form.capacityMl}
                 onChange={(event) => setField("capacityMl", event.target.value)}
+                placeholder="Es. 700"
                 className={inputClass}
               />
             </Field>
 
-            <Field label="Quantità confezione *">
+            <Field label="Pezzi nella confezione *">
               <input
                 inputMode="numeric"
                 value={form.packQuantity}
@@ -447,13 +458,14 @@ export function AdminProductCreateForm({
               />
             </Field>
 
-            <Field label="Gradazione %">
+            <Field label="Gradazione alcolica % (facoltativa)">
               <input
                 inputMode="decimal"
                 value={form.alcoholPercentage}
                 onChange={(event) =>
                   setField("alcoholPercentage", event.target.value)
                 }
+                placeholder="Es. 40 oppure 40,5"
                 className={inputClass}
               />
             </Field>
@@ -474,7 +486,7 @@ export function AdminProductCreateForm({
           </div>
         </Section>
 
-        <Section title="Contenuti">
+        <Section title="Descrizione e note (facoltative)">
           <div className="grid gap-5">
             <Field label="Descrizione">
               <textarea
@@ -511,19 +523,19 @@ export function AdminProductCreateForm({
           </div>
         </Section>
 
-        <Section title="Prezzo">
+        <Section title="Prezzo e IVA">
           <div className="grid gap-5 md:grid-cols-2">
-            <Field label="Prezzo netto € *">
+            <Field label="Prezzo netto (€) *">
               <input
                 inputMode="decimal"
                 value={form.netAmount}
                 onChange={(event) => setField("netAmount", event.target.value)}
-                placeholder="0,00"
+                placeholder="Es. 39,90"
                 className={inputClass}
               />
             </Field>
 
-            <Field label="IVA % *">
+            <Field label="IVA % * (normalmente 22)">
               <input
                 inputMode="decimal"
                 value={form.vatPercentage}
@@ -561,8 +573,8 @@ export function AdminProductCreateForm({
               >
                 {isPending
                   ? selectedImage
-                    ? "Creazione e caricamento…"
-                    : "Creazione…"
+                    ? "Sto creando il prodotto e caricando l’immagine…"
+                    : "Sto creando il prodotto…"
                   : "Crea prodotto"}
               </button>
 
@@ -582,11 +594,11 @@ export function AdminProductCreateForm({
       <AdminConfirmDialog
         open={dialogOpen}
         eyebrow="Nuovo prodotto"
-        title="Creare questo prodotto?"
+        title="Confermi la creazione?"
         description={
           selectedImage
-            ? "Il prodotto verrà salvato come Bozza insieme all’immagine selezionata e alla relativa thumbnail."
-            : "Il prodotto verrà salvato come Bozza. Potrai aggiungere l’immagine anche successivamente."
+            ? "Controlla i dati un’ultima volta. Il prodotto verrà creato come Bozza e verrà caricata anche l’immagine selezionata."
+            : "Controlla i dati un’ultima volta. Il prodotto verrà creato come Bozza e potrai aggiungere l’immagine anche successivamente."
         }
         confirmLabel={
           selectedImage ? "Sì, crea e carica immagine" : "Sì, crea prodotto"

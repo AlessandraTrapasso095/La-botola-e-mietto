@@ -36,14 +36,45 @@ const schema = z.object({
 
 export type AdminProductCreateInput = z.infer<typeof schema>;
 
-export async function createAdminProduct(input: AdminProductCreateInput) {
+export type AdminProductCreateResult =
+  | {
+      ok: true;
+      productId: string;
+    }
+  | {
+      ok: false;
+      error: string;
+    };
+
+export async function createAdminProduct(
+  input: AdminProductCreateInput,
+): Promise<AdminProductCreateResult> {
   const adminUser = await getServerAdminUser();
 
   if (!adminUser) {
-    throw new Error("Accesso amministratore richiesto.");
+    return {
+      ok: false,
+      error: "La sessione amministratore non è più valida. Accedi di nuovo e riprova.",
+    };
   }
 
-  const data = schema.parse(input);
+  const parsedInput = schema.safeParse(input);
+
+  if (!parsedInput.success) {
+    console.error("[admin-product-create] input non valido", {
+      issues: parsedInput.error.issues.map((issue) => ({
+        path: issue.path.join("."),
+        code: issue.code,
+      })),
+    });
+
+    return {
+      ok: false,
+      error: "Alcuni dati del prodotto non sono validi. Controlla i campi evidenziati e riprova.",
+    };
+  }
+
+  const data = parsedInput.data;
   const admin = createSupabaseAdminClient();
 
   const { data: productId, error } = await admin.rpc(
@@ -76,26 +107,35 @@ export async function createAdminProduct(input: AdminProductCreateInput) {
     if (
       error.message.includes("duplicate key value violates unique constraint")
     ) {
-      throw new Error(
-        "Esiste già un prodotto con questo codice o con questo slug.",
-      );
+      return {
+        ok: false,
+        error: "Esiste già un prodotto con questo codice. Controlla il codice e riprova.",
+      };
     }
 
     console.error("[admin-product-create] creazione prodotto fallita", {
       code: error.code,
     });
 
-    throw new Error("Impossibile creare il prodotto. Riprova.");
+    return {
+      ok: false,
+      error: "Non è stato possibile creare il prodotto. Riprova tra qualche secondo.",
+    };
   }
 
   if (!productId || typeof productId !== "string") {
-    throw new Error(
-      "Il prodotto è stato creato ma non è stato possibile recuperarne l’identificativo.",
-    );
+    return {
+      ok: false,
+      error:
+        "Il prodotto potrebbe essere stato creato, ma non è stato possibile aprirne la scheda. Torna all’elenco prodotti e verifica prima di riprovare.",
+    };
   }
 
   revalidatePath("/admin/prodotti");
   revalidatePath("/prodotti");
 
-  return productId;
+  return {
+    ok: true,
+    productId,
+  };
 }

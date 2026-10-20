@@ -21,12 +21,14 @@ describe("admin product creation with image", () => {
 
   it("creates the draft product before uploading its image", () => {
     const createPosition = form.indexOf(
-      "productId = await createAdminProduct(input)",
+      "const result = await createAdminProduct(input)",
     );
+    const productIdPosition = form.indexOf("productId = result.productId");
     const uploadPosition = form.indexOf("await uploadAdminProductImage({");
 
     expect(createPosition).toBeGreaterThan(-1);
-    expect(uploadPosition).toBeGreaterThan(createPosition);
+    expect(productIdPosition).toBeGreaterThan(createPosition);
+    expect(uploadPosition).toBeGreaterThan(productIdPosition);
   });
 
   it("uploads the selected original and thumbnail through the reusable flow", () => {
@@ -44,7 +46,7 @@ describe("admin product creation with image", () => {
 
   it("still allows creating a product without an image", () => {
     expect(form).toContain(
-      "Potrai aggiungere l’immagine anche successivamente",
+      "potrai aggiungere l’immagine anche successivamente",
     );
     expect(form).toContain("Sì, crea prodotto");
   });

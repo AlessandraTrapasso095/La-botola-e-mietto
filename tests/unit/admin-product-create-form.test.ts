@@ -38,6 +38,6 @@ describe("admin new product form", () => {
   it("integrates image management into product creation", () => {
     expect(form).toContain("AdminProductCreateImageField");
     expect(form).toContain("uploadAdminProductImage");
-    expect(form).toContain("caricata automaticamente");
+    expect(form).toContain("verrà caricata anche l’immagine selezionata");
   });
 });
