@@ -303,6 +303,7 @@ export default async function AdminProductDetailPage({
             <Section
               title="Pubblicazione"
               description="Scegli se il prodotto deve essere visibile, restare in bozza o essere archiviato."
+              emphasis
             >
             <AdminProductStatusControl
               productId={product.id}
@@ -326,24 +327,61 @@ function Section({
   title,
   description,
   children,
+  emphasis = false,
 }: {
   title: string;
   description?: string;
   children: React.ReactNode;
+  emphasis?: boolean;
 }) {
   return (
-    <section className="overflow-hidden rounded-2xl border border-white/10 bg-[#171717]">
-      <div className="border-b border-white/10 bg-white/[0.02] px-5 py-4 sm:px-6">
-        <h2 className="text-base font-semibold text-white">{title}</h2>
+    <section
+      className={[
+        "overflow-hidden rounded-2xl border",
+        emphasis
+          ? "border-orange-400/40 bg-gradient-to-br from-orange-500/[0.10] via-[#171717] to-[#171717] shadow-[0_0_0_1px_rgba(251,146,60,0.05)]"
+          : "border-white/10 bg-[#171717]",
+      ].join(" ")}
+    >
+      <div
+        className={[
+          "border-b px-5 py-4 sm:px-6",
+          emphasis
+            ? "border-orange-400/20 bg-orange-400/[0.06]"
+            : "border-white/10 bg-white/[0.02]",
+        ].join(" ")}
+      >
+        {emphasis ? (
+          <p className="mb-2 text-[10px] font-bold tracking-[0.18em] text-orange-300 uppercase">
+            Visibilità nello store
+          </p>
+        ) : null}
+
+        <h2
+          className={
+            emphasis
+              ? "text-lg font-semibold text-white sm:text-xl"
+              : "text-base font-semibold text-white"
+          }
+        >
+          {title}
+        </h2>
 
         {description ? (
-          <p className="mt-1 text-xs leading-5 text-white/40">
+          <p
+            className={[
+              "mt-1 leading-5",
+              emphasis ? "text-sm text-white/55" : "text-xs text-white/40",
+            ].join(" ")}
+          >
             {description}
           </p>
         ) : null}
       </div>
 
-      <div className="p-5 sm:p-6">{children}</div>
+      <div className={emphasis ? "p-5 sm:p-7" : "p-5 sm:p-6"}>
+        {children}
+      </div>
     </section>
   );
 }
