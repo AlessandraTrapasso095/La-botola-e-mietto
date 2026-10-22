@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import { cache } from "react";
 
 import { Container } from "@/components/ui/container";
+import { businessInfo } from "@/config/business";
+import { defaultSiteUrl } from "@/config/metadata";
 import { Heading } from "@/components/ui/heading";
 import { Section } from "@/components/ui/section";
 import { Breadcrumbs } from "@/features/catalog/breadcrumbs";
@@ -21,6 +23,20 @@ const loadProduct = cache((slug: string) =>
   getCatalogRepository().getProductBySlug(slug),
 );
 
+function createSeoDescription(value: string) {
+  const normalized = value.replace(/\s+/g, " ").trim();
+
+  if (normalized.length <= 160) {
+    return normalized;
+  }
+
+  return `${normalized.slice(0, 157).trimEnd()}…`;
+}
+
+function absoluteUrl(value: string) {
+  return new URL(value, defaultSiteUrl).toString();
+}
+
 export async function generateMetadata({
   params,
 }: ProductPageProps): Promise<Metadata> {
@@ -28,14 +44,30 @@ export async function generateMetadata({
   const product = await loadProduct(slug);
   if (!product) return {};
 
+  const description = createSeoDescription(product.overview);
+  const imageUrl = absoluteUrl(product.media[0].src);
+
   return {
     title: product.name,
-    description: product.overview,
+    description,
     alternates: { canonical: `/prodotto/${product.slug}` },
     openGraph: {
-      title: `${product.name} | La Botola e Mietto`,
-      description: product.overview,
-      images: [{ url: product.media[0].src }],
+      type: "website",
+      title: `${product.name} | ${businessInfo.brandName}`,
+      description,
+      url: `/prodotto/${product.slug}`,
+      images: [
+        {
+          url: imageUrl,
+          alt: product.media[0].alt || product.name,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${product.name} | ${businessInfo.brandName}`,
+      description,
+      images: [imageUrl],
     },
   };
 }
@@ -49,13 +81,17 @@ export default async function ProductPage({ params }: ProductPageProps) {
   ]);
   if (!productView) notFound();
 
-  const productUrl = `https://labotolaemietto.it/prodotto/${productView.slug}`;
+  const productUrl = `${defaultSiteUrl}/prodotto/${productView.slug}`;
+  const productImageUrls = productView.media.map((media) =>
+    absoluteUrl(media.src),
+  );
+
   const productJsonLd = {
     "@context": "https://schema.org",
     "@type": "Product",
     name: productView.name,
     description: productView.overview,
-    image: productView.media.map((media) => media.src),
+    image: productImageUrls,
     sku: productView.code,
     ...(productView.brandName
       ? {
@@ -75,7 +111,50 @@ export default async function ProductPage({ params }: ProductPageProps) {
           ? "https://schema.org/InStock"
           : "https://schema.org/OutOfStock",
       itemCondition: "https://schema.org/NewCondition",
+      seller: {
+        "@type": "Organization",
+        name: businessInfo.brandName,
+        url: defaultSiteUrl,
+      },
     },
+  };
+
+  const breadcrumbItems = [
+    {
+      name: "Home",
+      url: defaultSiteUrl,
+    },
+    {
+      name: "Catalogo",
+      url: `${defaultSiteUrl}/catalogo`,
+    },
+    {
+      name: productView.categoryName,
+      url: `${defaultSiteUrl}/categoria/${productView.categorySlug}`,
+    },
+    ...(productView.brandSlug && productView.brandName
+      ? [
+          {
+            name: productView.brandName,
+            url: `${defaultSiteUrl}/marchio/${productView.brandSlug}`,
+          },
+        ]
+      : []),
+    {
+      name: productView.name,
+      url: productUrl,
+    },
+  ];
+
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: breadcrumbItems.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: item.name,
+      item: item.url,
+    })),
   };
 
   return (
@@ -84,6 +163,12 @@ export default async function ProductPage({ params }: ProductPageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(productJsonLd).replace(/</g, "\\u003c"),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(breadcrumbJsonLd).replace(/</g, "\\u003c"),
         }}
       />
       <Breadcrumbs
