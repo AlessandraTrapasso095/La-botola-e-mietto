@@ -41,6 +41,25 @@ describe("admin bulk price increase", () => {
     expect(migration).toContain("to service_role");
   });
 
+  it("computes preview totals in SQL without relying on API row limits", () => {
+    const migration = source(
+      "supabase/migrations/0062_fix_bulk_price_preview_count.sql",
+    );
+    const server = source("src/server/admin/admin-bulk-prices.ts");
+
+    expect(migration).toContain(
+      "admin_preview_bulk_price_increase_v2",
+    );
+    expect(migration).toContain("'total_count'");
+    expect(migration).toContain("'active_offer_count'");
+    expect(migration).toContain("limit 10");
+    expect(server).toContain(
+      "admin_preview_bulk_price_increase_v2",
+    );
+    expect(server).toContain("totalCount: Number(payload.total_count ?? 0)");
+    expect(server).not.toContain("totalCount: items.length");
+  });
+
   it("requires preview before applying the bulk change", () => {
     const component = source(
       "src/features/admin/admin-bulk-price-control.tsx",

@@ -64,7 +64,7 @@ export async function previewAdminBulkPriceIncrease(
   const admin = createSupabaseAdminClient();
 
   const { data, error } = await admin.rpc(
-    "admin_preview_bulk_price_increase" as never,
+    "admin_preview_bulk_price_increase_v2" as never,
     rpcParams(input) as never,
   );
 
@@ -73,17 +73,21 @@ export async function previewAdminBulkPriceIncrease(
     throw new Error("Impossibile preparare l’anteprima dei nuovi prezzi.");
   }
 
-  const rows = (data ?? []) as Array<{
-    product_id: string;
-    code: string;
-    name: string;
-    current_net_amount_minor: number | string;
-    new_net_amount_minor: number | string;
-    vat_rate_basis_points: number;
-    has_active_offer: boolean;
-  }>;
+  const payload = (data ?? {}) as {
+    total_count?: number | string;
+    active_offer_count?: number | string;
+    items?: Array<{
+      product_id: string;
+      code: string;
+      name: string;
+      current_net_amount_minor: number | string;
+      new_net_amount_minor: number | string;
+      vat_rate_basis_points: number;
+      has_active_offer: boolean;
+    }>;
+  };
 
-  const items = rows.map((row) => ({
+  const items = (payload.items ?? []).map((row) => ({
     productId: row.product_id,
     code: row.code,
     name: row.name,
@@ -94,9 +98,9 @@ export async function previewAdminBulkPriceIncrease(
   }));
 
   return {
-    totalCount: items.length,
-    activeOfferCount: items.filter((item) => item.hasActiveOffer).length,
-    items: items.slice(0, 10),
+    totalCount: Number(payload.total_count ?? 0),
+    activeOfferCount: Number(payload.active_offer_count ?? 0),
+    items,
   };
 }
 
