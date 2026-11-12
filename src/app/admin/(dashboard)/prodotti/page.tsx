@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { AdminBulkPriceControl } from "@/features/admin/admin-bulk-price-control";
 import {
   getAdminProducts,
   type AdminProductAvailability,
@@ -228,6 +229,17 @@ export default async function AdminProductsPage({
           ) : null}
         </div>
       </form>
+
+      <AdminBulkPriceControl
+        filters={{
+          query,
+          status,
+          brandId: brandId || null,
+          categoryId: categoryId || null,
+          availability,
+        }}
+        filteredProductCount={result.totalCount}
+      />
 
       <div className="overflow-hidden rounded-lg border border-white/10 bg-[#171717]">
         <div className="flex min-w-0 flex-col gap-2 border-b border-white/10 px-4 py-4 text-sm text-white/45 sm:flex-row sm:items-center sm:justify-between sm:px-5">
