@@ -2,6 +2,11 @@ import Link from "next/link";
 
 import { AdminBulkPriceControl } from "@/features/admin/admin-bulk-price-control";
 import {
+  AdminProductSelectionCheckbox,
+  AdminProductSelectionProvider,
+  AdminProductSelectionToolbar,
+} from "@/features/admin/admin-product-selection";
+import {
   getAdminProducts,
   type AdminProductAvailability,
   type AdminProductStatus,
@@ -230,18 +235,71 @@ export default async function AdminProductsPage({
         </div>
       </form>
 
-      <AdminBulkPriceControl
-        filters={{
-          query,
-          status,
-          brandId: brandId || null,
-          categoryId: categoryId || null,
-          availability,
-        }}
-        filteredProductCount={result.totalCount}
-      />
+      <AdminProductSelectionProvider
+        pageProductIds={result.products.map((product) => product.id)}
+      >
+        <AdminBulkPriceControl
+          filters={{
+            query,
+            status,
+            brandId: brandId || null,
+            categoryId: categoryId || null,
+            availability,
+          }}
+          filteredProductCount={result.totalCount}
+        />
 
-      <div className="overflow-hidden rounded-lg border border-white/10 bg-[#171717]">
+        <div className="overflow-hidden rounded-lg border border-white/10 bg-[#171717]">
+          <form
+            method="get"
+            className="border-b border-white/10 bg-white/[0.02] p-4 sm:p-5"
+          >
+            <div className="flex flex-col gap-3 lg:flex-row lg:items-end">
+              <label className="min-w-0 flex-1 space-y-2">
+                <span className="text-xs font-medium text-white/50">
+                  Cerca prodotto da selezionare
+                </span>
+
+                <input
+                  type="search"
+                  name="q"
+                  defaultValue={query}
+                  placeholder="Nome o codice prodotto..."
+                  className="h-11 w-full rounded-md border border-white/10 bg-[#111111] px-3 text-sm text-white transition outline-none placeholder:text-white/25 focus:border-orange-400/60"
+                />
+              </label>
+
+              <input type="hidden" name="status" value={status} />
+              <input type="hidden" name="brand" value={brandId} />
+              <input type="hidden" name="category" value={categoryId} />
+              <input type="hidden" name="availability" value={availability} />
+
+              <div className="flex flex-col gap-3 sm:flex-row">
+                <button
+                  type="submit"
+                  className="inline-flex h-11 w-full items-center justify-center rounded-md bg-orange-500 px-5 text-sm font-semibold text-black transition hover:bg-orange-400 sm:w-auto"
+                >
+                  Cerca
+                </button>
+
+                {query ? (
+                  <Link
+                    href={`/admin/prodotti?${new URLSearchParams({
+                      ...(status !== "all" ? { status } : {}),
+                      ...(brandId ? { brand: brandId } : {}),
+                      ...(categoryId ? { category: categoryId } : {}),
+                      ...(availability !== "all" ? { availability } : {}),
+                    }).toString()}`}
+                    className="inline-flex h-11 w-full items-center justify-center rounded-md border border-white/10 px-5 text-sm font-medium text-white/70 transition hover:bg-white/5 hover:text-white sm:w-auto"
+                  >
+                    Azzera ricerca
+                  </Link>
+                ) : null}
+              </div>
+            </div>
+          </form>
+
+          <AdminProductSelectionToolbar />
         <div className="flex min-w-0 flex-col gap-2 border-b border-white/10 px-4 py-4 text-sm text-white/45 sm:flex-row sm:items-center sm:justify-between sm:px-5">
           <span>
             {result.totalCount === 0
@@ -260,7 +318,13 @@ export default async function AdminProductsPage({
           {result.products.map((product) => (
             <article key={product.id} className="min-w-0 p-4 sm:p-5">
               <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-                <div className="min-w-0">
+                <div className="flex min-w-0 items-start gap-3">
+                  <AdminProductSelectionCheckbox
+                    productId={product.id}
+                    label={product.name}
+                  />
+
+                  <div className="min-w-0">
                   <p className="font-mono text-xs break-all text-white/40">
                     {product.code}
                   </p>
@@ -284,6 +348,7 @@ export default async function AdminProductsPage({
                         ? `${product.availableQuantity} disponibili`
                         : "Esaurito"}
                     </span>
+                  </div>
                   </div>
                 </div>
 
@@ -332,6 +397,9 @@ export default async function AdminProductsPage({
           <table className="min-w-full divide-y divide-white/10 text-sm">
             <thead className="bg-white/[0.03]">
               <tr className="text-left text-xs font-semibold tracking-wide text-white/40 uppercase">
+                <th className="w-14 px-5 py-4">
+                  <span className="sr-only">Seleziona</span>
+                </th>
                 <th className="px-5 py-4">Codice</th>
                 <th className="px-5 py-4">Prodotto</th>
                 <th className="px-5 py-4">Marchio</th>
@@ -348,6 +416,13 @@ export default async function AdminProductsPage({
                   key={product.id}
                   className="transition hover:bg-white/[0.025]"
                 >
+                  <td className="px-5 py-4">
+                    <AdminProductSelectionCheckbox
+                      productId={product.id}
+                      label={product.name}
+                    />
+                  </td>
+
                   <td className="px-5 py-4 font-mono text-xs whitespace-nowrap text-white/50">
                     {product.code}
                   </td>
@@ -446,7 +521,8 @@ export default async function AdminProductsPage({
             )}
           </div>
         ) : null}
-      </div>
+        </div>
+      </AdminProductSelectionProvider>
     </div>
   );
 }

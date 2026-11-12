@@ -15,7 +15,9 @@ const filtersSchema = z.object({
 });
 
 const inputSchema = filtersSchema.extend({
+  operation: z.enum(["increase", "decrease"]).default("increase"),
   percentage: z.number().finite().positive().max(100),
+  productIds: z.array(z.string().uuid()).max(1000).nullable().default(null),
 });
 
 export type AdminBulkPriceFilters = z.infer<typeof filtersSchema>;
@@ -46,16 +48,18 @@ async function requireAdmin() {
 
 function rpcParams(input: z.infer<typeof inputSchema>) {
   return {
+    p_operation: input.operation,
     p_percentage: input.percentage,
     p_query: input.query || null,
     p_status: input.status,
     p_brand_id: input.brandId,
     p_category_id: input.categoryId,
     p_availability: input.availability,
+    p_product_ids: input.productIds,
   };
 }
 
-export async function previewAdminBulkPriceIncrease(
+export async function previewAdminBulkPriceAdjustment(
   rawInput: z.input<typeof inputSchema>,
 ): Promise<AdminBulkPricePreview> {
   await requireAdmin();
@@ -64,7 +68,7 @@ export async function previewAdminBulkPriceIncrease(
   const admin = createSupabaseAdminClient();
 
   const { data, error } = await admin.rpc(
-    "admin_preview_bulk_price_increase_v2" as never,
+    "admin_preview_bulk_price_adjustment_v1" as never,
     rpcParams(input) as never,
   );
 
@@ -104,7 +108,7 @@ export async function previewAdminBulkPriceIncrease(
   };
 }
 
-export async function applyAdminBulkPriceIncrease(
+export async function applyAdminBulkPriceAdjustment(
   rawInput: z.input<typeof inputSchema>,
 ): Promise<{ updatedCount: number }> {
   await requireAdmin();
@@ -113,13 +117,13 @@ export async function applyAdminBulkPriceIncrease(
   const admin = createSupabaseAdminClient();
 
   const { data, error } = await admin.rpc(
-    "admin_apply_bulk_price_increase" as never,
+    "admin_apply_bulk_price_adjustment_v1" as never,
     rpcParams(input) as never,
   );
 
   if (error) {
     console.error("[admin-bulk-prices] apply failed", { code: error.code });
-    throw new Error("Impossibile applicare l’aumento dei prezzi.");
+    throw new Error("Impossibile applicare la modifica dei prezzi.");
   }
 
   revalidatePath("/admin/prodotti");

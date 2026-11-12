@@ -4,9 +4,10 @@ import { useRouter } from "next/navigation";
 import { useMemo, useState, useTransition } from "react";
 
 import { AdminConfirmDialog } from "@/features/admin/admin-confirm-dialog";
+import { useAdminProductSelection } from "@/features/admin/admin-product-selection";
 import {
-  applyAdminBulkPriceIncrease,
-  previewAdminBulkPriceIncrease,
+  applyAdminBulkPriceAdjustment,
+  previewAdminBulkPriceAdjustment,
   type AdminBulkPriceFilters,
   type AdminBulkPricePreview,
 } from "@/server/admin/admin-bulk-prices";
@@ -30,7 +31,12 @@ export function AdminBulkPriceControl({
   filteredProductCount: number;
 }) {
   const router = useRouter();
+  const { selectedIds, selectedCount, clearSelection } =
+    useAdminProductSelection();
 
+  const [scopeMode, setScopeMode] = useState<"selected" | "filtered">("selected");
+  const [adjustmentMode, setAdjustmentMode] =
+    useState<"increase" | "decrease">("increase");
   const [percentage, setPercentage] = useState("5");
   const [preview, setPreview] = useState<AdminBulkPricePreview | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -57,10 +63,14 @@ export function AdminBulkPriceControl({
       : `tutti i ${filteredProductCount.toLocaleString("it-IT")} prodotti`;
   }, [filters, filteredProductCount]);
 
+  const selectedMode = scopeMode === "selected";
+
   function input() {
     return {
       ...filters,
+      operation: adjustmentMode,
       percentage: parsedPercentage,
+      productIds: selectedMode ? selectedIds : null,
     };
   }
 
@@ -70,12 +80,17 @@ export function AdminBulkPriceControl({
       return;
     }
 
+    if (selectedMode && selectedCount === 0) {
+      setError("Seleziona almeno un prodotto dalla lista.");
+      return;
+    }
+
     setError(null);
     setSuccess(null);
 
     startTransition(async () => {
       try {
-        const result = await previewAdminBulkPriceIncrease(input());
+        const result = await previewAdminBulkPriceAdjustment(input());
         setPreview(result);
       } catch (caught) {
         setPreview(null);
@@ -104,7 +119,7 @@ export function AdminBulkPriceControl({
 
     startTransition(async () => {
       try {
-        const result = await applyAdminBulkPriceIncrease(input());
+        const result = await applyAdminBulkPriceAdjustment(input());
 
         setDialogOpen(false);
         setPreview(null);
@@ -113,12 +128,15 @@ export function AdminBulkPriceControl({
             "it-IT",
           )} prodotti.`,
         );
+        if (selectedMode) {
+          clearSelection();
+        }
         router.refresh();
       } catch (caught) {
         setError(
           caught instanceof Error
             ? caught.message
-            : "Impossibile applicare l’aumento.",
+            : "Impossibile applicare la modifica.",
         );
       }
     });
@@ -133,20 +151,125 @@ export function AdminBulkPriceControl({
           </p>
 
           <h2 className="mt-2 text-xl font-semibold text-white">
-            Aumenta prezzi in blocco
+            Modifica prezzi in blocco
           </h2>
 
           <p className="mt-2 max-w-3xl text-sm leading-6 text-white/50">
-            Applica un aumento percentuale a {scopeLabel}. Prima di salvare
-            vedrai sempre un’anteprima dei nuovi prezzi.
+            Aumenta o riduci in percentuale i prezzi di {scopeLabel}. Prima di
+            salvare vedrai sempre un’anteprima dei nuovi prezzi.
           </p>
         </div>
 
         <div className="p-5 sm:p-6">
+          <div className="mb-5 grid gap-3 sm:grid-cols-2">
+            <button
+              type="button"
+              onClick={() => {
+                setAdjustmentMode("increase");
+                setPreview(null);
+                setError(null);
+                setSuccess(null);
+              }}
+              className={[
+                "rounded-xl border px-4 py-4 text-left transition",
+                adjustmentMode === "increase"
+                  ? "border-emerald-400/50 bg-emerald-500/10"
+                  : "border-white/10 bg-[#111111] hover:bg-white/[0.04]",
+              ].join(" ")}
+            >
+              <p className="text-sm font-semibold text-white">
+                Aumento prezzo
+              </p>
+              <p className="mt-1 text-xs leading-5 text-white/40">
+                Aumenta il prezzo dei prodotti della percentuale indicata.
+              </p>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                setAdjustmentMode("decrease");
+                setPreview(null);
+                setError(null);
+                setSuccess(null);
+              }}
+              className={[
+                "rounded-xl border px-4 py-4 text-left transition",
+                adjustmentMode === "decrease"
+                  ? "border-red-400/50 bg-red-500/10"
+                  : "border-white/10 bg-[#111111] hover:bg-white/[0.04]",
+              ].join(" ")}
+            >
+              <p className="text-sm font-semibold text-white">
+                Riduzione prezzo
+              </p>
+              <p className="mt-1 text-xs leading-5 text-white/40">
+                Riduce il prezzo dei prodotti della percentuale indicata.
+              </p>
+            </button>
+          </div>
+
+          <div className="mb-5 grid gap-3 sm:grid-cols-2">
+            <button
+              type="button"
+              onClick={() => {
+                setScopeMode("selected");
+                setPreview(null);
+                setError(null);
+                setSuccess(null);
+              }}
+              className={[
+                "rounded-xl border px-4 py-4 text-left transition",
+                selectedMode
+                  ? "border-orange-400/50 bg-orange-500/10"
+                  : "border-white/10 bg-[#111111] hover:bg-white/[0.04]",
+              ].join(" ")}
+            >
+              <p className="text-sm font-semibold text-white">
+                Solo prodotti selezionati
+              </p>
+              <p className="mt-1 text-xs leading-5 text-white/40">
+                {selectedCount === 0
+                  ? "Spunta dalla lista i prodotti che vuoi modificare."
+                  : `${selectedCount.toLocaleString("it-IT")} ${
+                      selectedCount === 1
+                        ? "prodotto selezionato"
+                        : "prodotti selezionati"
+                    }`}
+              </p>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                setScopeMode("filtered");
+                setPreview(null);
+                setError(null);
+                setSuccess(null);
+              }}
+              className={[
+                "rounded-xl border px-4 py-4 text-left transition",
+                !selectedMode
+                  ? "border-orange-400/50 bg-orange-500/10"
+                  : "border-white/10 bg-[#111111] hover:bg-white/[0.04]",
+              ].join(" ")}
+            >
+              <p className="text-sm font-semibold text-white">
+                Tutti i risultati filtrati
+              </p>
+              <p className="mt-1 text-xs leading-5 text-white/40">
+                Coinvolge {filteredProductCount.toLocaleString("it-IT")} prodotti.
+                Usa questa opzione solo per modifiche davvero massive.
+              </p>
+            </button>
+          </div>
+
           <div className="grid gap-4 lg:grid-cols-[220px_1fr_auto] lg:items-end">
             <label className="space-y-2">
               <span className="text-xs font-medium text-white/50">
-                Aumento percentuale
+                {adjustmentMode === "increase"
+                  ? "Aumento percentuale"
+                  : "Riduzione percentuale"}
               </span>
 
               <div className="relative">
@@ -173,16 +296,26 @@ export function AdminBulkPriceControl({
             <div className="rounded-xl border border-white/10 bg-black/20 px-4 py-3">
               <p className="text-xs text-white/40">Prodotti interessati</p>
               <p className="mt-1 text-base font-semibold text-white">
-                {scopeLabel}
+                {selectedMode
+                  ? selectedCount === 0
+                    ? "Nessun prodotto selezionato"
+                    : `${selectedCount.toLocaleString("it-IT")} selezionati`
+                  : scopeLabel}
               </p>
               <p className="mt-1 text-xs text-white/30">
-                Per restringere l’aumento usa prima i filtri prodotti qui sopra.
+                {selectedMode
+                  ? "Spunta i prodotti direttamente nella lista qui sotto."
+                  : "Verranno coinvolti tutti i prodotti che rispettano i filtri correnti."}
               </p>
             </div>
 
             <button
               type="button"
-              disabled={!validPercentage || isPending}
+              disabled={
+                !validPercentage ||
+                isPending ||
+                (selectedMode && selectedCount === 0)
+              }
               onClick={requestPreview}
               className="inline-flex min-h-12 w-full items-center justify-center rounded-xl bg-orange-500 px-5 text-sm font-semibold text-black transition hover:bg-orange-400 disabled:cursor-not-allowed disabled:opacity-40 lg:w-auto"
             >
@@ -306,7 +439,9 @@ export function AdminBulkPriceControl({
                     onClick={requestApply}
                     className="inline-flex min-h-12 w-full items-center justify-center rounded-xl bg-emerald-500 px-6 text-sm font-semibold text-black transition hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
                   >
-                    Applica aumento del {parsedPercentage}%
+                    {adjustmentMode === "increase"
+                      ? `Applica aumento del ${parsedPercentage}%`
+                      : `Applica riduzione del ${parsedPercentage}%`}
                   </button>
                 </div>
               ) : null}
@@ -318,7 +453,11 @@ export function AdminBulkPriceControl({
       <AdminConfirmDialog
         open={dialogOpen}
         eyebrow="Modifica massiva prezzi"
-        title={`Confermi l’aumento del ${parsedPercentage}%?`}
+        title={
+          adjustmentMode === "increase"
+            ? `Confermi l’aumento del ${parsedPercentage}%?`
+            : `Confermi la riduzione del ${parsedPercentage}%?`
+        }
         description={
           <>
             Stai per modificare il prezzo di{" "}
