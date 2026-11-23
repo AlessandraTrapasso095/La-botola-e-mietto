@@ -508,11 +508,11 @@ function AddressForm({
       />
       <Input
         id="address-street-number"
-        label="Numero civico"
+        label="Numero civico *"
+        required
         value={draft.streetNumber}
         error={errors.streetNumber}
         onChange={(event) => onChange("streetNumber", event.target.value)}
-        required
       />
       <Input
         id="address-line-2"

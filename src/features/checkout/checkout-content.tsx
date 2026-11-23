@@ -139,6 +139,14 @@ export function CheckoutContent({
       ? shippingAddressId
       : billingAddressId;
 
+  const selectedBillingAddress = addresses.find(
+    (address) => address.id === effectiveBillingAddressId,
+  );
+
+  function hasStreetNumber(address: Address | undefined) {
+    return Boolean(address?.streetNumber.trim());
+  }
+
   async function applyPromotionCode() {
     if (promotionCodeLoading || submitting) return;
 
@@ -194,6 +202,23 @@ export function CheckoutContent({
 
     if (!effectiveBillingAddressId) {
       setError("Seleziona un indirizzo di fatturazione.");
+      return;
+    }
+
+    if (
+      shippingMethod !== "store_pickup" &&
+      !hasStreetNumber(selectedShippingAddress)
+    ) {
+      setError(
+        "L’indirizzo di spedizione non contiene il numero civico. Modificalo dalla sezione Indirizzi prima di continuare.",
+      );
+      return;
+    }
+
+    if (!hasStreetNumber(selectedBillingAddress)) {
+      setError(
+        "L’indirizzo di fatturazione non contiene il numero civico. Modificalo dalla sezione Indirizzi prima di continuare.",
+      );
       return;
     }
 
