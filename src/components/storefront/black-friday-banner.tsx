@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useState } from "react";
 
 const BLACK_FRIDAY_END = new Date(
@@ -37,53 +36,36 @@ export function BlackFridayBanner() {
 
   return (
     <div className="relative w-full overflow-hidden border-b border-orange-400/30 bg-[#120b05]">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,132,0,0.14),transparent_65%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,132,0,0.16),transparent_65%)]" />
 
-      <div className="relative mx-auto w-full max-w-[1440px] px-4 py-3 sm:px-6 lg:px-8">
+      <div className="relative mx-auto flex w-full max-w-[1440px] flex-col items-center justify-center gap-2.5 px-4 py-3.5 text-center sm:px-6 md:min-h-[68px] md:flex-row md:gap-6 md:py-2 lg:gap-8 lg:px-8">
 
-        {/* MOBILE */}
-        <div className="flex w-full flex-col items-center justify-center gap-2 text-center md:hidden">
-          <div className="text-[20px] font-black tracking-[0.12em] text-orange-400 uppercase">
-            Black Friday
-          </div>
+        <span className="shrink-0 text-[20px] font-black tracking-[0.13em] text-orange-400 uppercase sm:text-[22px] md:text-xl lg:text-[22px]">
+          Black Friday
+        </span>
 
-          <div className="flex w-full flex-wrap items-center justify-center gap-x-3 gap-y-2">
-            <span className="text-[13px] font-medium text-white/75">
-              Offerte speciali solo per oggi
-            </span>
+        <span
+          aria-hidden="true"
+          className="hidden h-7 w-px shrink-0 bg-orange-400/30 md:block"
+        />
 
-            <Link
-              href="/in-offerta"
-              className="inline-flex min-h-9 items-center justify-center gap-2 rounded-md border border-orange-400/50 bg-orange-400/10 px-4 text-[13px] font-semibold text-orange-300 transition hover:border-orange-300 hover:bg-orange-400 hover:text-black"
-            >
-              Scopri le offerte
-              <span aria-hidden="true">→</span>
-            </Link>
-          </div>
-        </div>
+        <div className="flex max-w-full flex-wrap items-center justify-center gap-x-2 gap-y-2 text-[13px] leading-relaxed font-medium text-white/85 sm:text-sm md:text-[15px]">
+          <span>Con il codice</span>
 
-        {/* TABLET / DESKTOP */}
-        <div className="hidden min-h-[62px] w-full items-center justify-center gap-6 text-center md:flex lg:gap-8">
-          <span className="shrink-0 text-lg font-black tracking-[0.16em] text-orange-400 uppercase">
-            Black Friday
+          <span className="inline-flex items-center rounded-md border border-orange-400/70 bg-orange-400/15 px-2.5 py-1 font-black tracking-[0.08em] text-orange-300 uppercase shadow-[0_0_16px_rgba(251,146,60,0.12)]">
+            BLACKFRIDAY
           </span>
 
-          <span
-            aria-hidden="true"
-            className="h-6 w-px shrink-0 bg-orange-400/30"
-          />
-
-          <span className="text-sm font-medium text-white/75 lg:text-[15px]">
-            Offerte speciali disponibili solo per oggi
+          <span>
+            ottieni il{" "}
+            <strong className="font-black text-white">
+              10% di sconto
+            </strong>{" "}
+            sugli ordini superiori a{" "}
+            <strong className="font-black text-white">
+              70 €
+            </strong>
           </span>
-
-          <Link
-            href="/in-offerta"
-            className="inline-flex min-h-9 shrink-0 items-center justify-center gap-2 rounded-md border border-orange-400/50 bg-orange-400/10 px-4 text-sm font-semibold text-orange-300 transition hover:border-orange-300 hover:bg-orange-400 hover:text-black"
-          >
-            Scopri le offerte
-            <span aria-hidden="true">→</span>
-          </Link>
         </div>
 
       </div>
