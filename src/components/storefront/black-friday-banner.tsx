@@ -37,29 +37,55 @@ export function BlackFridayBanner() {
 
   return (
     <div className="relative w-full overflow-hidden border-b border-orange-400/30 bg-[#120b05]">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,132,0,0.12),transparent_60%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,132,0,0.14),transparent_65%)]" />
 
-      <div className="relative mx-auto flex w-full max-w-[1440px] flex-col items-center justify-center gap-2 px-4 py-3 text-center sm:min-h-[62px] sm:flex-row sm:gap-5 sm:px-6 sm:py-2 lg:gap-7 lg:px-8">
-        <span className="whitespace-nowrap text-sm font-black tracking-[0.14em] text-orange-400 uppercase sm:text-base lg:text-lg">
-          Black Friday
-        </span>
+      <div className="relative mx-auto w-full max-w-[1440px] px-4 py-3 sm:px-6 lg:px-8">
 
-        <span
-          aria-hidden="true"
-          className="hidden h-6 w-px shrink-0 bg-orange-400/30 sm:block"
-        />
+        {/* MOBILE */}
+        <div className="flex w-full flex-col items-center justify-center gap-2 text-center md:hidden">
+          <div className="text-[20px] font-black tracking-[0.12em] text-orange-400 uppercase">
+            Black Friday
+          </div>
 
-        <span className="max-w-full text-xs leading-snug font-medium text-white/75 sm:text-sm lg:text-[15px]">
-          Offerte speciali disponibili solo per oggi
-        </span>
+          <div className="flex w-full flex-wrap items-center justify-center gap-x-3 gap-y-2">
+            <span className="text-[13px] font-medium text-white/75">
+              Offerte speciali solo per oggi
+            </span>
 
-        <Link
-          href="/in-offerta"
-          className="inline-flex min-h-9 shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-md border border-orange-400/50 bg-orange-400/10 px-4 text-xs font-semibold text-orange-300 transition hover:border-orange-300 hover:bg-orange-400 hover:text-black sm:ml-1 sm:text-sm"
-        >
-          Scopri le offerte
-          <span aria-hidden="true">→</span>
-        </Link>
+            <Link
+              href="/in-offerta"
+              className="inline-flex min-h-9 items-center justify-center gap-2 rounded-md border border-orange-400/50 bg-orange-400/10 px-4 text-[13px] font-semibold text-orange-300 transition hover:border-orange-300 hover:bg-orange-400 hover:text-black"
+            >
+              Scopri le offerte
+              <span aria-hidden="true">→</span>
+            </Link>
+          </div>
+        </div>
+
+        {/* TABLET / DESKTOP */}
+        <div className="hidden min-h-[62px] w-full items-center justify-center gap-6 text-center md:flex lg:gap-8">
+          <span className="shrink-0 text-lg font-black tracking-[0.16em] text-orange-400 uppercase">
+            Black Friday
+          </span>
+
+          <span
+            aria-hidden="true"
+            className="h-6 w-px shrink-0 bg-orange-400/30"
+          />
+
+          <span className="text-sm font-medium text-white/75 lg:text-[15px]">
+            Offerte speciali disponibili solo per oggi
+          </span>
+
+          <Link
+            href="/in-offerta"
+            className="inline-flex min-h-9 shrink-0 items-center justify-center gap-2 rounded-md border border-orange-400/50 bg-orange-400/10 px-4 text-sm font-semibold text-orange-300 transition hover:border-orange-300 hover:bg-orange-400 hover:text-black"
+          >
+            Scopri le offerte
+            <span aria-hidden="true">→</span>
+          </Link>
+        </div>
+
       </div>
     </div>
   );
