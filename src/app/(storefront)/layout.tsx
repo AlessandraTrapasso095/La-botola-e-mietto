@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
+import { BlackFridayBanner } from "@/components/storefront/black-friday-banner";
 import { WhatsAppContact } from "@/components/layout/whatsapp-contact";
 import { ageGateConfig, cookieConsentConfig } from "@/config/consent";
 import { baseMetadata } from "@/config/metadata";
@@ -85,6 +86,7 @@ export default async function RootLayout({
           <CommerceProvider initialWishlist={initialWishlist}>
             <div id="site-shell">
               <SiteHeader />
+        <BlackFridayBanner />
               {children}
               <SiteFooter />
               <CookiePreferencesBanner
